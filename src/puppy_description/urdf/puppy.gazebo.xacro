@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<robot name="puppy" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/puppy</robotNamespace>
+    </plugin>
+  </gazebo>
+
+  <gazebo reference="lf_link2">
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <minDepth>0.0002</minDepth>
+    <kp  value="1000000.0"/>
+    <kd  value="100.0"/>
+  </gazebo>
+
+  <gazebo reference="rf_link2">
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <minDepth>0.0002</minDepth>
+    <kp  value="1000000.0"/>
+    <kd  value="100.0"/>
+  </gazebo>
+
+  <gazebo reference="lb_link2">
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <minDepth>0.0002</minDepth>
+    <kp  value="1000000.0"/>
+    <kd  value="100.0"/>
+  </gazebo>
+
+  <gazebo reference="rb_link2">
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <minDepth>0.0002</minDepth>
+    <kp  value="1000000.0"/>
+    <kd  value="100.0"/>
+  </gazebo>
+</robot>
