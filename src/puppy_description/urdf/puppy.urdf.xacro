@@ -2,8 +2,8 @@
 <robot name="puppy" xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:include filename="$(find puppy_description)/urdf/puppy.transmission.xacro"/>
   <xacro:include filename="$(find puppy_description)/urdf/puppy.gazebo.xacro"/>
-  <xacro:property name="motor_torque" value="0.1"/>
-  <xacro:property name="motor_vec" value="0.1"/>
+  <xacro:property name="motor_torque" value="1.4"/>
+  <xacro:property name="motor_vec" value="2"/>
 
   <link name="base_footprint" />
   <joint name="base_joint" type="fixed">
@@ -97,7 +97,7 @@
     type="revolute">
     <origin
       xyz="0.0420105649539 0.0778693100523862 0.0159880060021007"
-      rpy="-0.766 0 0" />
+      rpy="-0.752 0 0" />
     <parent
       link="base_link" />
     <child
@@ -213,7 +213,7 @@
     type="revolute">
     <origin
       xyz="-0.0420105649534512 0.0778693100523859 0.0159880060091649"
-      rpy="-0.766 0 0" />
+      rpy="-0.752 0 0" />
     <parent
       link="base_link" />
     <child
@@ -329,7 +329,7 @@
     type="revolute">
     <origin
       xyz="-0.0420105469986279 -0.0778692767711234 0.0106512951143373"
-      rpy="-0.766 0 0" />
+      rpy="-0.752 0 0" />
     <parent
       link="base_link" />
     <child
@@ -445,7 +445,7 @@
     type="revolute">
     <origin
       xyz="0.0420105469981795 -0.0778692767711239 0.0106512951072731"
-      rpy="-0.766 0 0" />
+      rpy="-0.752 0 0" />
     <parent
       link="base_link" />
     <child
