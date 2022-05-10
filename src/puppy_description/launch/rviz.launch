@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<launch>
+    <param name="robot_description" command="$(find xacro)/xacro $(find puppy_description)/urdf/puppy.urdf.xacro"/>
+    
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+      <param name="/use_gui" value="false"/>
+      <rosparam param="/source_list">[/puppy/joint_states]</rosparam>
+    </node>
+     <rosparam file="$(find puppy_description)/config/gazebo_control.yaml" command="load"/>
+
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" ns="/puppy"
+    output="screen" args="joint_state_controller
+                          joint1_position_controller
+                          joint2_position_controller
+                          joint3_position_controller
+                          joint4_position_controller
+                          joint5_position_controller
+                          joint6_position_controller
+                          joint7_position_controller
+                          joint8_position_controller"/>
+		  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+      <remap from="/joint_states" to="/puppy/joint_states" />
+    </node>
+
+    <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find puppy_description)/test.rviz"/>
+</launch>

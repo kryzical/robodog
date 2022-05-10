@@ -2,8 +2,8 @@
 <robot name="puppy" xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:include filename="$(find puppy_description)/urdf/puppy.transmission.xacro"/>
   <xacro:include filename="$(find puppy_description)/urdf/puppy.gazebo.xacro"/>
-  <xacro:property name="motor_torque" value="1.4"/>
-  <xacro:property name="motor_vec" value="2"/>
+  <xacro:property name="motor_torque" value="0.1"/>
+  <xacro:property name="motor_vec" value="1"/>
 
   <link name="base_footprint" />
   <joint name="base_joint" type="fixed">

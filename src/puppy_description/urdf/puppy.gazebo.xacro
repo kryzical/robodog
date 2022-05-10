@@ -8,7 +8,7 @@
     </plugin>
   </gazebo>
 
-  <xacro:macro name="joint_setup_block" params="joint_name">
+  <!--xacro:macro name="joint_setup_block" params="joint_name">
     <gazebo reference="${joint_name}">
       <implicitSpringDamper>1</implicitSpringDamper>
     </gazebo>
@@ -20,15 +20,15 @@
   <xacro:joint_setup_block joint_name="lb_joint1"/>
   <xacro:joint_setup_block joint_name="lb_joint2"/>
   <xacro:joint_setup_block joint_name="rb_joint1"/>
-  <xacro:joint_setup_block joint_name="rb_joint2"/>
+  <xacro:joint_setup_block joint_name="rb_joint2"/-->
 
   <xacro:macro name="link_setup_block" params="link_name">
     <gazebo reference="${link_name}">
       <kp>1000000.0</kp>
       <kd>1.0</kd>
-      <mu1>0.6</mu1>
-      <mu2>0.6</mu2>
-      <minDepth>0.001</minDepth>
+      <mu1>0.05</mu1>
+      <mu2>0.05</mu2>
+      <minDepth>0.0002</minDepth>
     </gazebo>
   </xacro:macro>
   <xacro:link_setup_block link_name="lf_link2"/>

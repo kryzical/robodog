@@ -2,7 +2,7 @@ puppy:
    # Position Controllers ---------------------------------------
   joint_state_controller:
     type: joint_state_controller/JointStateController
-    publish_rate: 300
+    publish_rate: 100
 
   # Position Controllers ---------------------------------------
   joint1_position_controller:

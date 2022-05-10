@@ -8,10 +8,13 @@
       <arg name="use_sim_time" value="true"/>
       <arg name="headless" value="false"/>
     </include>
-  
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+      <param name="/use_gui" value="false"/> 
+      <rosparam param="/source_list">[/puppy/joint_states]</rosparam>
+    </node>
     <param name="robot_description" command="$(find xacro)/xacro $(find puppy_description)/urdf/puppy.urdf.xacro"/>
 
-    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model puppy -param robot_description -z 0.2 -J lf_joint1 0 -J rf_joint1 0 -J rb_joint1 0 -J lb_joint1 0 -J lf_joint2 0 -J rf_joint2 0 -J rb_joint2 0 -J lb_joint2 0"/>
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model puppy -param robot_description -z 0.1 -J lf_joint1 0.8 -J rf_joint1 0.8 -J rb_joint1 0.8 -J lb_joint1 0.8 -J lf_joint2 0 -J rf_joint2 0 -J rb_joint2 0 -J lb_joint2 0"/>
 
     <rosparam file="$(find puppy_description)/config/gazebo_control.yaml" command="load"/>
 
@@ -25,5 +28,8 @@
                           joint6_position_controller
                           joint7_position_controller
                           joint8_position_controller"/>
-
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+      <param name="publish_rate" value="100"/>
+      <remap from="/joint_states" to="/puppy/joint_states" />
+    </node>
 </launch>
