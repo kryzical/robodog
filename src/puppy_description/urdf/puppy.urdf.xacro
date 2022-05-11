@@ -2,14 +2,16 @@
 <robot name="puppy" xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:include filename="$(find puppy_description)/urdf/puppy.transmission.xacro"/>
   <xacro:include filename="$(find puppy_description)/urdf/puppy.gazebo.xacro"/>
-  <xacro:property name="motor_torque" value="0.1"/>
-  <xacro:property name="motor_vec" value="1"/>
+  <xacro:include filename="materials.xacro" />
+  
+  <xacro:property name="motor_torque" value="0.5"/>
+  <xacro:property name="motor_vec" value="2"/>
 
   <link name="base_footprint" />
   <joint name="base_joint" type="fixed">
     <parent link="base_footprint" />
     <child link="base_link" />
-    <origin xyz="0.0 0.0 0.109" rpy="0 0 0" />
+    <origin xyz="0.0 0.0 0.11" rpy="0 0 0" />
   </joint>
 
   <link
@@ -37,9 +39,7 @@
           filename="package://puppy_description/meshes/base_link.STL" />
       </geometry>
       <material
-        name="">
-        <color
-          rgba="1 1 1 1" />
+        name="black">
       </material>
     </visual>
     <collision>
@@ -77,9 +77,7 @@
           filename="package://puppy_description/meshes/lb_link1.STL" />
       </geometry>
       <material
-        name="">
-        <color
-          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+        name="black">
       </material>
     </visual>
     <collision>
@@ -135,9 +133,7 @@
           filename="package://puppy_description/meshes/lb_link2.STL" />
       </geometry>
       <material
-        name="">
-        <color
-          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+        name="black">
       </material>
     </visual>
     <collision>
@@ -193,9 +189,7 @@
           filename="package://puppy_description/meshes/rb_link1.STL" />
       </geometry>
       <material
-        name="">
-        <color
-          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+        name="black">
       </material>
     </visual>
     <collision>
@@ -251,9 +245,7 @@
           filename="package://puppy_description/meshes/rb_link2.STL" />
       </geometry>
       <material
-        name="">
-        <color
-          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+        name="black">
       </material>
     </visual>
     <collision>
@@ -309,9 +301,7 @@
           filename="package://puppy_description/meshes/rf_link1.STL" />
       </geometry>
       <material
-        name="">
-        <color
-          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+        name="black">
       </material>
     </visual>
     <collision>
@@ -367,9 +357,7 @@
           filename="package://puppy_description/meshes/rf_link2.STL" />
       </geometry>
       <material
-        name="">
-        <color
-          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+        name="black">
       </material>
     </visual>
     <collision>
@@ -425,9 +413,7 @@
           filename="package://puppy_description/meshes/lf_link1.STL" />
       </geometry>
       <material
-        name="">
-        <color
-          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+        name="black">
       </material>
     </visual>
     <collision>
@@ -483,9 +469,7 @@
           filename="package://puppy_description/meshes/lf_link2.STL" />
       </geometry>
       <material
-        name="">
-        <color
-          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+        name="black">
       </material>
     </visual>
     <collision>
@@ -541,9 +525,7 @@
           filename="package://puppy_description/meshes/camera_link.STL" />
       </geometry>
       <material
-        name="">
-        <color
-          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+        name="black">
       </material>
     </visual>
     <collision>
@@ -566,6 +548,158 @@
       link="base_link" />
     <child
       link="camera_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+
+  <link name="lf_link3">
+    <inertial>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+     <mass
+        value="0.0391" />
+      <inertia
+        ixx="3.7713E-012"
+        ixy="0"
+        ixz="0"
+        iyy="3.5422E-12"
+        iyz="0"
+        izz="5.443E-012" />
+    </inertial>
+    <collision>
+      <origin
+        xyz="0.0032 0 0.001"
+        rpy="0 1.57 0" />
+      <geometry>
+        <cylinder radius="0.01" length="0.01"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="rf_link3">
+    <inertial>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+     <mass
+        value="0.0391" />
+      <inertia
+        ixx="3.7713E-012"
+        ixy="0"
+        ixz="0"
+        iyy="3.5422E-12"
+        iyz="0"
+        izz="5.443E-012" />
+    </inertial>
+    <collision>
+      <origin
+        xyz="0.0032 0 0.001"
+        rpy="0 1.57 0" />
+      <geometry>
+        <cylinder radius="0.01" length="0.01"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="lb_link3">
+    <inertial>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+     <mass
+        value="0.0391" />
+      <inertia
+        ixx="3.7713E-012"
+        ixy="0"
+        ixz="0"
+        iyy="3.5422E-12"
+        iyz="0"
+        izz="5.443E-012" />
+    </inertial>
+    <collision>
+      <origin
+        xyz="0.0032 0 0.001"
+        rpy="0 1.57 0" />
+      <geometry>
+        <cylinder radius="0.01" length="0.01"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="rb_link3">
+    <inertial>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+     <mass
+        value="0.0391" />
+      <inertia
+        ixx="3.7713E-012"
+        ixy="0"
+        ixz="0"
+        iyy="3.5422E-12"
+        iyz="0"
+        izz="5.443E-012" />
+    </inertial>
+    <collision>
+      <origin
+        xyz="0.0032 0 0.001"
+        rpy="0 1.57 0" />
+      <geometry>
+        <cylinder radius="0.01" length="0.01"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="lf_joint3"
+    type="fixed">
+    <origin
+      xyz="0 -0.053 -0.053"
+      rpy="0.78 0 0" />
+    <parent
+      link="lf_link2" />
+    <child
+      link="lf_link3" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+
+  <joint name="rf_joint3"
+    type="fixed">
+    <origin
+      xyz="0 -0.053 -0.053"
+      rpy="0.78 0 0" />
+    <parent
+      link="rf_link2" />
+    <child
+      link="rf_link3" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+
+  <joint name="lb_joint3"
+    type="fixed">
+    <origin
+      xyz="0 -0.053 -0.053"
+      rpy="0.78 0 0" />
+    <parent
+      link="lb_link2" />
+    <child
+      link="lb_link3" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+
+  <joint name="rb_joint3"
+    type="fixed">
+    <origin
+      xyz="0 -0.053 -0.053"
+      rpy="0.78 0 0" />
+    <parent
+      link="rb_link2" />
+    <child
+      link="rb_link3" />
     <axis
       xyz="0 0 0" />
   </joint>

@@ -26,15 +26,15 @@
     <gazebo reference="${link_name}">
       <kp>1000000.0</kp>
       <kd>1.0</kd>
-      <mu1>0.05</mu1>
-      <mu2>0.05</mu2>
+      <mu1>0.3</mu1>
+      <mu2>0.3</mu2>
       <minDepth>0.0002</minDepth>
     </gazebo>
   </xacro:macro>
-  <xacro:link_setup_block link_name="lf_link2"/>
-  <xacro:link_setup_block link_name="rf_link2"/>
-  <xacro:link_setup_block link_name="lb_link2"/>
-  <xacro:link_setup_block link_name="rb_link2"/>
+  <xacro:link_setup_block link_name="lf_link3"/>
+  <xacro:link_setup_block link_name="rf_link3"/>
+  <xacro:link_setup_block link_name="lb_link3"/>
+  <xacro:link_setup_block link_name="rb_link3"/>
 
   <!--gazebo reference="lf_link2">
     <mu1>1.0</mu1>

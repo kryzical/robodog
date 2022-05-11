@@ -4,9 +4,10 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
+        - /RobotModel1
         - /TF1
       Splitter Ratio: 0.5
-    Tree Height: 809
+    Tree Height: 787
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -53,7 +54,7 @@ Visualization Manager:
       Value: true
     - Alpha: 1
       Class: rviz/RobotModel
-      Collision Enabled: false
+      Collision Enabled: true
       Enabled: true
       Links:
         All Links Enabled: true
@@ -85,12 +86,22 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        lb_link3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         lf_link1:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
         lf_link2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        lf_link3:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -105,6 +116,11 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        rb_link3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         rf_link1:
           Alpha: 1
           Show Axes: false
@@ -115,12 +131,17 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        rf_link3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
       Name: RobotModel
       Robot Description: robot_description
       TF Prefix: ""
       Update Interval: 0
       Value: true
-      Visual Enabled: true
+      Visual Enabled: false
     - Class: rviz/TF
       Enabled: true
       Frame Timeout: 15
@@ -136,18 +157,27 @@ Visualization Manager:
           Value: true
         lb_link2:
           Value: true
+        lb_link3:
+          Value: true
         lf_link1:
           Value: true
         lf_link2:
+          Value: true
+        lf_link3:
           Value: true
         rb_link1:
           Value: true
         rb_link2:
           Value: true
+        rb_link3:
+          Value: true
         rf_link1:
           Value: true
         rf_link2:
           Value: true
+        rf_link3:
+          Value: true
+      Marker Alpha: 1
       Marker Scale: 0.20000000298023224
       Name: TF
       Show Arrows: true
@@ -160,16 +190,20 @@ Visualization Manager:
               {}
             lb_link1:
               lb_link2:
-                {}
+                lb_link3:
+                  {}
             lf_link1:
               lf_link2:
-                {}
+                lf_link3:
+                  {}
             rb_link1:
               rb_link2:
-                {}
+                rb_link3:
+                  {}
             rf_link1:
               rf_link2:
-                {}
+                rf_link3:
+                  {}
       Update Interval: 0
       Value: true
   Enabled: true
@@ -200,25 +234,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 0.4353868365287781
+      Distance: 0.279979407787323
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
+      Field of View: 0.7853981852531433
       Focal Point:
-        X: -0.06276378780603409
-        Y: 0.02829238586127758
-        Z: 0.052016954869031906
+        X: -0.03506119176745415
+        Y: -0.08589216321706772
+        Z: 0.08431915193796158
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.37479665875434875
+      Pitch: -0.025203395634889603
       Target Frame: <Fixed Frame>
-      Value: Orbit (rviz)
-      Yaw: 6.023600101470947
+      Yaw: 5.765439033508301
     Saved: ~
 Window Geometry:
   Displays:
@@ -226,7 +260,7 @@ Window Geometry:
   Height: 1016
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd000000040000000000000156000003b4fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c0061007900730100000027000003b4000000c900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f0000035afc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003d0000035a000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000007380000003efc0100000002fb0000000800540069006d0065000000000000000738000004f300fffffffb0000000800540069006d00650100000000000004500000000000000000000005dc000003b400000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000400000000000001560000039efc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d0000039e000000c900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f0000035afc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003d0000035a000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000007380000003efc0100000002fb0000000800540069006d0065000000000000000738000004f300fffffffb0000000800540069006d00650100000000000004500000000000000000000005dc0000039e00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
