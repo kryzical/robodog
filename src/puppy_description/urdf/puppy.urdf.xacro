@@ -4,7 +4,7 @@
   <xacro:include filename="$(find puppy_description)/urdf/puppy.gazebo.xacro"/>
   <xacro:include filename="materials.xacro" />
   
-  <xacro:property name="motor_torque" value="0.5"/>
+  <xacro:property name="motor_torque" value="1"/>
   <xacro:property name="motor_vec" value="2"/>
 
   <link name="base_footprint" />
