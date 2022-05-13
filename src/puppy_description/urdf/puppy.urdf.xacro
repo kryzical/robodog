@@ -4,7 +4,7 @@
   <xacro:include filename="$(find puppy_description)/urdf/puppy.gazebo.xacro"/>
   <xacro:include filename="materials.xacro" />
   
-  <xacro:property name="motor_torque" value="1"/>
+  <xacro:property name="motor_torque" value="0.5"/>
   <xacro:property name="motor_vec" value="2"/>
 
   <link name="base_footprint" />
@@ -572,7 +572,7 @@
         xyz="0.0032 0 0.001"
         rpy="0 1.57 0" />
       <geometry>
-        <cylinder radius="0.01" length="0.01"/>
+        <cylinder radius="0.0095" length="0.01"/>
       </geometry>
     </collision>
   </link>
@@ -597,7 +597,7 @@
         xyz="0.0032 0 0.001"
         rpy="0 1.57 0" />
       <geometry>
-        <cylinder radius="0.01" length="0.01"/>
+        <cylinder radius="0.0095" length="0.01"/>
       </geometry>
     </collision>
   </link>
@@ -622,7 +622,7 @@
         xyz="0.0032 0 0.001"
         rpy="0 1.57 0" />
       <geometry>
-        <cylinder radius="0.01" length="0.01"/>
+        <cylinder radius="0.0095" length="0.01"/>
       </geometry>
     </collision>
   </link>
@@ -647,7 +647,7 @@
         xyz="0.0032 0 0.001"
         rpy="0 1.57 0" />
       <geometry>
-        <cylinder radius="0.01" length="0.01"/>
+        <cylinder radius="0.0095" length="0.01"/>
       </geometry>
     </collision>
   </link>

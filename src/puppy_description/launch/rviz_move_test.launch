@@ -4,10 +4,13 @@
     name="model" />
   <arg name="urdf_file" default="$(find xacro)/xacro '$(find puppy_description)/urdf/puppy.urdf.xacro'" />
   <param name="robot_description" command="$(arg urdf_file)" />
-  <node
-    name="robot_state_publisher"
-    pkg="robot_state_publisher"
-    type="robot_state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" >
+    <param name="publish_rate" value="100"/>
+  </node>
+  <!--node
+    name="joint_state_publisher_gui"
+    pkg="joint_state_publisher_gui"
+    type="joint_state_publisher_gui" /-->
   <node
     name="rviz"
     pkg="rviz"

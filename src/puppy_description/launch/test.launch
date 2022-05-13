@@ -10,6 +10,7 @@
     </include>
     <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
       <param name="/use_gui" value="false"/> 
+      <param name="publish_rate" value="100"/>
       <rosparam param="/source_list">[/puppy/joint_states]</rosparam>
     </node>
     <param name="robot_description" command="$(find xacro)/xacro $(find puppy_description)/urdf/puppy.urdf.xacro"/>
