@@ -1,0 +1,8 @@
+prefix=/home/puppy/puppy_sim/devel
+
+Name: puppy_description
+Description: Description of puppy_description
+Version: 1.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

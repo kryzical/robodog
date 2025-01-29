@@ -1,0 +1,8 @@
+prefix=/home/puppy/puppy_sim/devel
+
+Name: map_server
+Description: Description of map_server
+Version: 1.17.1
+Cflags: -I/home/puppy/puppy_sim/src/third_party/navigation/map_server/include
+Libs: -L${prefix}/lib -lmap_server_image_loader
+Requires: roscpp nav_msgs tf2

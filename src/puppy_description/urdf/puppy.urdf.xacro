@@ -13,15 +13,25 @@
     <child link="base_link" />
     <origin xyz="0.0 0.0 0.11" rpy="0 0 0" />
   </joint>
-
+  
+  <link name="base_link" />
+  <joint name="dummy_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="base_dummy" />
+    <origin xyz="0.0 0.0 0.0" rpy="0 0 1.57" />
+  </joint>
+  
   <link
-    name="base_link">
+    name="base_dummy">
     <inertial>
       <origin
         xyz="-0.000281314271092793 -0.00232093824972492 0.0187442604423227"
         rpy="0 0 0" />
       <mass
         value="0.0656002451111466" />
+      <material
+        name="black">
+      </material>
       <inertia
         ixx="0.0001015640290354"
         ixy="5.44665608405109E-10"
@@ -97,7 +107,7 @@
       xyz="0.0420105649539 0.0778693100523862 0.0159880060021007"
       rpy="-0.752 0 0" />
     <parent
-      link="base_link" />
+      link="base_dummy" />
     <child
       link="lb_link1" />
     <axis
@@ -209,7 +219,7 @@
       xyz="-0.0420105649534512 0.0778693100523859 0.0159880060091649"
       rpy="-0.752 0 0" />
     <parent
-      link="base_link" />
+      link="base_dummy" />
     <child
       link="rb_link1" />
     <axis
@@ -321,7 +331,7 @@
       xyz="-0.0420105469986279 -0.0778692767711234 0.0106512951143373"
       rpy="-0.752 0 0" />
     <parent
-      link="base_link" />
+      link="base_dummy" />
     <child
       link="rf_link1" />
     <axis
@@ -433,7 +443,7 @@
       xyz="0.0420105469981795 -0.0778692767711239 0.0106512951072731"
       rpy="-0.752 0 0" />
     <parent
-      link="base_link" />
+      link="base_dummy" />
     <child
       link="lf_link1" />
     <axis
@@ -545,7 +555,7 @@
       xyz="0 -0.100686660929431 0.017109543359257"
       rpy="0.0342537604318887 0 0" />
     <parent
-      link="base_link" />
+      link="base_dummy" />
     <child
       link="camera_link" />
     <axis

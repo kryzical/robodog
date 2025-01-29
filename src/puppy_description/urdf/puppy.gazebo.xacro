@@ -8,20 +8,6 @@
     </plugin>
   </gazebo>
 
-  <!--xacro:macro name="joint_setup_block" params="joint_name">
-    <gazebo reference="${joint_name}">
-      <implicitSpringDamper>1</implicitSpringDamper>
-    </gazebo>
-  </xacro:macro>
-  <xacro:joint_setup_block joint_name="lf_joint1"/>
-  <xacro:joint_setup_block joint_name="lf_joint2"/>
-  <xacro:joint_setup_block joint_name="rf_joint1"/>
-  <xacro:joint_setup_block joint_name="rf_joint2"/>
-  <xacro:joint_setup_block joint_name="lb_joint1"/>
-  <xacro:joint_setup_block joint_name="lb_joint2"/>
-  <xacro:joint_setup_block joint_name="rb_joint1"/>
-  <xacro:joint_setup_block joint_name="rb_joint2"/-->
-
   <xacro:macro name="model_color" params="link_name">
     <gazebo reference="${link_name}">
       <material>Gazebo/Black</material>
@@ -57,10 +43,4 @@
   <xacro:link_setup_block link_name="lb_link3"/>
   <xacro:link_setup_block link_name="rb_link3"/>
 
-  <!--gazebo reference="lf_link2">
-    <mu1>1.0</mu1>
-    <mu2>1.0</mu2>
-    <minDepth>0.0002</minDepth>
-    <kp  value="1000000.0"/>
-    <kd  value="100.0"/-->
 </robot>
