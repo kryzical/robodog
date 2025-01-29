@@ -1,0 +1,38 @@
+# Use ROS 1 Noetic as the base image
+FROM ros:noetic
+
+# Set non-interactive frontend to prevent issues during installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install necessary ROS 1 packages and dependencies
+RUN apt-get update && apt-get install -y \
+    ros-noetic-catkin \
+    ros-noetic-gazebo-ros \
+    ros-noetic-joint-state-publisher \
+    ros-noetic-robot-state-publisher \
+    ros-noetic-rviz \
+    ros-noetic-xacro \
+    python3-rosdep \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Initialize rosdep
+RUN rosdep update && rosdep fix-permissions
+
+# Create a Catkin workspace inside the container
+WORKDIR /catkin_ws
+RUN mkdir -p /catkin_ws/src
+
+# Copy your ROS 1 project into the container
+COPY . /catkin_ws/src/
+
+# Build the Catkin workspace
+RUN /bin/bash -c "source /opt/ros/noetic/setup.bash && \
+    cd /catkin_ws && catkin_make"
+
+# Source the ROS environment automatically when the container starts
+RUN echo "source /opt/ros/noetic/setup.bash" >> /root/.bashrc
+RUN echo "source /catkin_ws/devel/setup.bash" >> /root/.bashrc
+
+# Set the default command to start a Bash shell
+CMD ["bash"]
