@@ -2,8 +2,8 @@
 <launch>
   <arg
     name="model" />
-  <arg name="urdf_file" default="$(find xacro)/xacro '$(find puppy_description)/urdf/puppy.urdf.xacro'" />
-  <param name="robot_description" command="$(arg urdf_file)" />
+  <arg name="urdf_file" default="$(find puppy_description)/urdf/puppy.urdf.xacro" />
+  <param name="robot_description" command="$(find xacro)/xacro $(arg urdf_file)" />
   <node
     name="joint_state_publisher_gui"
     pkg="joint_state_publisher_gui"

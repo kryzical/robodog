@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Include the Gazebo launch file -->
+  <include file="$(find puppy_description)/launch/gazebo.launch" />
+
+  <!-- Include the RViz launch file -->
+  <include file="$(find puppy_description)/launch/rviz_with_urdf.launch" />
+</launch>

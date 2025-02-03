@@ -16,5 +16,4 @@
     "mounts": [
       "source=${localWorkspaceFolder},target=/catkin_ws/src,type=bind"
     ]
-  }
-  
+}
