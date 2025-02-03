@@ -1,8 +1,0 @@
-prefix=/home/puppy/puppy_sim/devel
-
-Name: navfn
-Description: Description of navfn
-Version: 1.17.1
-Cflags: -I/home/puppy/puppy_sim/devel/include -I/home/puppy/puppy_sim/src/third_party/navigation/navfn/include
-Libs: -L${prefix}/lib -lnavfn
-Requires: geometry_msgs message_runtime nav_core nav_msgs pluginlib roscpp sensor_msgs visualization_msgs

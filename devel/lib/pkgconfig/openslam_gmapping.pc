@@ -1,8 +1,0 @@
-prefix=/home/puppy/puppy_sim/devel
-
-Name: openslam_gmapping
-Description: Description of openslam_gmapping
-Version: 0.2.1
-Cflags: -I/home/puppy/puppy_sim/src/third_party/slam_gmapping-devel/openslam_gmapping/include -I/home/puppy/puppy_sim/devel/include
-Libs: -L${prefix}/lib -lutils -lsensor_base -lsensor_odometry -lsensor_range -llog -lconfigfile -lscanmatcher -lgridfastslam
-Requires: 
