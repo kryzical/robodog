@@ -1,8 +1,0 @@
-prefix=/home/puppy/puppy_sim/install
-
-Name: puppy_slam
-Description: Description of puppy_slam
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
