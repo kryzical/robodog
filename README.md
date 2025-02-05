@@ -1,3 +1,4 @@
-ripped robot dog file from vmware pro
+files from the google drive arthur posted
 
-uses noetic as its the last ROS1 distro to be released
+has python code relevant to robodog movement and etc
+
