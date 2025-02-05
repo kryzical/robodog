@@ -1,0 +1,17 @@
+ROS is an operating system that handles most of the complex overhead that is found in robotics. Such as interpolating programs, sensor communication. These processes would generally take a lot of resources whereas ROS attempts to minimize that.
+
+* PuppyPi uses ROS1 ver. Noetic
+
+How ROS Runs
+- files are in packages and manifests (package.xml)
+	* a ROS package is a collection of code, data and documentation.
+	* the manifest/package.xml contains information related to the ros project such as version numbers, authors, maintainers and dependencies etc.
+
+
+ROS TERMS
+
+- ROS Master: The connection between nodes
+- NODE: The smallest unit of ROS, is an exe file, uses topic and service to communicate with other nodes 
+- MESSAGE: The variables of int, float, boolean etc
+- TOPIC: One way ASYNC communication. They are named which allows NODES to exchange MESSAGES. Essentially, nodes don't know who they are or who they are communicating. The nodes subscribe to the relevant topic and then publish to that topic. 
+ 
