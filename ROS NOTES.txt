@@ -1,3 +1,17 @@
+NOTES FOR PUPPYPI
+-uses debian 12 (bookworm)
+-ROS Noetic
+	* As of 3 months ago, there are several packages that are not updated to support debian 12 w/ noetic
+	
+-catkin folder is aptly named "ros_catkin_ws"
+- idk what this step means but : 
+echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+
+"George"
+
+
+
 ROS is an operating system that handles most of the complex overhead that is found in robotics. Such as interpolating programs, sensor communication. These processes would generally take a lot of resources whereas ROS attempts to minimize that.
 
 * PuppyPi uses ROS1 ver. Noetic
