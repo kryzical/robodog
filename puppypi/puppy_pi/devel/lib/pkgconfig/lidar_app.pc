@@ -1,0 +1,8 @@
+prefix=/home/pi/puppy_pi/devel
+
+Name: lidar_app
+Description: Description of lidar_app
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

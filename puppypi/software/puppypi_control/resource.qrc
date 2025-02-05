@@ -1,0 +1,13 @@
+<RCC>
+  <qresource prefix="/">
+    <file>resource.qrc</file>
+    <file>images/stop.png</file>
+    <file>images/play.png</file>
+    <file>images/puppy1.png</file>
+    <file>images/puppy2.png</file>
+    <file>images/index.png</file>
+    <file>images/Puppy.png</file>
+    <file>images/PuppyPi.png</file>
+  </qresource>
+  <qresource prefix="newPrefix"/>
+</RCC>

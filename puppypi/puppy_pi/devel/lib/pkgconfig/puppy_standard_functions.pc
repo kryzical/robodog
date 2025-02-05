@@ -1,0 +1,8 @@
+prefix=/home/pi/puppy_pi/devel
+
+Name: puppy_standard_functions
+Description: Description of puppy_standard_functions
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

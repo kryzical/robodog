@@ -1,0 +1,2 @@
+set(robot_localization_MESSAGE_FILES "")
+set(robot_localization_SERVICE_FILES "/home/pi/puppy_pi/src/third_party/robot_localization/srv/GetState.srv;/home/pi/puppy_pi/src/third_party/robot_localization/srv/SetDatum.srv;/home/pi/puppy_pi/src/third_party/robot_localization/srv/SetPose.srv;/home/pi/puppy_pi/src/third_party/robot_localization/srv/SetUTMZone.srv;/home/pi/puppy_pi/src/third_party/robot_localization/srv/ToggleFilterProcessing.srv;/home/pi/puppy_pi/src/third_party/robot_localization/srv/FromLL.srv;/home/pi/puppy_pi/src/third_party/robot_localization/srv/ToLL.srv")
