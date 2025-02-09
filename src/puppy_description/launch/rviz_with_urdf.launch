@@ -1,18 +1,19 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="model" />
+  <param name="robot_description" command="$(find xacro)/xacro $(find puppy_description)/urdf/puppy.urdf.xacro"/>
+  
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="use_gui" value="true"/>
+    <param name="rate" value="50"/>
+  </node>
 
-  <arg name="urdf_file" default="$(find puppy_description)/urdf/puppy.urdf.xacro" />
-  <param name="robot_description" command="$(find xacro)/xacro $(arg urdf_file)" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="50.0"/>
+  </node>
 
-  <node
-    name="robot_state_publisher"
-    pkg="robot_state_publisher"
-    type="robot_state_publisher" />
-    
-  <node
-    name="rviz"
-    pkg="rviz"
-    type="rviz"
-    args="-d $(find puppy_description)/rviz/mapping.rviz" /> 
+  <node pkg="tf" type="static_transform_publisher" name="base_to_footprint" 
+        args="0 0 0 0 0 0 1 base_footprint base_link 100"/>
+
+  <node name="rviz" pkg="rviz" type="rviz" 
+        args="-d $(find puppy_description)/rviz/mapping.rviz"/>
 </launch>
