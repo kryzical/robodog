@@ -26,7 +26,7 @@
       <geometry>
         <mesh filename="package://puppy_description/meshes/base_link.STL"/>
       </geometry>
-      <material name="black"/>
+      <material name="white"/>
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -35,6 +35,17 @@
       </geometry>
     </collision>
   </link>
+  <!-- Gazebo override for base_link -->
+  <gazebo reference="base_link">
+    <visual>
+      <material>
+        <ambient>1 1 1 1</ambient>
+        <diffuse>1 1 1 1</diffuse>
+        <specular>1 1 1 1</specular>
+        <emissive>0 0 0 1</emissive>
+      </material>
+    </visual>
+  </gazebo>
   
   <link
     name="lb_link1">
@@ -61,7 +72,7 @@
           filename="package://puppy_description/meshes/lb_link1.STL" />
       </geometry>
       <material
-        name="black">
+        name="white">
       </material>
     </visual>
     <collision>
@@ -74,6 +85,16 @@
       </geometry>
     </collision>
   </link>
+  <gazebo reference="lb_link1">
+    <visual>
+      <material>
+        <ambient>1 1 1 1</ambient>
+        <diffuse>1 1 1 1</diffuse>
+        <specular>1 1 1 1</specular>
+        <emissive>0 0 0 1</emissive>
+      </material>
+    </visual>
+  </gazebo>
   <joint
     name="lb_joint1"
     type="revolute">
@@ -117,7 +138,7 @@
           filename="package://puppy_description/meshes/lb_link2.STL" />
       </geometry>
       <material
-        name="black">
+        name="white">
       </material>
     </visual>
     <collision>
@@ -130,6 +151,16 @@
       </geometry>
     </collision>
   </link>
+  <gazebo reference="lb_link2">
+    <visual>
+      <material>
+        <ambient>1 1 1 1</ambient>
+        <diffuse>1 1 1 1</diffuse>
+        <specular>1 1 1 1</specular>
+        <emissive>0 0 0 1</emissive>
+      </material>
+    </visual>
+  </gazebo>
   <joint
     name="lb_joint2"
     type="revolute">
@@ -173,7 +204,7 @@
           filename="package://puppy_description/meshes/rb_link1.STL" />
       </geometry>
       <material
-        name="black">
+        name="white">
       </material>
     </visual>
     <collision>
@@ -186,6 +217,16 @@
       </geometry>
     </collision>
   </link>
+  <gazebo reference="rb_link1">
+    <visual>
+      <material>
+        <ambient>1 1 1 1</ambient>
+        <diffuse>1 1 1 1</diffuse>
+        <specular>1 1 1 1</specular>
+        <emissive>0 0 0 1</emissive>
+      </material>
+    </visual>
+  </gazebo>
   <joint
     name="rb_joint1"
     type="revolute">
@@ -229,7 +270,7 @@
           filename="package://puppy_description/meshes/rb_link2.STL" />
       </geometry>
       <material
-        name="black">
+        name="white">
       </material>
     </visual>
     <collision>
@@ -242,6 +283,16 @@
       </geometry>
     </collision>
   </link>
+  <gazebo reference="rb_link2">
+    <visual>
+      <material>
+        <ambient>1 1 1 1</ambient>
+        <diffuse>1 1 1 1</diffuse>
+        <specular>1 1 1 1</specular>
+        <emissive>0 0 0 1</emissive>
+      </material>
+    </visual>
+  </gazebo>
   <joint
     name="rb_joint2"
     type="revolute">
@@ -285,7 +336,7 @@
           filename="package://puppy_description/meshes/rf_link1.STL" />
       </geometry>
       <material
-        name="black">
+        name="white">
       </material>
     </visual>
     <collision>
@@ -298,6 +349,16 @@
       </geometry>
     </collision>
   </link>
+  <gazebo reference="rf_link1">
+    <visual>
+      <material>
+        <ambient>1 1 1 1</ambient>
+        <diffuse>1 1 1 1</diffuse>
+        <specular>1 1 1 1</specular>
+        <emissive>0 0 0 1</emissive>
+      </material>
+    </visual>
+  </gazebo>
   <joint
     name="rf_joint1"
     type="revolute">
@@ -341,7 +402,7 @@
           filename="package://puppy_description/meshes/rf_link2.STL" />
       </geometry>
       <material
-        name="black">
+        name="white">
       </material>
     </visual>
     <collision>
@@ -354,6 +415,16 @@
       </geometry>
     </collision>
   </link>
+  <gazebo reference="rf_link2">
+    <visual>
+      <material>
+        <ambient>1 1 1 1</ambient>
+        <diffuse>1 1 1 1</diffuse>
+        <specular>1 1 1 1</specular>
+        <emissive>0 0 0 1</emissive>
+      </material>
+    </visual>
+  </gazebo>
   <joint
     name="rf_joint2"
     type="revolute">
@@ -397,7 +468,7 @@
           filename="package://puppy_description/meshes/lf_link1.STL" />
       </geometry>
       <material
-        name="black">
+        name="white">
       </material>
     </visual>
     <collision>
@@ -410,6 +481,16 @@
       </geometry>
     </collision>
   </link>
+  <gazebo reference="lf_link1">
+    <visual>
+      <material>
+        <ambient>1 1 1 1</ambient>
+        <diffuse>1 1 1 1</diffuse>
+        <specular>1 1 1 1</specular>
+        <emissive>0 0 0 1</emissive>
+      </material>
+    </visual>
+  </gazebo>
   <joint
     name="lf_joint1"
     type="revolute">
@@ -453,7 +534,7 @@
           filename="package://puppy_description/meshes/lf_link2.STL" />
       </geometry>
       <material
-        name="black">
+        name="white">
       </material>
     </visual>
     <collision>
@@ -466,6 +547,16 @@
       </geometry>
     </collision>
   </link>
+  <gazebo reference="lf_link2">
+    <visual>
+      <material>
+        <ambient>1 1 1 1</ambient>
+        <diffuse>1 1 1 1</diffuse>
+        <specular>1 1 1 1</specular>
+        <emissive>0 0 0 1</emissive>
+      </material>
+    </visual>
+  </gazebo>
   <joint
     name="lf_joint2"
     type="revolute">
@@ -509,7 +600,7 @@
           filename="package://puppy_description/meshes/camera_link.STL" />
       </geometry>
       <material
-        name="black">
+        name="white">
       </material>
     </visual>
     <collision>
@@ -522,6 +613,16 @@
       </geometry>
     </collision>
   </link>
+  <gazebo reference="camera_link">
+    <visual>
+      <material>
+        <ambient>1 1 1 1</ambient>
+        <diffuse>1 1 1 1</diffuse>
+        <specular>1 1 1 1</specular>
+        <emissive>0 0 0 1</emissive>
+      </material>
+    </visual>
+  </gazebo>
   <joint
     name="camera_joint"
     type="fixed">
@@ -687,4 +788,10 @@
     <axis
       xyz="0 0 0" />
   </joint>
+
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/puppy</robotNamespace>
+    </plugin>
+  </gazebo>
 </robot>
