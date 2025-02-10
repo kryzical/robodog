@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-noetic-joint-state-publisher-gui \
     ros-noetic-robot-state-publisher \
     ros-noetic-rviz \
+    ros-noetic-image-view \
     ros-noetic-xacro \
     ros-noetic-ros-control \
     ros-noetic-ros-controllers \
