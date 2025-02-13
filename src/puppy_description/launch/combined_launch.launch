@@ -4,4 +4,6 @@
   
   <!-- Include the camera view launch file -->
   <include file="$(find puppy_description)/launch/camera_view.launch" />
+  <!-- include gazebo launch file -->
+  <include file="$(find puppy_description)/launch/gazebo_with_urdf.launch"/>
 </launch>
