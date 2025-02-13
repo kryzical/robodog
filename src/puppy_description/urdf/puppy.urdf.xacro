@@ -832,7 +832,7 @@
       <parent link="${parent_link}"/>
       <child link="${name}_link"/>
       <!-- Tilt camera downward (adjust pitch as needed) -->
-      <origin xyz="0 0 0.2" rpy="-0.5 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 -1.57"/>
     </joint>
     <gazebo reference="${name}_link">
       <sensor type="camera" name="${name}_camera">
