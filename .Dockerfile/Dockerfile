@@ -4,16 +4,23 @@ FROM ros:noetic-ros-base
 # Set shell once at the beginning
 SHELL ["/bin/bash", "-c"]
 
-# Install curl to enable fetching remote resources
-RUN apt-get update && apt-get install -y curl
+# # Install curl to enable fetching remote resources
+# RUN apt-get update && apt-get install -y curl
 
-# Add NVIDIA Docker repository for Ubuntu 20.04 (adjust if using a different distro)
-RUN distribution=$(. /etc/os-release; echo $ID$VERSION_ID) && \
-    curl -fsSL https://nvidia.github.io/nvidia-docker/gpgkey | apt-key add - && \
-    curl -fsSL https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | tee /etc/apt/sources.list.d/nvidia-docker.list && \
-    apt-get update && \
-    apt-get install -y nvidia-container-toolkit && \
-    rm -rf /var/lib/apt/lists/*
+# # Add NVIDIA Docker repository for Ubuntu 20.04 (adjust if using a different distro)
+# RUN distribution=$(. /etc/os-release; echo $ID$VERSION_ID) && \
+#     curl -fsSL https://nvidia.github.io/nvidia-docker/gpgkey | apt-key add - && \
+#     curl -fsSL https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | tee /etc/apt/sources.list.d/nvidia-docker.list && \
+#     apt-get update && \
+#     apt-get install -y nvidia-container-toolkit && \
+#     rm -rf /var/lib/apt/lists/*
+
+# OPTIONAL: Uncomment for AMD (ROCm) support installation
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#    rocm-dkms \
+#    rocm-dev && \
+#    rm -rf /var/lib/apt/lists/*
+# ENV ROCM_VISIBLE_DEVICES=all
 
 # Install required packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -34,7 +41,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
 
-# Set environment variables for display (gpu runtime is provided by the host)
+# Set environment variables for display and NVIDIA GPU support.
+# For AMD GPUs (with ROCm) the environment variable ROCM_VISIBLE_DEVICES (if set in the optional section) is used.
 ENV DISPLAY=:0 \
     QT_X11_NO_MITSHM=1 \
     NVIDIA_VISIBLE_DEVICES=all \
