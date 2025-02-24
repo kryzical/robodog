@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Set environment variables so Gazebo locates models and worlds within the package -->
+    <env name="GAZEBO_MODEL_PATH" value="$(find puppy_description)/models:$GAZEBO_MODEL_PATH"/>
+    <env name="GAZEBO_RESOURCE_PATH" value="$(find puppy_description)/worlds:$GAZEBO_RESOURCE_PATH"/>
+    
+    <!-- Launch Gazebo with empty world first -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="verbose" value="true"/>
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="true"/>
+        <arg name="headless" value="false"/>
+        <arg name="debug" value="false"/>
+    </include>
+
+    <!-- Load robot description -->
+    <param name="robot_description" command="$(find xacro)/xacro $(find puppy_description)/urdf/puppy.urdf.xacro"/>
+
+    <!-- Spawn the robot in Gazebo -->
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+          args="-urdf -model puppy -param robot_description -z 0.1"/>
+
+    <!-- Load controller configuration -->
+    <rosparam file="$(find puppy_description)/config/gazebo_control.yaml" command="load"/>
+
+    <!-- Start joint state controller -->
+    <node name="joint_state_controller_spawner" pkg="controller_manager" type="spawner" 
+          args="joint_state_controller" ns="/puppy" />
+
+    <!-- Start position controllers -->
+    <node name="position_controllers_spawner" pkg="controller_manager" type="spawner" 
+          args="joint1_position_controller
+                joint2_position_controller
+                joint3_position_controller
+                joint4_position_controller
+                joint5_position_controller
+                joint6_position_controller
+                joint7_position_controller
+                joint8_position_controller"
+          ns="/puppy" />
+
+    <!-- Robot state publisher -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+      <param name="publish_rate" value="100"/>
+      <remap from="/joint_states" to="/puppy/joint_states" />
+    </node>
+
+    <!-- Run walking script -->
+    <node name="walking_node" pkg="puppy_description" type="walking.py" output="screen" 
+          launch-prefix="bash -c 'sleep 5; $0 $@'" />
+
+    <!-- Unpause physics after everything is loaded -->
+    <node name="unpause_physics" pkg="rosservice" type="rosservice" args="call --wait /gazebo/unpause_physics"/>
+
+</launch>
