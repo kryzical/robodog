@@ -34,7 +34,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-noetic-xacro \
     ros-noetic-ros-control \
     ros-noetic-ros-controllers \
-    nvidia-cuda-toolkit \
+    ros-noetic-gazebo-ros-control \
     x11-apps \
     x11-xserver-utils \
     xauth \
