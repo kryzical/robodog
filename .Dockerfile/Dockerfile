@@ -4,7 +4,18 @@ FROM ros:noetic-ros-base
 # Set shell once at the beginning
 SHELL ["/bin/bash", "-c"]
 
-# Install required packages including joint_state_publisher
+# Install curl to enable fetching remote resources
+RUN apt-get update && apt-get install -y curl
+
+# Add NVIDIA Docker repository for Ubuntu 20.04 (adjust if using a different distro)
+RUN distribution=$(. /etc/os-release; echo $ID$VERSION_ID) && \
+    curl -fsSL https://nvidia.github.io/nvidia-docker/gpgkey | apt-key add - && \
+    curl -fsSL https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | tee /etc/apt/sources.list.d/nvidia-docker.list && \
+    apt-get update && \
+    apt-get install -y nvidia-container-toolkit && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install required packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-catkin-tools \
     ros-noetic-gazebo-ros-pkgs \
@@ -16,12 +27,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-noetic-xacro \
     ros-noetic-ros-control \
     ros-noetic-ros-controllers \
+    nvidia-cuda-toolkit \
     x11-apps \
     x11-xserver-utils \
     xauth \
     && rm -rf /var/lib/apt/lists/* \
     && echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
 
-# Set environment variables together
+# Set environment variables for display (gpu runtime is provided by the host)
 ENV DISPLAY=:0 \
-    QT_X11_NO_MITSHM=1
+    QT_X11_NO_MITSHM=1 \
+    NVIDIA_VISIBLE_DEVICES=all \
+    NVIDIA_DRIVER_CAPABILITIES=all
