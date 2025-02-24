@@ -1,0 +1,17 @@
+Visualization Manager:
+  Class: "rviz/VisualizationManager"
+  Fixed Frame: "base_link"
+  Displays:
+    - Name: "Camera Image"
+      Class: "rviz/Image"
+      Image Topic: "/head_camera/image_raw"
+      # ...existing image display properties...
+    - Name: "Markers"
+      Class: "rviz/Marker"
+      # ...configure marker properties as needed...
+# ...existing configuration...
+Panels:
+  - Class: "rviz/DisplaysPanel"
+  - Class: "rviz/SelectionPanel"
+  - Class: "rviz/ToolPropertiesPanel"
+  - Class: "rviz/TimePanel"

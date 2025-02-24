@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Load URDF with gazebo_ros_control plugin -->
+  <param name="robot_description" command="$(find xacro)/xacro $(find puppy_description)/urdf/puppy.urdf.xacro"/>
+  
+  <!-- Spawn the robot in Gazebo -->
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" output="screen"
+        args="-param robot_description -urdf -model puppy" />
+  
+  <!-- Insert an explicit delay (e.g. 10 seconds) -->
+  <node pkg="rosbash" type="sleep" name="delay_node" args="10" output="screen"/>
+  
+  <!-- Load the controller configuration -->
+  <rosparam file="$(find puppy_description)/config/gazebo_control.yaml" command="load"/>
+
+  <!-- Start controllers (update the list to include all your joints) -->
+  <!-- If using namespace /puppy, prepend it to controller names or remap accordingly -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner"
+        args="/puppy/joint_state_controller /puppy/joint1_position_controller /puppy/joint2_position_controller ..." />
+  
+  <!-- Launch Gazebo world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch"/>
+</launch>
