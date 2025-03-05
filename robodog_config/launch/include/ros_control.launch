@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="robot_name" default="robodog"/>
+    <arg name="hardware_connected" default="false"/>
+    
+    <!-- Load joint controller configurations from YAML file -->
+    <rosparam file="$(find robodog_config)/config/ros_control/ros_control.yaml" command="load"/>
+
+    <!-- Load the controllers -->
+    <node name="controller_spawner" pkg="controller_manager"
+          type="spawner" respawn="false"
+          output="screen" ns="/$(arg robot_name)"
+          args="joint_states_controller
+                joint_group_position_controller"/>
+
+    <!-- Convert joint states to TF transforms -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" 
+          type="robot_state_publisher" respawn="false" output="screen">
+        <remap from="/joint_states" to="/$(arg robot_name)/joint_states" />
+    </node>
+</launch>

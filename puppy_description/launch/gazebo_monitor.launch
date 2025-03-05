@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- First include the standard Gazebo launch file -->
+    <include file="$(find puppy_description)/launch/gazebo.launch" />
+    
+    <!-- Additional joint data visualization node with real-time plots -->
+    <!-- <node name="joint_state_monitor" pkg="rqt_plot" type="rqt_plot" output="screen"
+          args="/puppy/joint_states/position[0] /puppy/joint_states/position[1] /puppy/joint_states/position[2] /puppy/joint_states/position[3]"
+          launch-prefix="bash -c 'sleep 12; $0 $@'" /> -->
+</launch>

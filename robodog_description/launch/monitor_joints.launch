@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Start the joint state publisher GUI -->
+  <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" output="screen">
+    <!-- Subscribe to the joint states coming from the robot -->
+    <remap from="joint_states" to="/puppy/joint_states"/>
+    <param name="rate" value="30"/>
+    <param name="use_gui" value="true"/>
+    <!-- Makes sliders show current positions rather than controlling them -->
+    <param name="use_mimic" value="false"/>
+    <param name="zeros/lf_joint1" value="0.0"/>
+    <param name="zeros/lf_joint2" value="0.0"/>
+    <param name="zeros/rf_joint1" value="0.0"/>
+    <param name="zeros/rf_joint2" value="0.0"/>
+    <param name="zeros/lb_joint1" value="0.0"/>
+    <param name="zeros/lb_joint2" value="0.0"/>
+    <param name="zeros/rb_joint1" value="0.0"/>
+    <param name="zeros/rb_joint2" value="0.0"/>
+  </node>
+  
+  <!-- Additional joint data visualization node -->
+  <!-- Commented out to disable rqt_plot window
+  <node name="joint_state_monitor" pkg="rqt_plot" type="rqt_plot" output="screen"
+        args="/puppy/joint_states/position[0] /puppy/joint_states/position[1] /puppy/joint_states/position[2] /puppy/joint_states/position[3]"
+        launch-prefix="bash -c 'sleep 2; $0 $@'" />
+  -->
+</launch>

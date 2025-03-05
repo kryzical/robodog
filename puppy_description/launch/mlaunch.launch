@@ -1,0 +1,9 @@
+<launch>
+  <!-- Include the launch file that spawns RViz and loads URDF -->
+  <!-- <include file="$(find puppy_description)/launch/rviz_with_urdf.launch" />
+   -->
+  <!-- Include the camera view launch file -->
+  <include file="$(find puppy_description)/launch/camera_view.launch" />
+  <!-- include gazebo launch file -->
+  <include file="$(find puppy_description)/launch/gazebo_with_urdf.launch"/>
+</launch>

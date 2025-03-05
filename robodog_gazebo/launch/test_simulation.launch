@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Launch the main simulation -->
+    <include file="$(find robodog_gazebo)/launch/gazebo.launch">
+        <arg name="world_name" value="default"/>
+        <arg name="gui" value="true"/>
+        <arg name="paused" value="true"/>
+    </include>
+
+    <!-- Launch RViz for visualization -->
+    <include file="$(find robodog_gazebo)/launch/rviz.launch" />
+
+    <!-- Load test parameters -->
+    <rosparam command="load" file="$(find robodog_gazebo)/config/robot_params.yaml" />
+    <rosparam command="load" file="$(find robodog_gazebo)/config/gazebo_controller_plugin.yaml" />
+
+    <!-- Initialize robot pose -->
+    <node name="robot_pose_publisher" pkg="robodog_gazebo" type="robot_pose_publisher.py" output="screen"/>
+
+    <!-- Start joint state publisher GUI for manual testing -->
+    <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui">
+        <remap from="/joint_states" to="/robodog/joint_states"/>
+    </node>
+
+    <!-- Test movement commands publisher -->
+    <node name="test_movement" pkg="robodog_gazebo" type="test_movement.py" output="screen"/>
+</launch>

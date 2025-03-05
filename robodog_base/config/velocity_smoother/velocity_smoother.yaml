@@ -1,0 +1,22 @@
+# Maximum acceleration limits
+accel_lim_x: 1.0
+accel_lim_y: 1.0
+accel_lim_th: 2.0
+
+# Maximum deceleration limits
+decel_lim_x: 1.0
+decel_lim_y: 1.0
+decel_lim_th: 2.0
+
+# Velocity feedback
+speed_lim_x: 0.5
+speed_lim_y: 0.25
+speed_lim_th: 1.0
+
+# Parameters for velocity smoothing
+frequency: 20.0
+decel_factor: 1.0
+
+# Input and output topics
+input_topic: "cmd_vel"
+output_topic: "cmd_vel_smoothed"

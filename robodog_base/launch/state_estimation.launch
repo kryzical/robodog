@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Start EKF for sensor fusion -->
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization" clear_params="true">
+        <rosparam command="load" file="$(find robodog_base)/config/ekf/ekf.yaml" />
+    </node>
+
+    <!-- Start velocity smoother -->
+    <node pkg="yocs_velocity_smoother" type="velocity_smoother" name="velocity_smoother" output="screen">
+        <rosparam command="load" file="$(find robodog_base)/config/velocity_smoother/velocity_smoother.yaml" />
+        <remap from="velocity_smoother/raw_cmd_vel" to="cmd_vel"/>
+        <remap from="velocity_smoother/smooth_cmd_vel" to="cmd_vel_smoothed"/>
+        <remap from="velocity_smoother/robot_cmd_vel" to="robot_cmd_vel"/>
+        <remap from="velocity_smoother/odometry" to="odom"/>
+    </node>
+</launch>

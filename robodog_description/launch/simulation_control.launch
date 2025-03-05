@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Launch Gazebo with the puppy model -->
+  <include file="$(find puppy_description)/launch/gazebo_with_urdf.launch"/>
+  
+  <!-- Launch RViz to visualize the robot
+  <include file="$(find puppy_description)/launch/rviz_with_urdf.launch"/> -->
+  
+  <!-- Launch the simulation-only controller -->
+  <node name="simulation_controller" pkg="puppy_description" type="unified_sim.py" output="screen"/>
+  
+  <!-- Launch joint state monitoring (optional)
+  <include file="$(find puppy_description)/launch/monitor_joints.launch"/> -->
+</launch>

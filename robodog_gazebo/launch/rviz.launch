@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Launch RViz with our configuration -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find robodog_description)/rviz/robot_viz.rviz" required="true">
+        <remap from="/joint_states" to="/robodog/joint_states"/>
+    </node>
+</launch>

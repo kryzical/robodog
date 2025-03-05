@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Arguments for world loading -->
+    <arg name="world_name" default="default"/>
+    <arg name="paused" default="true"/>
+    <arg name="gui" default="true"/>
+    
+    <!-- Arguments for robot spawning -->
+    <arg name="x" default="0"/>
+    <arg name="y" default="0"/>
+    <arg name="z" default="0.5"/>
+    <arg name="roll" default="0"/>
+    <arg name="pitch" default="0"/>
+    <arg name="yaw" default="0"/>
+
+    <!-- Load world -->
+    <include file="$(find robodog_gazebo)/launch/spawn_world.launch">
+        <arg name="world_name" value="$(arg world_name)"/>
+        <arg name="paused" value="$(arg paused)"/>
+        <arg name="gui" value="$(arg gui)"/>
+    </include>
+
+    <!-- Spawn robot -->
+    <include file="$(find robodog_gazebo)/launch/spawn_robot.launch">
+        <arg name="x" value="$(arg x)"/>
+        <arg name="y" value="$(arg y)"/>
+        <arg name="z" value="$(arg z)"/>
+        <arg name="roll" value="$(arg roll)"/>
+        <arg name="pitch" value="$(arg pitch)"/>
+        <arg name="yaw" value="$(arg yaw)"/>
+    </include>
+
+    <!-- Load Gazebo ROS Control -->
+    <rosparam file="$(find robodog_gazebo)/config/gazebo_ros_control.yaml" command="load"/>
+    
+    <!-- Launch robot control and state estimation -->
+    <include file="$(find robodog_base)/launch/base.launch"/>
+    
+    <!-- Start sensors -->
+    <node name="imu_sensor" pkg="robodog_gazebo" type="imu_sensor.py" output="screen"/>
+    <node name="odometry" pkg="robodog_gazebo" type="odometry.py" output="screen"/>
+    
+    <!-- Unpause simulation after everything is loaded -->
+    <node name="unpause_physics" pkg="rosservice" type="rosservice" 
+          args="call --wait /gazebo/unpause_physics"
+          launch-prefix="bash -c 'sleep 5; $0 $@'"/>
+</launch>

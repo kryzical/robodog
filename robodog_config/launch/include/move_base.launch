@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+        <rosparam file="$(find robodog_config)/config/move_base/move_base_params.yaml" command="load" />
+        <rosparam file="$(find robodog_config)/config/move_base/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find robodog_config)/config/move_base/local_costmap_params.yaml" command="load" />
+        
+        <!-- Remapping topics -->
+        <remap from="cmd_vel" to="cmd_vel/raw"/>
+        <remap from="odom" to="odom/raw"/>
+    </node>
+</launch>
