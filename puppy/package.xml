@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>puppy</name>
+  <version>0.1.0</version>
+  <description>A metapackage for puppy robot dog project</description>
+
+  <maintainer email="your_email@example.com">Your Name</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>puppy_description</exec_depend>
+  <exec_depend>puppy_base</exec_depend>
+  <exec_depend>puppy_bringup</exec_depend>
+  <exec_depend>puppy_config</exec_depend>
+  <exec_depend>puppy_gazebo</exec_depend>
+  <exec_depend>puppy_msgs</exec_depend>
+  <exec_depend>puppy_navigation</exec_depend>
+
+  <export>
+    <metapackage/>
+  </export>
+</package>

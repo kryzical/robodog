@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>puppy_navigation</name>
+  <version>0.1.0</version>
+  <description>Navigation package for puppy robot</description>
+  <maintainer email="you@example.com">Your Name</maintainer>
+  <license>MIT</license>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <depend>roscpp</depend>
+  <depend>rospy</depend>
+  <depend>tf2_ros</depend>
+  <depend>nav_msgs</depend>
+  <depend>move_base</depend>
+  <depend>map_server</depend>
+  <depend>amcl</depend>
+  
+  <exec_depend>puppy_description</exec_depend>
+  <exec_depend>puppy_base</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>rviz</exec_depend>
+  
+  <export>
+  </export>
+</package>
