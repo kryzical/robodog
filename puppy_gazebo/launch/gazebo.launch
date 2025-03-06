@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <launch>
+    <!-- Start Gazebo paused to prevent movement during initialization -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
       <arg name="world_name" value="$(find puppy_description)/worlds/empty.world"/>
       <arg name="debug" value="false" />
@@ -15,43 +16,53 @@
     
     <param name="robot_description" command="$(find xacro)/xacro $(find puppy_description)/urdf/puppy.urdf.xacro"/>
 
-    <!-- Spawn the robot with a more stable initial position -->
-    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" 
-          args="-urdf -model puppy -param robot_description -z 0.3
-                -J lf_joint1 -0.2 -J lf_joint2 0.4
-                -J rf_joint1 -0.2 -J rf_joint2 0.4
-                -J lb_joint1 -0.2 -J lb_joint2 0.4
-                -J rb_joint1 -0.2 -J rb_joint2 0.4"/>
+    <!-- Spawn the robot on ground with stable position -->
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+          args="-urdf -model puppy -param robot_description -z -0.04
+                -J joint1 -0.4 -J joint5 1.2
+                -J joint2 -0.4 -J joint6 1.2
+                -J joint3 0.4 -J joint7 1.2
+                -J joint4 0.4 -J joint8 1.2"/>
 
     <!-- Load controllers -->
     <rosparam file="$(find puppy_description)/config/gazebo_control.yaml" command="load"/>
 
-    <!-- Start controllers with proper delays -->
-    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" ns="/puppy"
-          output="screen" args="joint_state_controller"
-          launch-prefix="bash -c 'sleep 5; $0 $@'"/>
+    <!-- Set initial controller positions to match spawn positions -->
+    <param name="/puppy/joint1_position_controller/command" value="-0.4" type="double"/>
+    <param name="/puppy/joint2_position_controller/command" value="-0.4" type="double"/>
+    <param name="/puppy/joint3_position_controller/command" value="0.4" type="double"/>
+    <param name="/puppy/joint4_position_controller/command" value="0.4" type="double"/>
+    <param name="/puppy/joint5_position_controller/command" value="1.2" type="double"/>
+    <param name="/puppy/joint6_position_controller/command" value="1.2" type="double"/>
+    <param name="/puppy/joint7_position_controller/command" value="1.2" type="double"/>
+    <param name="/puppy/joint8_position_controller/command" value="1.2" type="double"/>
                           
-    <!-- Robot state publisher with reduced rate -->
+    <!-- Robot state publisher -->
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
       <param name="publish_rate" value="30"/>
       <remap from="/joint_states" to="/puppy/joint_states" />
     </node>
     
-    <!-- Unpause physics after proper initialization -->
-    <node name="unpause_physics" pkg="rosservice" type="rosservice" 
-          args="call --wait /gazebo/unpause_physics"
+    <!-- Start controllers - ONLY ONCE -->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" ns="/puppy"
+          output="screen" args="joint_state_controller
+                                joint1_position_controller
+                                joint2_position_controller
+                                joint3_position_controller
+                                joint4_position_controller
+                                joint5_position_controller
+                                joint6_position_controller
+                                joint7_position_controller
+                                joint8_position_controller"
+          launch-prefix="bash -c 'sleep 2; $0 $@'"/>
+    
+    <!-- Create position stabilizer script if it doesn't exist -->
+    <node pkg="rosservice" type="rosservice" name="position_holder" 
+          args="call --wait /gazebo/pause_physics"
+          launch-prefix="bash -c 'sleep 4; $0 $@'" />
+          
+    <!-- Unpause physics only after everything is ready -->
+    <node name="unpause_physics" pkg="rostopic" type="rostopic" 
+          args="pub -1 /gazebo/unpause_physics std_msgs/Empty '{}'" 
           launch-prefix="bash -c 'sleep 7; $0 $@'" />
-
-    <!-- Load position controllers last -->
-    <node name="position_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
-          ns="/puppy" output="screen" 
-          args="joint1_position_controller
-                joint2_position_controller
-                joint3_position_controller
-                joint4_position_controller
-                joint5_position_controller
-                joint6_position_controller
-                joint7_position_controller
-                joint8_position_controller"
-          launch-prefix="bash -c 'sleep 10; $0 $@'"/>
 </launch>

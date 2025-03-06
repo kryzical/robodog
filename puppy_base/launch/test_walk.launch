@@ -1,0 +1,7 @@
+<launch>
+    <!-- Launch the Gazebo simulation -->
+    <include file="$(find puppy_description)/launch/gazebo.launch"/>
+
+    <!-- Start the walking script -->
+    <node name="walking_node" pkg="puppy_base" type="walking.py" output="screen"/>
+</launch>
