@@ -10,8 +10,4 @@
   
   <!-- Launch gzclient -->
   <node name="custom_gzclient" pkg="gazebo_ros" type="gzclient" output="screen"/>
-
-  <include file="$(find puppy_description)/launch/gazebo.launch" />
-
-  <node name="walking_node" pkg="puppy_description" type="walking.py" output="screen" />
 </launch>
