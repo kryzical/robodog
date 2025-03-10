@@ -1,4 +1,5 @@
 #include "quadruped_controller.h"
+#include "puppy_config/gait_config.h"
 
 namespace robodog
 {
@@ -10,20 +11,17 @@ namespace robodog
         pnh_->param<double>("loop_rate", loop_rate_, 100.0);
         pnh_->param<bool>("hardware_connected", hardware_connected_, false);
         
-        // Load gait parameters
-        nh_->param<double>("gait/stance_height", stance_height_, 0.20);
-        nh_->param<double>("gait/swing_height", swing_height_, 0.04);
-        nh_->param<double>("gait/stance_duration", stance_duration_, 0.25);
-        nh_->param<double>("gait/swing_duration", swing_duration_, 0.25);
-        
-        // Load motion limits
-        nh_->param<double>("gait/max_linear_velocity_x", max_linear_velocity_x_, 0.5);
-        nh_->param<double>("gait/max_linear_velocity_y", max_linear_velocity_y_, 0.25);
-        nh_->param<double>("gait/max_angular_velocity_z", max_angular_velocity_z_, 1.0);
+        // Use centralized gait parameters
+        stance_height_ = GAIT_CONFIG_NOMINAL_HEIGHT;
+        swing_height_ = GAIT_CONFIG_SWING_HEIGHT;
+        stance_duration_ = GAIT_CONFIG_STANCE_DURATION;
+        swing_duration_ = GAIT_CONFIG_SWING_DURATION;
+        max_linear_velocity_x_ = GAIT_CONFIG_MAX_LINEAR_VEL_X;
+        max_linear_velocity_y_ = GAIT_CONFIG_MAX_LINEAR_VEL_Y;
+        max_angular_velocity_z_ = GAIT_CONFIG_MAX_ANGULAR_VEL_Z;
         
         // Initialize hardware interface
         if (hardware_connected_) {
-            // TODO: Initialize real hardware interface
             actuator_ = new ServoActuator();
         } else {
             actuator_ = new SimulationActuator();

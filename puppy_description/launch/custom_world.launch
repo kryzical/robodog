@@ -1,13 +1,23 @@
 <?xml version="1.0"?>
 <launch>
-  <!-- Set environment variables so Gazebo locates models and worlds within the package -->
-  <env name="GAZEBO_MODEL_PATH" value="$(find puppy_description)/models:$GAZEBO_MODEL_PATH"/>
-  <env name="GAZEBO_RESOURCE_PATH" value="$(find puppy_description)/worlds:$GAZEBO_RESOURCE_PATH"/>
+  <!-- World parameters -->
+  <arg name="world_name" default="$(find puppy_gazebo)/worlds/empty.world"/>
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
   
-  <!-- Launch gzserver with your custom world file from the puppy_description package -->
-  <node name="custom_gzserver" pkg="gazebo_ros" type="gzserver" output="screen"
-        args="$(find puppy_description)/worlds/fetchit_challenge_tests_lowlights.world" />
-  
-  <!-- Launch gzclient -->
-  <node name="custom_gzclient" pkg="gazebo_ros" type="gzclient" output="screen"/>
+  <!-- Launch Gazebo with the specified world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(arg world_name)"/>
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="headless" value="$(arg headless)"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>
+
+  <!-- Launch robot description and spawn robot in Gazebo -->
+  <include file="$(find puppy_description)/launch/gazebo.launch"/>
 </launch>

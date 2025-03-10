@@ -3,12 +3,25 @@
   <!-- Launch Gazebo with the puppy model -->
   <include file="$(find puppy_description)/launch/gazebo_with_urdf.launch"/>
   
-  <!-- Launch RViz to visualize the robot
-  <include file="$(find puppy_description)/launch/rviz_with_urdf.launch"/> -->
+  <!-- Arguments -->
+  <arg name="controller" default="walking" /> <!-- Options: walking, stand, test -->
   
-  <!-- Launch the simulation-only controller -->
-  <node name="simulation_controller" pkg="puppy_description" type="unified_sim.py" output="screen"/>
+  <!-- Common parameters -->
+  <param name="use_sim_time" value="true" />
   
-  <!-- Launch joint state monitoring (optional)
-  <include file="$(find puppy_description)/launch/monitor_joints.launch"/> -->
+  <!-- Load state estimation for any controller -->
+  <include file="$(find puppy_base)/launch/state_estimation.launch" />
+  
+  <!-- Launch the selected controller -->
+  <group if="$(eval controller == 'walking')">
+    <node name="walking_controller" pkg="puppy_base" type="walking.py" output="screen" />
+  </group>
+  
+  <group if="$(eval controller == 'stand')">
+    <node name="stand_controller" pkg="puppy_base" type="stand_up.py" output="screen" />
+  </group>
+  
+  <group if="$(eval controller == 'test')">
+    <node name="test_controller" pkg="puppy_base" type="test_controller.py" output="screen" />
+  </group>
 </launch>

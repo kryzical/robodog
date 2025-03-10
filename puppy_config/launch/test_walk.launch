@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
     <!-- Launch main bringup -->
-    <include file="$(find robodog_config)/launch/bringup.launch">
+    <include file="$(find puppy_config)/launch/bringup.launch">
         <arg name="rviz" value="true"/>
         <arg name="gazebo" value="true"/>
     </include>

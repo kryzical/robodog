@@ -21,3 +21,5 @@ Dependencies:
 - Standard ROS message types (std_msgs, geometry_msgs, sensor_msgs)
 - message_generation for build
 - message_runtime for execution
+
+documentation: https://wiki.ros.org/msg

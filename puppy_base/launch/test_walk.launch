@@ -2,6 +2,9 @@
     <!-- Launch the Gazebo simulation -->
     <include file="$(find puppy_description)/launch/gazebo.launch"/>
 
-    <!-- Start the walking script -->
-    <node name="walking_node" pkg="puppy_base" type="walking.py" output="screen"/>
+    <!-- Launch RViz with debug configuration -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find puppy_base)/config/debug_view.rviz" output="screen"/>
+
+    <!-- Start the unified walking controller -->
+    <node name="walking_controller" pkg="puppy_base" type="walking.py" output="screen"/>
 </launch>

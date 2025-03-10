@@ -175,7 +175,7 @@
       xyz="1 0 0" />
     <limit
       lower="-1.57"
-      upper="1.57"
+      upper="-0.4"
       effort="${motor_torque}"
       velocity="${motor_vec}" />
   </joint>
@@ -307,7 +307,7 @@
       xyz="1 0 0" />
     <limit
       lower="-1.57"
-      upper="1.57"
+      upper="-0.4"
       effort="${motor_torque}"
       velocity="${motor_vec}" />
   </joint>

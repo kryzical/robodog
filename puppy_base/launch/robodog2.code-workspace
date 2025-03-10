@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"name": "robodog2",
+			"path": "../.."
+		}
+	],
+	"settings": {
+		"cmake.ignoreCMakeListsMissing": true
+	}
+}

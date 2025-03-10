@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Launch the Gazebo simulation -->
+    <include file="$(find puppy_description)/launch/gazebo.launch"/>
+
+    <!-- Start the adapted walking script -->
+    <node name="adapted_walking_node" pkg="puppy_base" type="adapted_testing.py" output="screen"/>
+</launch>
