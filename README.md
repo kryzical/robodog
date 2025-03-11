@@ -78,3 +78,58 @@ The robot's configuration parameters are centralized in the `puppy_config` packa
 - All controllers inherit from the base `PuppyJointController` class
 - IK calculations handle front/back leg differences automatically
 - Common standing positions are shared between different controllers
+
+# Robodog Project
+
+## Running the Project
+
+This project is designed to be portable and run on any device. There are two main ways to run it:
+
+### 1. Core Robot Functionality (Headless)
+For running the core robot functionality without visualization:
+```bash
+chmod +x run_container_headless.sh
+./run_container_headless.sh
+```
+
+Then inside the container:
+```bash
+roslaunch puppy_camera puppy_camera.launch
+```
+
+### 2. Visualization (On Any Device with X11)
+To view the robot visualization on any machine with X11 support (including Steam Deck):
+
+1. Make sure you have Docker and ROS Noetic installed
+2. Run the visualization container:
+```bash
+chmod +x run_container_gui.sh
+./run_container_gui.sh
+```
+
+### Network Configuration
+If running the visualization on a different machine:
+
+1. On the robot (core) machine, set:
+```bash
+export ROS_IP=<robot_ip>
+export ROS_HOSTNAME=<robot_ip>
+```
+
+2. On the visualization machine, set:
+```bash
+export ROS_MASTER_URI=http://<robot_ip>:11311
+export ROS_IP=<local_ip>
+export ROS_HOSTNAME=<local_ip>
+```
+
+Replace `<robot_ip>` with the IP address of the robot machine and `<local_ip>` with the IP of your visualization machine.
+
+## Steam Deck Setup
+For Steam Deck users:
+
+1. Switch to Desktop Mode
+2. Install Docker using the standard installation method
+3. Follow the "Visualization" instructions above
+
+The visualization should work on Steam Deck as it runs Linux and has X11 support.

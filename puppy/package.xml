@@ -15,6 +15,7 @@
   <exec_depend>puppy_gazebo</exec_depend>
   <exec_depend>puppy_msgs</exec_depend>
   <exec_depend>puppy_navigation</exec_depend>
+  <exec_depend>puppy_camera</exec_depend>
 
   <export>
     <metapackage/>

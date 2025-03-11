@@ -5,13 +5,17 @@
   <description>Camera package for puppy robot</description>
   <maintainer email="you@example.com">Your Name</maintainer>
   <license>MIT</license>
-
+  
   <buildtool_depend>catkin</buildtool_depend>
+  
   <depend>roscpp</depend>
+  <depend>rospy</depend>
   <depend>sensor_msgs</depend>
   <depend>image_transport</depend>
   <depend>cv_bridge</depend>
-
+  <depend>python3-opencv</depend>
+  <depend>rviz</depend>
+  
   <export>
   </export>
 </package>
