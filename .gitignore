@@ -1,0 +1,51 @@
+# ROS build and devel directories
+build/
+devel/
+install/
+
+# Python
+*.pyc
+__pycache__/
+*.py[cod]
+
+# Logs
+*.log
+logs/
+log/
+
+# Environment and IDE
+.env
+.venv/
+venv/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# ROS specific
+.catkin_tools/
+.catkin_workspace
+
+# Docker
+.docker/
+
+# VSCode (except workspace settings)
+.vscode/*
+!.vscode/settings.json
+!.vscode/launch.json
+
+# Cursor
+.cursor/
+
+# Build artifacts
+*.o
+*.so
+*.dylib
+*.dll
+
+# Temporary files
+*.tmp
+*~
+
+# Bag files (usually too large for git)
+*.bag

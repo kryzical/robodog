@@ -2,13 +2,13 @@
 
 A ROS-based platform for controlling and simulating a quadruped robot.
 
-documentation supporting this structure system: https://wiki.ros.org/BestPractices
+Documentation supporting this structure system: https://wiki.ros.org/BestPractices
 
 ## Project Structure
 
 The project is organized into several ROS packages:
 
-- **puppy**: this serves as a "navigation", or a quick snippet of all the packages we use here
+- **puppy**: Quick navigation to all the packages we use here
 - **puppy_base**: Core control algorithms and scripts for the robot
 - **puppy_description**: URDF models and visualization for the robot
 - **puppy_gazebo**: Gazebo simulation environments and plugins
@@ -73,17 +73,9 @@ The robot's configuration parameters are centralized in the `puppy_config` packa
 - **Hardware settings**: Defined in `hardware_config.h`
 - **Robot description**: Available in `quadruped_description.h`
 
-## Development Notes
-
-- All controllers inherit from the base `PuppyJointController` class
-- IK calculations handle front/back leg differences automatically
-- Common standing positions are shared between different controllers
-
-# Robodog Project
-
 ## Running the Project
 
-This project is designed to be portable and run on any device. There are two main ways to run it:
+This project can run on any device through Docker containers:
 
 ### 1. Core Robot Functionality (Headless)
 For running the core robot functionality without visualization:
@@ -92,16 +84,9 @@ chmod +x run_container_headless.sh
 ./run_container_headless.sh
 ```
 
-Then inside the container:
-```bash
-roslaunch puppy_camera puppy_camera.launch
-```
-
 ### 2. Visualization (On Any Device with X11)
 To view the robot visualization on any machine with X11 support (including Steam Deck):
 
-1. Make sure you have Docker and ROS Noetic installed
-2. Run the visualization container:
 ```bash
 chmod +x run_container_gui.sh
 ./run_container_gui.sh
@@ -132,4 +117,30 @@ For Steam Deck users:
 2. Install Docker using the standard installation method
 3. Follow the "Visualization" instructions above
 
-The visualization should work on Steam Deck as it runs Linux and has X11 support.
+## Quick Start Commands
+
+The `puppypi.sh` script provides several commands:
+
+```bash
+./puppypi.sh start      # Start the robot simulation and controllers
+./puppypi.sh status     # Check the status of the robot
+./puppypi.sh stop       # Stop the robot
+./puppypi.sh restart    # Restart the robot
+./puppypi.sh controller # Run only the controller
+./puppypi.sh help       # Show help information
+```
+
+## Robot Features
+
+- Advanced gait control with multiple patterns (trot, walk, pace, bound)
+- Stabilization using IMU data
+- Camera integration
+- Navigation capabilities
+- RViz visualization tools
+- Spot-like crouched position for optimal stability
+
+## enter docker from another terminal
+docker exec -it puppy_ros_dev_gazebo bash
+
+cd /workspace
+source devel/setup.bash
