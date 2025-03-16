@@ -36,4 +36,8 @@ The Docker container includes:
 
 ## Steam Deck Architecture
 
-This Docker setup is primarily designed for use on the Steam Deck (x86_64 architecture), which will serve as the main control station for the RoboDog. The lightweight nodes running on the robot itself will communicate with this control station over ROS 2 topics. 
+This Docker setup is primarily designed for use on the Steam Deck (x86_64 architecture), which will serve as the main control station for the RoboDog. The lightweight nodes running on the robot itself will communicate with this control station over ROS 2 topics.
+
+## Consolidation Note
+
+We've consolidated all Docker-related files into this directory. Previously, there were Docker files in both `.Dockerfile/` and `docker/` directories, which caused confusion. The legacy files have been moved to `archive/legacy/` for reference. 
