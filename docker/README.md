@@ -2,7 +2,7 @@
 
 This directory contains the Docker configuration for running ROS 2 Humble with Gazebo for the RoboDog project.
 
-## Key Files
+## Files
 
 - `Dockerfile.ros2`: The main Dockerfile that creates a ROS 2 Humble environment with Gazebo and all necessary tools.
 - `run_ros2_humble.sh`: A script to build and run the Docker container with various options.
@@ -38,6 +38,6 @@ The Docker container includes:
 
 This Docker setup is primarily designed for use on the Steam Deck (x86_64 architecture), which will serve as the main control station for the RoboDog. The lightweight nodes running on the robot itself will communicate with this control station over ROS 2 topics.
 
-## Consolidation Note
+## Clean Directory Structure
 
-We've consolidated all Docker-related files into this directory. Previously, there were Docker files in both `.Dockerfile/` and `docker/` directories, which caused confusion. The legacy files have been moved to `archive/legacy/` for reference. 
+This directory has been simplified to contain only the essential files needed for the Docker setup. All other Docker-related files that were previously in this directory or in `.Dockerfile/` have been moved to `archive/docker/` for reference. 
