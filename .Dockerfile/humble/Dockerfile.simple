@@ -1,0 +1,31 @@
+# Simple Dockerfile for Gazebo simulation
+FROM ros:humble-ros-base-jammy
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install Gazebo and ROS 2 packages in one step
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3-pip \
+    python3-opencv \
+    python3-numpy \
+    ros-humble-gazebo-ros \
+    ros-humble-gazebo-ros-pkgs \
+    ros-humble-ros2-control \
+    ros-humble-ros2-controllers \
+    ros-humble-controller-manager \
+    ros-humble-joint-state-broadcaster \
+    ros-humble-robot-state-publisher \
+    ros-humble-xacro \
+    ros-humble-rviz2 \
+    ros-humble-cv-bridge \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/* /var/tmp/*
+
+# Create workspace
+WORKDIR /ros_ws
+
+# Setup shell environment
+RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+
+# Default command
+CMD ["bash"] 

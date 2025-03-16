@@ -1,0 +1,40 @@
+FROM osrf/ros:humble-desktop-full
+
+# Set environment variables for display and GPU support
+ENV NVIDIA_VISIBLE_DEVICES ${NVIDIA_VISIBLE_DEVICES:-all}
+ENV NVIDIA_DRIVER_CAPABILITIES ${NVIDIA_DRIVER_CAPABILITIES:+$NVIDIA_DRIVER_CAPABILITIES,}graphics
+ENV QT_X11_NO_MITSHM=1
+ENV DISPLAY=${DISPLAY}
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install essential packages for Gazebo simulation
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3-pip \
+    python3-opencv \
+    python3-numpy \
+    gazebo \
+    ros-humble-gazebo-ros \
+    ros-humble-gazebo-ros-pkgs \
+    ros-humble-joint-state-publisher \
+    ros-humble-robot-state-publisher \
+    ros-humble-xacro \
+    ros-humble-ros2-control \
+    ros-humble-ros2-controllers \
+    ros-humble-controller-manager \
+    ros-humble-joint-state-broadcaster \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/* /var/tmp/*
+
+# Create workspace
+WORKDIR /ros_ws
+
+# Setup shell environment
+RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+RUN echo "source /usr/share/gazebo/setup.sh" >> ~/.bashrc
+RUN echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> ~/.bashrc
+RUN echo 'alias cbuild="colcon build --symlink-install"' >> ~/.bashrc
+RUN echo 'alias ssetup="source ./install/setup.bash"' >> ~/.bashrc
+
+# Default command
+CMD ["bash"] 

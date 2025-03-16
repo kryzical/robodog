@@ -1,0 +1,1 @@
+docker/scripts/run_docker_compose.sh

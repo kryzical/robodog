@@ -1,0 +1,26 @@
+FROM ros:humble
+
+# Set environment variables
+ENV DISPLAY=${DISPLAY}
+ENV QT_X11_NO_MITSHM=1
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install only the essential packages for ROS 2 visualization
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3-pip \
+    python3-opencv \
+    ros-humble-rviz2 \
+    ros-humble-xacro \
+    ros-humble-robot-state-publisher \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/* /var/tmp/*
+
+# Create workspace
+WORKDIR /ros_ws
+
+# Setup shell environment
+RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+
+# Default command
+CMD ["bash"] 

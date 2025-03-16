@@ -1,13 +1,9 @@
 version: '3'
 services:
   ros2_base:
-    image: puppy_robot_optimized:humble
     build:
       context: ../..
-      dockerfile: .Dockerfile/humble/Dockerfile.optimized
-      # Enable BuildKit for parallel builds
-      args:
-        - BUILDKIT_INLINE_CACHE=1
+      dockerfile: .Dockerfile/humble/Dockerfile
     network_mode: host
     ipc: host
     privileged: true
