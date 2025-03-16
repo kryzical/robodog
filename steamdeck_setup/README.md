@@ -13,8 +13,17 @@ Our approach is:
 ## Setup Instructions
 
 1. Install Docker on the Steam Deck
-2. Build the Docker image: `docker build -t robodog:humble .`
-3. Run the container: `./run_gazebo.sh`
+2. Use the consolidated Docker setup from the root project:
+   ```
+   cd /path/to/robodog
+   ./run_humble.sh --gazebo  # To run with Gazebo
+   ./run_humble.sh --rviz    # To run with RViz
+   ./run_humble.sh           # To run interactive shell
+   ```
+
+## Unified Docker Setup
+
+We've created a unified Docker setup in `docker/Dockerfile.ros2` and `docker/run_ros2_humble.sh` that should be used instead of the files in this directory. The files here remain for reference purposes only.
 
 ## Included Files
 

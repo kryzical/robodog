@@ -1,0 +1,50 @@
+FROM osrf/ros:humble-desktop-full
+
+ARG WORKSPACE=robodog_ws
+WORKDIR /root/$WORKSPACE
+
+# Environment variables for graphics and display
+ENV NVIDIA_VISIBLE_DEVICES ${NVIDIA_VISIBLE_DEVICES:-all}
+ENV NVIDIA_DRIVER_CAPABILITIES ${NVIDIA_DRIVER_CAPABILITIES:+$NVIDIA_DRIVER_CAPABILITIES,}graphics
+ENV QT_X11_NO_MITSHM=1
+ENV DISPLAY=${DISPLAY}
+ENV XDG_RUNTIME_DIR=/tmp
+
+# Install ROS 2 packages and dependencies
+RUN apt-get update && apt-get install -y \
+    cmake \
+    curl \
+    gazebo \
+    libglu1-mesa-dev \
+    nano \
+    python3-pip \
+    python3-pydantic \
+    ros-humble-gazebo-ros \
+    ros-humble-gazebo-ros-pkgs \
+    ros-humble-joint-state-publisher \
+    ros-humble-robot-localization \
+    ros-humble-robot-state-publisher \
+    ros-humble-ros2bag \
+    ros-humble-rosbag2-storage-default-plugins \
+    ros-humble-rqt-tf-tree \
+    ros-humble-rmw-fastrtps-cpp \
+    ros-humble-rmw-cyclonedds-cpp \
+    ros-humble-usb-cam \
+    ros-humble-xacro \
+    tmux \
+    wget \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Setup shell environment
+RUN echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc
+RUN echo "source /usr/share/gazebo/setup.sh" >> /root/.bashrc
+
+# Set aliases for common commands
+RUN echo 'alias rosdi="rosdep install --from-paths src --ignore-src --rosdistro=${ROS_DISTRO} -y"' >> /root/.bashrc
+RUN echo 'alias cbuild="colcon build --symlink-install"' >> /root/.bashrc
+RUN echo 'alias ssetup="source ./install/local_setup.bash"' >> /root/.bashrc
+RUN echo 'export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp' >> /root/.bashrc
+
+# Default command
+CMD ["bash"] 

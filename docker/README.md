@@ -1,69 +1,39 @@
-# Docker Resources for Puppy Robot
+# Docker Setup for RoboDog
 
-This directory contains Docker-related resources for the Puppy robot project.
+This directory contains the Docker configuration for running ROS 2 Humble with Gazebo for the RoboDog project.
 
-## Directory Structure
+## Key Files
 
-- `run_ros2.sh`: Main script to build and run ROS 2 Docker containers
-- `scripts/`: Utility scripts for Docker operations
-  - `clean_docker.sh`: Script for cleaning up Docker resources
+- `Dockerfile.ros2`: The main Dockerfile that creates a ROS 2 Humble environment with Gazebo and all necessary tools.
+- `run_ros2_humble.sh`: A script to build and run the Docker container with various options.
 
-## Usage
+## Quick Start
 
-### Building the ROS 2 Image
-
-```bash
-./run_ros2.sh --build
-```
-
-This will:
-1. Clean up existing Docker resources
-2. Build a new Docker image from the Dockerfile
-3. Tag it as `puppy_ros2:humble`
-
-### Running Components
-
-#### Interactive Shell
+From the project root directory:
 
 ```bash
-./run_ros2.sh --run
+# Run in interactive mode
+./run_humble.sh
+
+# Run with Gazebo
+./run_humble.sh --gazebo
+
+# Run with RViz
+./run_humble.sh --rviz
+
+# Build the ROS workspace
+./run_humble.sh --build
 ```
 
-#### Camera Node
+## Docker Container Details
 
-```bash
-./run_ros2.sh --run --camera
-```
+The Docker container includes:
+- ROS 2 Humble
+- Gazebo simulator
+- RViz visualization
+- ROS 2 development tools
+- Cross-architecture support (primarily x86_64 for Steam Deck)
 
-#### Controller Node
+## Steam Deck Architecture
 
-```bash
-./run_ros2.sh --run --controller
-```
-
-#### Gazebo Simulation
-
-```bash
-./run_ros2.sh --run --gazebo
-```
-
-#### RViz Visualization
-
-```bash
-./run_ros2.sh --run --rviz
-```
-
-### Cleaning Docker Resources
-
-```bash
-./run_ros2.sh --clean
-```
-
-## Container Configuration
-
-The Docker container:
-- Runs with privileged access
-- Mounts required devices (/dev/video0, /dev/vchiq, /dev/ttyAMA0)
-- Shares the host network
-- Mounts X11 for GUI applications
-- Maps the project directory to /ros_ws/src 
+This Docker setup is primarily designed for use on the Steam Deck (x86_64 architecture), which will serve as the main control station for the RoboDog. The lightweight nodes running on the robot itself will communicate with this control station over ROS 2 topics. 
