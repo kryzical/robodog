@@ -1,0 +1,45 @@
+# syntax=docker/dockerfile:1.4
+
+# Stage 1: Base with ROS Humble
+FROM ros:humble-ros-base-jammy AS base
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Stage 2: Install CV dependencies (runs in parallel)
+FROM base AS cv_deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3-opencv \
+    ros-humble-cv-bridge \
+    ros-humble-image-transport \
+    ros-humble-compressed-image-transport \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/* /var/tmp/*
+
+# Stage 3: Install UI dependencies (runs in parallel)
+FROM base AS ui_deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3-pip \
+    python3-numpy \
+    python3-prctl \
+    ros-humble-rqt-image-view \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/* /var/tmp/*
+
+# Final stage: Combine all dependencies
+FROM base
+COPY --from=cv_deps /opt/ros/humble/ /opt/ros/humble/
+COPY --from=ui_deps /opt/ros/humble/ /opt/ros/humble/
+COPY --from=ui_deps /usr/lib/ /usr/lib/
+COPY --from=ui_deps /usr/local/ /usr/local/
+COPY --from=cv_deps /usr/lib/ /usr/lib/
+COPY --from=cv_deps /usr/local/ /usr/local/
+
+# Create workspace
+WORKDIR /ros_ws
+
+# Setup shell environment
+RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+
+# Default command
+CMD ["bash"] 
