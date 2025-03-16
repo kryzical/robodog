@@ -49,3 +49,9 @@ venv/
 
 # Bag files (usually too large for git)
 *.bag
+
+# Documentation and archived files (local only)
+/archive/
+/docs/
+*.md
+README*
