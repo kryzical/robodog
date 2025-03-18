@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  puppy_ros:
+    build: .
+    container_name: puppy_ros_noetic
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - .:/ros_ws/src/puppy_description
+    network_mode: host
+    command: bash
+    stdin_open: true
+    tty: true 
