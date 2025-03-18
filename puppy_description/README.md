@@ -18,6 +18,7 @@ xhost +local:docker
 
 ### 2. Build and run the container
 
+make sure you are in puppy_description
 ```bash
 docker-compose build
 docker-compose up -d
