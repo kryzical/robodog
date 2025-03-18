@@ -58,3 +58,9 @@ The `puppy_description` package is mounted as a volume, so any changes you make 
 ```bash
 docker-compose down
 ```
+
+## Executing commands inside the container
+To execute commands inside the running container, use:
+```bash
+docker-compose exec puppy_ros bash
+```
