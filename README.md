@@ -30,6 +30,13 @@ docker-compose up -d
 docker-compose exec puppy_ros bash
 ```
 
+## Sourcing the ROS setup
+Before running any ROS commands, make sure to source the ROS setup file:
+```bash
+source /opt/ros/noetic/setup.bash
+source /catkin_ws/devel/setup.bash
+```
+
 ## Running the simulation
 
 Once inside the container, you can run the simulation using:
@@ -50,4 +57,4 @@ The `puppy_description` package is mounted as a volume, so any changes you make 
 
 ```bash
 docker-compose down
-``` 
+```
