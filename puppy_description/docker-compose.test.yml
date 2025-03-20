@@ -1,13 +1,12 @@
 version: '3.8'
 
 services:
-  puppy_ros:
+  puppy_ros_test:
     build: .
-    container_name: puppy_ros_noetic
+    container_name: puppy_ros_test
     environment:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
-      - XAUTHORITY=/tmp/.docker.xauth
       - ROS_HOSTNAME=localhost
       - ROS_MASTER_URI=http://localhost:11311
       - PYTHONUNBUFFERED=1
@@ -16,20 +15,19 @@ services:
       - GAZEBO_RESOURCE_PATH=/ros_ws/src/puppy_description/worlds
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
-      - /tmp/.docker.xauth:/tmp/.docker.xauth:rw
       - .:/ros_ws/src/puppy_description:delegated
       - /dev/shm:/dev/shm:rw
       - /tmp/ros_logs:/tmp/ros_logs:rw
       - /dev/dri:/dev/dri:rw  # For hardware acceleration
     network_mode: host
+    entrypoint: []
     command: >
       bash -c "
         source /opt/ros/noetic/setup.bash &&
-        cd /ros_ws &&
-        catkin_make &&
-        source devel/setup.bash &&
+        source /ros_ws/devel/setup.bash &&
         (roscore & sleep 5) &&
-        roslaunch puppy_description gazebo.launch"
+        rosnode list &&
+        exec bash"
     stdin_open: true
     tty: true
     init: true
