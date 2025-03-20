@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
   puppy_ros:
@@ -9,8 +9,13 @@ services:
       - QT_X11_NO_MITSHM=1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
-      - .:/ros_ws/src/puppy_description
+      - .:/ros_ws/src/puppy_description:delegated
     network_mode: host
     command: bash
     stdin_open: true
-    tty: true 
+    tty: true
+    init: true
+    security_opt:
+      - seccomp:unconfined
+    privileged: true
+    shm_size: '2gb' 
