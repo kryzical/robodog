@@ -7,50 +7,15 @@ services:
     environment:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
-      - XAUTHORITY=/tmp/.docker.xauth
-      - ROS_HOSTNAME=localhost
-      - ROS_MASTER_URI=http://localhost:11311
-      - PYTHONUNBUFFERED=1
-      - ROS_LOG_DIR=/tmp/ros_logs
-      - GAZEBO_MODEL_PATH=/ros_ws/src/puppy_description/models
-      - GAZEBO_RESOURCE_PATH=/ros_ws/src/puppy_description/worlds
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
-      - /tmp/.docker.xauth:/tmp/.docker.xauth:rw
       - .:/ros_ws/src/puppy_description:delegated
-      - /dev/shm:/dev/shm:rw
-      - /tmp/ros_logs:/tmp/ros_logs:rw
-      - /dev/dri:/dev/dri:rw  # For hardware acceleration
     network_mode: host
-    command: >
-      bash -c "
-        source /opt/ros/noetic/setup.bash &&
-        cd /ros_ws &&
-        catkin_make &&
-        source devel/setup.bash &&
-        (roscore & sleep 5) &&
-        roslaunch puppy_description gazebo.launch"
+    command: bash
     stdin_open: true
     tty: true
     init: true
     security_opt:
       - seccomp:unconfined
     privileged: true
-    shm_size: '2gb'
-    stop_grace_period: 10s
-    restart: "no"
-    healthcheck:
-      test: ["CMD-SHELL", "source /opt/ros/noetic/setup.bash && rosnode list || exit 1"]
-      interval: 5s
-      timeout: 3s
-      retries: 3
-      start_period: 10s
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    ulimits:
-      nofile:
-        soft: 65536
-        hard: 65536 
+    shm_size: '2gb' 
