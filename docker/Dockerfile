@@ -20,6 +20,10 @@ RUN echo "source /opt/ros/noetic/setup.bash" >> /root/.bashrc && \
     echo "cd /ros_ws" >> /root/.bashrc && \
     echo "if [ -f /ros_ws/devel/setup.bash ]; then source /ros_ws/devel/setup.bash; fi" >> /root/.bashrc
 
+# Copy the ros_entrypoint.sh script
+COPY docker/ros_entrypoint.sh /ros_entrypoint.sh
+RUN chmod +x /ros_entrypoint.sh
+
 # Set the entrypoint
 ENTRYPOINT ["/ros_entrypoint.sh"]
 CMD ["bash"] 

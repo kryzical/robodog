@@ -6,43 +6,49 @@ This document explains the organization of the PuppyPi robot simulation project.
 
 ```
 /home/brian/robots/puppypi_v2/robodog/    # Main project directory
-├── Dockerfile                            # Docker image definition
-├── docker-compose.yml                    # Multi-service configuration
-├── run_robot.sh                          # Main launch script
+├── docker/                               # Docker configuration
+│   ├── Dockerfile                        # Docker image definition
+│   ├── docker-compose.yml                # Multi-service configuration
+│   └── ros_entrypoint.sh                 # ROS container entrypoint
+├── docs/                                 # Documentation
+│   ├── DOCKER_GUIDE.md                   # Docker setup details
+│   └── PROJECT_STRUCTURE.md              # This file
+├── scripts/                              # Utility scripts
+│   └── run_robot.sh                      # Main launch script
 ├── puppy_description/                    # ROS package for the robot
 │   ├── config/                           # Controller configuration
 │   ├── launch/                           # Launch files
 │   ├── meshes/                           # 3D model files
 │   ├── rviz/                             # RViz configuration
+│   ├── scripts/                          # Robot control scripts
 │   ├── urdf/                             # Robot URDF/Xacro files
 │   ├── CMakeLists.txt                    # Build configuration
 │   └── package.xml                       # Package metadata
 ├── reference/                            # Reference materials (kept for examples)
 ├── README.md                             # Main project documentation
-├── DOCKER_GUIDE.md                       # Docker configuration guide
-└── PROJECT_STRUCTURE.md                  # This file
+└── run_robot.sh                          # Symlink to scripts/run_robot.sh
 ```
 
 ## Primary Files and Their Purpose
 
 ### Core Files
 
-- **run_robot.sh**: The main script for launching the simulation
+- **scripts/run_robot.sh**: The main script for launching the simulation
   - Supports multiple modes: simulation, dev, rviz
   - Example usage: `./run_robot.sh simulation`
 
-- **docker-compose.yml**: Defines the Docker services
+- **docker/docker-compose.yml**: Defines the Docker services
   - simulation: Full Gazebo simulation
   - dev: Development environment
   - rviz: Lightweight visualization
 
-- **Dockerfile**: Defines the ROS Noetic environment with necessary packages
+- **docker/Dockerfile**: Defines the ROS Noetic environment with necessary packages
 
 ### Documentation
 
 - **README.md**: Main project documentation with usage instructions
-- **DOCKER_GUIDE.md**: Detailed guide for the Docker configuration
-- **puppy_description/README.md**: Documentation for the ROS package
+- **docs/DOCKER_GUIDE.md**: Detailed guide for the Docker configuration
+- **puppy_description/README.md**: Documentation for the ROS package (if available)
 
 ### Active Directories
 
@@ -61,7 +67,7 @@ This document explains the organization of the PuppyPi robot simulation project.
 
 - To add sensors: Modify the URDF files in `puppy_description/urdf/`
 - To adjust controllers: Edit `puppy_description/config/gazebo_control.yaml`
-- To create new launch configurations: Add to `docker-compose.yml` and update `run_robot.sh`
+- To create new launch configurations: Add to `docker/docker-compose.yml` and update `scripts/run_robot.sh`
 
 ## Maintenance Notes
 

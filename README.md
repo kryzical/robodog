@@ -64,12 +64,28 @@ Launches only the RViz visualization (lighter weight, no physics simulation):
 
 The project is organized as follows:
 
-- **Dockerfile**: Defines the ROS Noetic environment with necessary packages
-- **docker-compose.yml**: Defines multiple services for different use cases
-- **run_robot.sh**: Main script for launching the simulation in different modes
-- **puppy_description/**: ROS package containing the robot model and simulation
+```
+├── docker/                   # Docker configuration
+│   ├── Dockerfile            # Base image definition
+│   ├── docker-compose.yml    # Service configurations
+│   └── ros_entrypoint.sh     # ROS container entrypoint script
+├── docs/                     # Documentation
+│   ├── DOCKER_GUIDE.md       # Docker setup details
+│   └── PROJECT_STRUCTURE.md  # Project organization info
+├── puppy_description/        # ROS package with robot model
+│   ├── config/               # Controller configuration
+│   ├── launch/               # Launch files
+│   ├── meshes/               # 3D model files
+│   ├── rviz/                 # RViz configuration
+│   ├── scripts/              # Python code for robot control
+│   └── urdf/                 # Robot URDF/Xacro files
+├── scripts/                  # Utility scripts
+│   └── run_robot.sh          # Main launcher script
+├── reference/                # Reference materials
+└── run_robot.sh              # Symlink to launcher script
+```
 
-For more detailed information about the project structure, see [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md).
+For more detailed information about the project structure, see [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md).
 
 ## Docker Configuration
 
@@ -79,7 +95,7 @@ The project uses Docker to ensure consistent environment setup. Key features:
 - X11 forwarding for GUI applications
 - Volume mounts for development without rebuilding
 
-For detailed information about Docker configuration, see [DOCKER_GUIDE.md](DOCKER_GUIDE.md).
+For detailed information about Docker configuration, see [docs/DOCKER_GUIDE.md](docs/DOCKER_GUIDE.md).
 
 ## Development
 
@@ -112,4 +128,4 @@ docker system prune -a
 docker-compose build --no-cache
 ```
 
-For more troubleshooting tips, see [DOCKER_GUIDE.md](DOCKER_GUIDE.md).
+For more troubleshooting tips, see [docs/DOCKER_GUIDE.md](docs/DOCKER_GUIDE.md).

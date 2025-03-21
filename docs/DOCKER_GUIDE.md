@@ -6,9 +6,9 @@ This guide explains the Docker setup for the PuppyPi robot simulation.
 
 The project uses the following Docker-related files:
 
-1. **Dockerfile**: Defines the base image with ROS Noetic and all required packages
-2. **docker-compose.yml**: Configures multiple services for different use cases
-3. **run_robot.sh**: A convenience script to run the simulation in different modes
+1. **docker/Dockerfile**: Defines the base image with ROS Noetic and all required packages
+2. **docker/docker-compose.yml**: Configures multiple services for different use cases
+3. **scripts/run_robot.sh**: A convenience script to run the simulation in different modes
 
 ## Launch Modes
 
@@ -67,6 +67,7 @@ The Docker configuration mounts directories as follows:
 To add more ROS packages to the Docker image, edit the Dockerfile:
 
 ```dockerfile
+# In docker/Dockerfile
 RUN apt-get update && apt-get install -y \
     ros-noetic-desktop-full \
     ros-noetic-gazebo-ros-control \
@@ -80,6 +81,7 @@ RUN apt-get update && apt-get install -y \
 To modify how the robot is launched, you can edit the command in docker-compose.yml:
 
 ```yaml
+# In docker/docker-compose.yml
 command: bash -c "cd /ros_ws && catkin config --extend /opt/ros/noetic && catkin build && source /opt/ros/noetic/setup.bash && source /ros_ws/devel/setup.bash && roslaunch puppy_description gazebo.launch your_param:=value"
 ```
 
@@ -88,8 +90,9 @@ command: bash -c "cd /ros_ws && catkin config --extend /opt/ros/noetic && catkin
 To keep persistent data across container restarts, add a named volume:
 
 ```yaml
+# In docker/docker-compose.yml
 volumes:
-  - ./puppy_description:/ros_ws/src/puppy_description
+  - ../puppy_description:/ros_ws/src/puppy_description
   - robot_data:/ros_ws/data
   - /tmp/.X11-unix:/tmp/.X11-unix:rw
 
@@ -111,7 +114,7 @@ If you encounter issues with the GUI display:
 
 2. Try running with the `--privileged` flag:
    ```yaml
-   # In docker-compose.yml
+   # In docker/docker-compose.yml
    privileged: true
    ```
 
@@ -121,6 +124,7 @@ If you encounter build errors:
 
 1. Try rebuilding with no cache:
    ```bash
+   cd docker
    docker-compose build --no-cache
    ```
 
@@ -149,6 +153,7 @@ DISPLAY=:0 ./run_robot.sh
 For NVIDIA GPU acceleration, add the following to your docker-compose.yml services:
 
 ```yaml
+# In docker/docker-compose.yml
 runtime: nvidia
 environment:
   - NVIDIA_VISIBLE_DEVICES=all
