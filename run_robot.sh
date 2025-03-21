@@ -1,7 +1,31 @@
 #!/bin/bash
 
 # Script to launch the PuppyPi robot simulation with multiple options
-# Usage: ./run_robot.sh [simulation|dev|rviz]
+# Usage: ./run_robot.sh [simulation|dev|rviz|help]
+
+# Function to display help
+show_help() {
+  echo "PuppyPi Robot Simulation Launcher"
+  echo ""
+  echo "Usage: ./run_robot.sh [MODE]"
+  echo ""
+  echo "Modes:"
+  echo "  simulation  - Launch Gazebo simulation with controllers (default)"
+  echo "  dev         - Launch interactive development environment"
+  echo "  rviz        - Launch RViz visualization only"
+  echo "  help        - Display this help message"
+  echo ""
+  echo "Examples:"
+  echo "  ./run_robot.sh           # Launch default simulation"
+  echo "  ./run_robot.sh dev       # Launch development environment"
+  echo "  ./run_robot.sh rviz      # Launch RViz visualization"
+  exit 0
+}
+
+# Check for help
+if [[ "$1" == "help" || "$1" == "--help" || "$1" == "-h" ]]; then
+  show_help
+fi
 
 # Default mode
 MODE=${1:-simulation}
@@ -9,6 +33,7 @@ MODE=${1:-simulation}
 # Check for valid mode
 if [[ "$MODE" != "simulation" && "$MODE" != "dev" && "$MODE" != "rviz" ]]; then
   echo "Error: Invalid mode. Choose from: simulation, dev, rviz"
+  echo "For help, use: ./run_robot.sh help"
   exit 1
 fi
 
