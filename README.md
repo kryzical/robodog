@@ -1,6 +1,6 @@
-# Puppy Robot ROS1 Noetic Container
+# PuppyPi Robot Simulation
 
-This repository contains a Docker setup for simulating the Puppy robot in ROS1 Noetic.
+This repository contains a ROS1 Noetic setup for simulating the PuppyPi quadruped robot using Docker.
 
 ## Prerequisites
 
@@ -8,131 +8,108 @@ This repository contains a Docker setup for simulating the Puppy robot in ROS1 N
 - Docker Compose
 - X11 for GUI applications (for visualization)
 
-## Setup
+## Quick Start
 
-### 1. Allow X11 connections (Linux)
+The simulation can be launched with a single command:
 
 ```bash
-xhost +local:docker
+# Launch the default simulation mode
+./run_robot.sh
 ```
 
-### 2. Build and run the container
+## Launch Modes
 
-There are two ways to run the container:
+The project supports three launch modes:
 
-#### Method 1: Using Docker Compose
+### 1. Simulation Mode (Default)
+
+Launches the robot in Gazebo simulation with controllers and standing pose:
+
 ```bash
-cd puppy_description
-docker-compose build
-docker-compose up -d
-docker-compose exec puppy_ros bash
+./run_robot.sh simulation
+# or simply
+./run_robot.sh
 ```
 
-#### Method 2: Using Docker directly
+### 2. Development Mode
+
+Opens an interactive shell for development and debugging:
+
 ```bash
-cd puppy_description
-docker build -t puppy_ros .
-docker run -it --network host \
-    -e DISPLAY=$DISPLAY \
-    -v /tmp/.X11-unix:/tmp/.X11-unix \
-    -v $(pwd):/ros_ws/src/puppy_description \
-    puppy_ros bash
+./run_robot.sh dev
 ```
 
-## Sourcing the ROS setup
-Before running any ROS commands, make sure to source the ROS setup file:
+Inside the container, you can manually run:
 ```bash
-source /opt/ros/noetic/setup.bash
-source /ros_ws/devel/setup.bash
-```
+# Launch the Gazebo simulation
+roslaunch puppy_description gazebo.launch
 
-## Running the simulation
-
-Once inside the container, you can run the simulation using:
-
-```bash
-# Launch the robot model with RViz
+# Or run RViz visualization
 roslaunch puppy_description display.launch
 
-# Or launch with Gazebo simulation
-roslaunch puppy_description gazebo.launch
+# Or any other ROS commands
+rostopic list
+rosnode list
 ```
+
+### 3. RViz Visualization Mode
+
+Launches only the RViz visualization (lighter weight, no physics simulation):
+
+```bash
+./run_robot.sh rviz
+```
+
+## Project Structure
+
+The project is organized as follows:
+
+- **Dockerfile**: Defines the ROS Noetic environment with necessary packages
+- **docker-compose.yml**: Defines multiple services for different use cases
+- **run_robot.sh**: Main script for launching the simulation in different modes
+- **puppy_description/**: ROS package containing the robot model and simulation
+
+For more detailed information about the project structure, see [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md).
+
+## Docker Configuration
+
+The project uses Docker to ensure consistent environment setup. Key features:
+
+- ROS Noetic with Gazebo and all required packages
+- X11 forwarding for GUI applications
+- Volume mounts for development without rebuilding
+
+For detailed information about Docker configuration, see [DOCKER_GUIDE.md](DOCKER_GUIDE.md).
 
 ## Development
 
-The `puppy_description` package is mounted as a volume, so any changes you make to the files on your host machine will be reflected inside the container.
+The `puppy_description` package is mounted as a volume, so any changes you make to the files on your host machine will be reflected inside the container. Use the development mode for interactive testing:
 
-## Stopping the container
-
-If using Docker Compose:
 ```bash
-docker-compose down
-```
-
-If using Docker directly:
-```bash
-# Press Ctrl+C to exit the container
-# Or in another terminal:
-docker stop $(docker ps -q --filter ancestor=puppy_ros)
+./run_robot.sh dev
 ```
 
 ## Troubleshooting
 
-If you encounter issues with Docker Compose, ensure you have version 1.29.2 or later installed. You can check your Docker Compose version with the following command:
+### Display Issues
+
+If you encounter issues with the GUI display:
+
 ```bash
-docker-compose --version
+# Allow X11 connections (Linux)
+xhost +local:docker
 ```
 
-If you need to update Docker Compose, follow the instructions [here](https://docs.docker.com/compose/install/).
+### Docker Issues
 
-If you encounter issues with the Docker system, you can clean it up by removing all stopped containers, unused networks, and dangling images with the following command:
+If you encounter Docker-related issues:
+
 ```bash
-docker system prune -a -f
+# Clean up Docker system
+docker system prune -a
+
+# Rebuild without cache
+docker-compose build --no-cache
 ```
 
-## Running the project
-To run the project, follow these steps:
-
-1. Allow X11 connections (Linux):
-   ```bash
-   xhost +local:docker
-   ```
-
-2. Navigate to the `puppy_description` directory:
-   ```bash
-   cd puppy_description
-   ```
-
-3. Build and run the container (choose one method):
-
-   Method 1 (Docker Compose):
-   ```bash
-   docker-compose build
-   docker-compose up -d
-   docker-compose exec puppy_ros bash
-   ```
-
-   Method 2 (Docker directly):
-   ```bash
-   docker build -t puppy_ros .
-   docker run -it --network host \
-       -e DISPLAY=$DISPLAY \
-       -v /tmp/.X11-unix:/tmp/.X11-unix \
-       -v $(pwd):/ros_ws/src/puppy_description \
-       puppy_ros bash
-   ```
-
-4. Source the ROS setup files inside the container:
-   ```bash
-   source /opt/ros/noetic/setup.bash
-   source /ros_ws/devel/setup.bash
-   ```
-
-5. Run the simulation:
-   ```bash
-   # Launch the robot model with RViz
-   roslaunch puppy_description display.launch
-
-   # Or launch with Gazebo simulation
-   roslaunch puppy_description gazebo.launch
-   ```
+For more troubleshooting tips, see [DOCKER_GUIDE.md](DOCKER_GUIDE.md).
