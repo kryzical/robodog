@@ -11,17 +11,19 @@ import datetime
 import signal
 import sys
 from leg_ik import LegIK
+import argparse
 
 class AutonomousWalker:
     def __init__(self):
         # Generate a unique ID based on timestamp for logging
-        self.unique_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.unique_id = str(int(time.time()) % 10000)
+        
         rospy.init_node(f'autonomous_walker_{self.unique_id}', anonymous=True)
         
         rospy.loginfo(f"Starting autonomous walker [{self.unique_id}] with optimized gait parameters...")
         
         # Set control rate
-        self.rate = rospy.Rate(60)  # Increased to 60Hz for even smoother motion
+        self.rate = rospy.Rate(40)  # Increased rate for smoother motion (from 20 to 40Hz)
         
         # Create joint publishers
         self.joint_pubs = {}
@@ -40,70 +42,68 @@ class AutonomousWalker:
             pub = rospy.Publisher(f'/puppy/joint{controller_num}_position_controller/command', Float64, queue_size=1)
             self.joint_pubs[joint_name] = pub
             
-        # Subscribe to joint states for position verification
+        # Subscribe to joint states for verification
         rospy.Subscriber('/joint_states', JointState, self.joint_states_callback)
         
         # Subscribe to model states for position tracking
         rospy.Subscriber('/gazebo/model_states', ModelStates, self.model_states_callback)
         
-        # Initialize IK solver
-        self.ik = LegIK()
-        
-        # Setup signal handler for graceful shutdown
-        signal.signal(signal.SIGINT, self.signal_handler)
-        
-        # Movement parameters - standing position (in meters) - fine-tuned for stability
-        self.STAND_HEIGHT = 0.11  # Optimized height for stability
-        self.STAND_WIDTH = 0.095  # Slightly narrower stance for better balance
-        self.STAND_LENGTH = 0.115  # Optimized length for stability
+        # Create inverse kinematics helper
+        try:
+            from puppy_ik import PuppyIK
+            self.ik = PuppyIK()
+        except ImportError:
+            rospy.logerr("Could not import PuppyIK. Using simple joint angle control instead.")
+            self.ik = None
         
         # Performance monitoring parameters
-        self.MIN_SPEED = 0.06     # Lower minimum acceptable speed
-        self.MAX_SPEED = 0.22     # Reasonable maximum speed
-        self.TARGET_SPEED = 0.12  # Target speed for stable walking
-        self.SPEED_CHECK_INTERVAL = 1.5  # Check speed every 1.5 seconds
-        self.MAX_TIME_PER_METER = 20.0  # More lenient time per meter
-        self.MIN_PROGRESS_INTERVAL = 2.5  # Check progress every 2.5 seconds
-        self.MIN_DISTANCE_PROGRESS = 0.04  # Minimum progress per interval
+        self.TARGET_SPEED = 0.15  # Increased target speed from 0.12 to 0.15 m/s
+        self.MIN_PROGRESS_INTERVAL = 3.0  # Check progress every 3 seconds
+        self.MIN_DISTANCE_PROGRESS = 0.08  # Expect at least 8cm progress every check interval
+        self.stability_threshold = 0.75  # Stability score threshold
+        self.stability_window_size = 10  # Size of stability history window
+        self.auto_recovery = True  # Enable auto-recovery when stability is low
+
+        # Walking parameters - fine-tuned for stability and effective forward movement
+        self.STAND_HEIGHT = 0.12  # Height from ground to body
+        self.STAND_WIDTH = 0.05   # Width between legs
+        self.STAND_LENGTH = 0.07  # Length offset for standing position
+        self.STEP_HEIGHT = 0.05   # Increased height for leg lifting (from 0.04 to 0.05)
+        self.STEP_LENGTH = 0.05   # Length of forward step (increased from 0.04 to 0.05)
         
-        # Walking parameters - fine-tuned for reliability
-        self.STEP_HEIGHT = 0.025  # Lower step height for stability
-        self.STEP_LENGTH = 0.05   # Shorter steps for reliability
-        self.STEP_WIDTH = 0.095   # Match stand width for consistency
+        # Timing parameters - adjusted for smoother coordination
+        self.PHASE_1_TIME = 0.10  # Time for lifting leg
+        self.PHASE_2_TIME = 0.08  # Time for moving leg forward
+        self.PHASE_3_TIME = 0.10  # Time for lowering leg
+        self.PHASE_4_TIME = 0.08  # Time for pushing back
         
-        # Phase timing - optimized for smooth transitions
-        self.PHASE_1_TIME = 0.09  # Lift phase
-        self.PHASE_2_TIME = 0.08  # Forward phase
-        self.PHASE_3_TIME = 0.09  # Lower phase
-        self.PHASE_4_TIME = 0.07  # Push phase
-        
-        # Transition steps for smoother movement
-        self.TRANSITION_STEPS = 18  # More steps for smoother transitions
+        # Transition steps for smoother motion
+        self.TRANSITION_STEPS = 10  # Increased from 8 to 10 for smoother transitions
         
         # State tracking
         self.joint_positions = {}
         self.initial_position = None
         self.current_position = None
+        self.initial_orientation = None
+        self.current_orientation = None
         self.distance_traveled = 0.0
         self.lateral_drift = 0.0
         self.direction_angle = 0.0
         self.target_distance = float('inf')  # Walk continuously
         self.max_walk_time = float('inf')    # Walk indefinitely
-        self.auto_recovery = True            # Enable automatic recovery from issues
-        
-        # Stability tracking
-        self.stability_window = []
-        self.max_stability_window = 20
-        self.stability_threshold = 0.7
         
         # Performance metrics
         self.cycle_start_time = None
+        self.start_time = None
         self.last_cycle_distance = 0.0
         self.cycle_speeds = []
         self.cycle_drifts = []
         self.cycle_angles = []
-        self.joint_velocities = {}
-        self.start_time = None
+        self.stability_window = []
+        
+        # Register shutdown handler
+        import signal
+        signal.signal(signal.SIGINT, self.signal_handler)
         
         # Log initial parameters
         rospy.loginfo(f"\n=== Walker [{self.unique_id}] Parameters ===")
@@ -112,7 +112,6 @@ class AutonomousWalker:
         rospy.loginfo(f"Standing Length: {self.STAND_LENGTH:.3f}m")
         rospy.loginfo(f"Step Height: {self.STEP_HEIGHT:.3f}m")
         rospy.loginfo(f"Step Length: {self.STEP_LENGTH:.3f}m")
-        rospy.loginfo(f"Step Width: {self.STEP_WIDTH:.3f}m")
         rospy.loginfo(f"Phase Timings: P1={self.PHASE_1_TIME:.2f}s, P2={self.PHASE_2_TIME:.2f}s, P3={self.PHASE_3_TIME:.2f}s, P4={self.PHASE_4_TIME:.2f}s")
         rospy.loginfo(f"Transition Steps: {self.TRANSITION_STEPS}")
         
@@ -153,7 +152,7 @@ class AutonomousWalker:
         stability = self.stability_score()
         
         self.stability_window.append(stability)
-        if len(self.stability_window) > self.max_stability_window:
+        if len(self.stability_window) > self.stability_window_size:
             self.stability_window.pop(0)
             
         avg_stability = sum(self.stability_window) / len(self.stability_window)
@@ -180,22 +179,22 @@ class AutonomousWalker:
         elif phase == "lift":
             # Lift phase - move foot up and slightly forward
             if leg in ['rf', 'rb']:  # Right side
-                x = self.STAND_LENGTH if leg == 'rf' else -self.STAND_LENGTH
+                x = self.STAND_LENGTH * 1.2 if leg == 'rf' else -self.STAND_LENGTH * 0.9
                 y = -self.STAND_WIDTH
             else:  # Left side
-                x = self.STAND_LENGTH if leg == 'lf' else -self.STAND_LENGTH
+                x = self.STAND_LENGTH * 1.2 if leg == 'lf' else -self.STAND_LENGTH * 0.9
                 y = self.STAND_WIDTH
             z = -self.STAND_HEIGHT + self.STEP_HEIGHT
             
         elif phase == "forward":
             # Forward phase - move foot forward
             if leg in ['rf', 'rb']:  # Right side
-                x = (self.STAND_LENGTH + self.STEP_LENGTH) if leg == 'rf' else -self.STAND_LENGTH
+                x = (self.STAND_LENGTH + self.STEP_LENGTH * 1.2) if leg == 'rf' else -(self.STAND_LENGTH * 0.8)
                 y = -self.STAND_WIDTH
             else:  # Left side
-                x = (self.STAND_LENGTH + self.STEP_LENGTH) if leg == 'lf' else -self.STAND_LENGTH
+                x = (self.STAND_LENGTH + self.STEP_LENGTH * 1.2) if leg == 'lf' else -(self.STAND_LENGTH * 0.8)
                 y = self.STAND_WIDTH
-            z = -self.STAND_HEIGHT + self.STEP_HEIGHT
+            z = -self.STAND_HEIGHT + self.STEP_HEIGHT * 0.8  # Slightly lower to prepare for touchdown
             
         elif phase == "lower":
             # Lower phase - move foot down
@@ -208,14 +207,14 @@ class AutonomousWalker:
             z = -self.STAND_HEIGHT
             
         else:  # push phase
-            # Push phase - move foot back
+            # Push phase - move foot back while maintaining downward pressure
             if leg in ['rf', 'rb']:  # Right side
-                x = self.STAND_LENGTH if leg == 'rf' else -self.STAND_LENGTH
+                x = self.STAND_LENGTH * 0.9 if leg == 'rf' else -self.STAND_LENGTH * 1.1
                 y = -self.STAND_WIDTH
             else:  # Left side
-                x = self.STAND_LENGTH if leg == 'lf' else -self.STAND_LENGTH
+                x = self.STAND_LENGTH * 0.9 if leg == 'lf' else -self.STAND_LENGTH * 1.1
                 y = self.STAND_WIDTH
-            z = -self.STAND_HEIGHT
+            z = -self.STAND_HEIGHT - 0.005  # Slight downward pressure during push phase
             
         return x, y, z
         
@@ -305,6 +304,17 @@ class AutonomousWalker:
             while not rospy.is_shutdown() and cycle_count < max_cycles:
                 current_time = rospy.Time.now()
                 
+                # Check if we've exceeded the maximum walk time
+                elapsed_time = (current_time - self.start_time).to_sec()
+                if self.max_walk_time != float('inf') and elapsed_time >= self.max_walk_time:
+                    rospy.loginfo(f"Maximum walk time of {self.max_walk_time:.1f}s reached. Stopping.")
+                    break
+                
+                # Check if we've reached the target distance
+                if self.target_distance != float('inf') and self.distance_traveled >= self.target_distance:
+                    rospy.loginfo(f"Target distance of {self.target_distance:.2f}m reached. Stopping.")
+                    break
+                
                 # Start new cycle
                 self.cycle_start_time = current_time
                 self.last_cycle_distance = self.distance_traveled
@@ -319,6 +329,17 @@ class AutonomousWalker:
                 if (current_time - last_progress_check).to_sec() >= self.MIN_PROGRESS_INTERVAL:
                     # Check if we're making forward progress
                     progress = self.distance_traveled - last_distance
+                    
+                    # Log detailed performance metrics
+                    rospy.loginfo(f"\n=== Performance Update [{self.unique_id}] ===")
+                    rospy.loginfo(f"Progress: {progress:.3f}m over {self.MIN_PROGRESS_INTERVAL:.1f}s")
+                    rospy.loginfo(f"Total distance: {self.distance_traveled:.3f}m")
+                    rospy.loginfo(f"Speed: {progress/self.MIN_PROGRESS_INTERVAL:.3f}m/s")
+                    rospy.loginfo(f"Drift: {self.lateral_drift:.3f}m")
+                    rospy.loginfo(f"Angle: {self.direction_angle:.1f}°")
+                    rospy.loginfo(f"Time elapsed: {elapsed_time:.1f}s / {self.max_walk_time if self.max_walk_time != float('inf') else 'inf'}s")
+                    rospy.loginfo(f"Distance remaining: {self.target_distance - self.distance_traveled:.2f}m" if self.target_distance != float('inf') else "Distance: unlimited")
+                    
                     if progress < self.MIN_DISTANCE_PROGRESS and cycle_count > 5:
                         rospy.logwarn(f"Low progress detected: {progress:.3f}m - adjusting gait parameters")
                         self.adjust_gait_parameters()
@@ -332,46 +353,66 @@ class AutonomousWalker:
                     rospy.loginfo(f"Distance: {self.distance_traveled:.3f}m, Speed: {self.cycle_speeds[-1] if self.cycle_speeds else 0:.3f}m/s")
                     rospy.loginfo(f"Drift: {self.lateral_drift:.3f}m, Angle: {self.direction_angle:.1f}°")
                 
-                # ===== OPTIMIZED DIAGONAL GAIT PATTERN =====
+                # ===== IMPROVED DIAGONAL GAIT PATTERN =====
                 
-                # Phase 1: First diagonal pair (LF+RB) lift
-                self.set_leg_position('lf', 'lift')
-                self.set_leg_position('rb', 'lift')
-                rospy.sleep(self.PHASE_1_TIME * 0.2)  # Reduced sleep for more responsive movement
+                # First prepare all legs for better balance before movement
+                # Set a pre-walk position for better weight distribution
+                self.set_leg_position('rf', 'stand', 0.15)
+                self.set_leg_position('lf', 'stand', 0.15)
+                self.set_leg_position('rb', 'stand', 0.15)
+                self.set_leg_position('lb', 'stand', 0.15)
+                rospy.sleep(0.05)
+                
+                # Phase 1: First diagonal pair (LF+RB) lift and prepare
+                self.set_leg_position('lf', 'lift', self.PHASE_1_TIME)
+                self.set_leg_position('rb', 'lift', self.PHASE_1_TIME)
+                # Slightly adjust other legs for better balance
+                self.set_leg_position('rf', 'push', self.PHASE_1_TIME)
+                self.set_leg_position('lb', 'push', self.PHASE_1_TIME)
+                rospy.sleep(self.PHASE_1_TIME * 0.2)
                 
                 # Phase 2: First diagonal pair move forward
-                self.set_leg_position('lf', 'forward')
-                self.set_leg_position('rb', 'forward')
+                self.set_leg_position('lf', 'forward', self.PHASE_2_TIME)
+                self.set_leg_position('rb', 'forward', self.PHASE_2_TIME)
                 rospy.sleep(self.PHASE_2_TIME * 0.2)
                 
-                # Phase 3: First diagonal pair lower
-                self.set_leg_position('lf', 'lower')
-                self.set_leg_position('rb', 'lower')
+                # Phase 3: First diagonal pair lower to ground
+                self.set_leg_position('lf', 'lower', self.PHASE_3_TIME)
+                self.set_leg_position('rb', 'lower', self.PHASE_3_TIME)
                 rospy.sleep(self.PHASE_3_TIME * 0.2)
                 
-                # Phase 4: First diagonal pair push
-                self.set_leg_position('lf', 'push')
-                self.set_leg_position('rb', 'push')
+                # Phase 4: First diagonal pair push while preparing second pair
+                self.set_leg_position('lf', 'push', self.PHASE_4_TIME)
+                self.set_leg_position('rb', 'push', self.PHASE_4_TIME)
+                # Pre-adjust second pair to prepare for lift
+                self.set_leg_position('rf', 'stand', self.PHASE_4_TIME)
+                self.set_leg_position('lb', 'stand', self.PHASE_4_TIME)
                 rospy.sleep(self.PHASE_4_TIME * 0.2)
                 
                 # Phase 5: Second diagonal pair (RF+LB) lift
-                self.set_leg_position('rf', 'lift')
-                self.set_leg_position('lb', 'lift')
+                self.set_leg_position('rf', 'lift', self.PHASE_1_TIME)
+                self.set_leg_position('lb', 'lift', self.PHASE_1_TIME)
+                # Maintain pressure on first pair for stability
+                self.set_leg_position('lf', 'push', self.PHASE_1_TIME)
+                self.set_leg_position('rb', 'push', self.PHASE_1_TIME)
                 rospy.sleep(self.PHASE_1_TIME * 0.2)
                 
                 # Phase 6: Second diagonal pair move forward
-                self.set_leg_position('rf', 'forward')
-                self.set_leg_position('lb', 'forward')
+                self.set_leg_position('rf', 'forward', self.PHASE_2_TIME)
+                self.set_leg_position('lb', 'forward', self.PHASE_2_TIME)
                 rospy.sleep(self.PHASE_2_TIME * 0.2)
                 
                 # Phase 7: Second diagonal pair lower
-                self.set_leg_position('rf', 'lower')
-                self.set_leg_position('lb', 'lower')
+                self.set_leg_position('rf', 'lower', self.PHASE_3_TIME)
+                self.set_leg_position('lb', 'lower', self.PHASE_3_TIME)
                 rospy.sleep(self.PHASE_3_TIME * 0.2)
                 
                 # Phase 8: Second diagonal pair push
-                self.set_leg_position('rf', 'push')
-                self.set_leg_position('lb', 'push')
+                self.set_leg_position('rf', 'push', self.PHASE_4_TIME)
+                self.set_leg_position('lb', 'push', self.PHASE_4_TIME)
+                # Return first pair to neutral for next cycle
+                self.set_leg_position('lf', 'stand', self.PHASE_4_TIME)
+                self.set_leg_position('rb', 'stand', self.PHASE_4_TIME)
                 rospy.sleep(self.PHASE_4_TIME * 0.2)
                 
                 # Calculate cycle metrics
@@ -440,42 +481,73 @@ class AutonomousWalker:
         rospy.loginfo("Recovery sequence completed")
     
     def adjust_gait_parameters(self):
-        """Dynamically adjust gait parameters based on performance"""
-        rospy.loginfo("\nAdjusting gait parameters for better performance...")
+        """Adjust gait parameters based on performance metrics"""
         
-        # Get recent performance metrics
-        if len(self.cycle_speeds) >= 5:
-            avg_speed = sum(self.cycle_speeds[-5:]) / 5
-            avg_drift = sum(self.cycle_drifts[-5:]) / 5
-            avg_angle = sum(self.cycle_angles[-5:]) / 5
+        # Calculate average metrics
+        recent_speeds = self.cycle_speeds[-5:] if len(self.cycle_speeds) >= 5 else self.cycle_speeds
+        recent_drifts = self.cycle_drifts[-5:] if len(self.cycle_drifts) >= 5 else self.cycle_drifts
+        recent_angles = self.cycle_angles[-5:] if len(self.cycle_angles) >= 5 else self.cycle_angles
+        
+        avg_speed = sum(recent_speeds) / len(recent_speeds) if recent_speeds else 0
+        avg_drift = sum(recent_drifts) / len(recent_drifts) if recent_drifts else 0
+        avg_angle = sum(recent_angles) / len(recent_angles) if recent_angles else 0
+        
+        rospy.loginfo(f"Adjusting gait parameters - Current metrics:")
+        rospy.loginfo(f"Speed: {avg_speed:.3f}m/s, Drift: {avg_drift:.3f}m, Angle: {avg_angle:.1f}°")
+        
+        # Check which parameter needs adjustment most
+        if avg_speed < self.TARGET_SPEED * 0.7:
+            # Robot is moving too slowly - increase step length and reduce phase times
+            self.STEP_LENGTH = min(self.STEP_LENGTH * 1.15, 0.06)  # Max 6cm step
+            self.PHASE_1_TIME *= 0.9  # Reduce phase times by 10%
+            self.PHASE_2_TIME *= 0.9
+            self.PHASE_3_TIME *= 0.9
+            self.PHASE_4_TIME *= 0.9
+            rospy.loginfo(f"Speed too low - Increasing step length to {self.STEP_LENGTH:.3f}m and reducing phase times")
             
-            # Adjust step length based on speed
-            if avg_speed < self.MIN_SPEED:
-                self.STEP_LENGTH = min(0.07, self.STEP_LENGTH * 1.05)
-                rospy.loginfo(f"Increasing step length to {self.STEP_LENGTH:.3f}m for better speed")
-            
-            # Adjust step height based on drift
-            if avg_drift > 0.15:
-                self.STEP_HEIGHT = max(0.02, self.STEP_HEIGHT * 0.95)
-                rospy.loginfo(f"Decreasing step height to {self.STEP_HEIGHT:.3f}m for better stability")
-            
-            # Adjust phase timing based on direction angle
-            if avg_angle > 10:
-                # Slowdown phases for more stability
-                self.PHASE_1_TIME *= 1.05
-                self.PHASE_2_TIME *= 1.05
-                self.PHASE_3_TIME *= 1.05
-                self.PHASE_4_TIME *= 1.05
-                rospy.loginfo(f"Slowing phase timing for better directional control")
-            
-        # Cap at reasonable values
-        self.STEP_LENGTH = max(0.03, min(0.07, self.STEP_LENGTH))
-        self.STEP_HEIGHT = max(0.02, min(0.04, self.STEP_HEIGHT))
-        self.PHASE_1_TIME = max(0.06, min(0.12, self.PHASE_1_TIME))
-        self.PHASE_2_TIME = max(0.05, min(0.10, self.PHASE_2_TIME))
-        self.PHASE_3_TIME = max(0.06, min(0.12, self.PHASE_3_TIME))
-        self.PHASE_4_TIME = max(0.05, min(0.10, self.PHASE_4_TIME))
-            
+        elif avg_angle > 10.0 or avg_drift > 0.1:
+            # Robot is drifting or turning - adjust step parameters to compensate
+            # Check drift direction from angle
+            if self.direction_angle > 5.0:  # Drifting right
+                self.STAND_WIDTH *= 0.95  # Reduce stance width
+                rospy.loginfo(f"Drifting right - Reducing stance width to {self.STAND_WIDTH:.3f}m")
+            elif self.direction_angle < -5.0:  # Drifting left
+                self.STAND_WIDTH *= 1.05  # Increase stance width
+                rospy.loginfo(f"Drifting left - Increasing stance width to {self.STAND_WIDTH:.3f}m")
+            else:  # Just reduce drift by increasing downward pressure
+                self.STAND_HEIGHT *= 0.95  # Lower stance height for more stability
+                rospy.loginfo(f"Excessive drift - Lowering stance height to {self.STAND_HEIGHT:.3f}m")
+                
+        elif len(self.stability_window) > 5 and sum(self.stability_window[-5:]) / 5 < 0.8:
+            # Stability is low - focus on a more conservative gait
+            self.STEP_HEIGHT *= 0.9  # Lower step height
+            self.PHASE_1_TIME *= 1.1  # Increase phase times by 10% for more careful stepping
+            self.PHASE_3_TIME *= 1.1
+            rospy.loginfo(f"Low stability - Reducing step height to {self.STEP_HEIGHT:.3f}m and increasing phase times")
+        
+        else:
+            # Fine-tune for optimal speed if everything else looks good
+            if avg_speed < self.TARGET_SPEED * 0.9:
+                # Slightly increase step length
+                self.STEP_LENGTH = min(self.STEP_LENGTH * 1.05, 0.06)
+                rospy.loginfo(f"Fine-tuning - Increasing step length to {self.STEP_LENGTH:.3f}m")
+            elif avg_speed > self.TARGET_SPEED * 1.1:
+                # Slightly decrease step length for more control
+                self.STEP_LENGTH *= 0.95
+                rospy.loginfo(f"Fine-tuning - Decreasing step length to {self.STEP_LENGTH:.3f}m")
+                
+        # Apply safety bounds to all parameters
+        self.STEP_LENGTH = max(0.03, min(self.STEP_LENGTH, 0.06))
+        self.STEP_HEIGHT = max(0.03, min(self.STEP_HEIGHT, 0.06))
+        self.STAND_HEIGHT = max(0.10, min(self.STAND_HEIGHT, 0.15))
+        self.STAND_WIDTH = max(0.04, min(self.STAND_WIDTH, 0.06))
+        self.PHASE_1_TIME = max(0.05, min(self.PHASE_1_TIME, 0.15))
+        self.PHASE_2_TIME = max(0.05, min(self.PHASE_2_TIME, 0.15))
+        self.PHASE_3_TIME = max(0.05, min(self.PHASE_3_TIME, 0.15))
+        self.PHASE_4_TIME = max(0.05, min(self.PHASE_4_TIME, 0.15))
+        
+        rospy.loginfo("Gait parameters adjusted and applied")
+    
     def stand(self):
         """Put the robot in a standing position using IK"""
         rospy.loginfo("Setting standing position...")
@@ -551,15 +623,35 @@ class AutonomousWalker:
 
 if __name__ == '__main__':
     try:
+        # Parse command line arguments
+        parser = argparse.ArgumentParser(description='Run the autonomous walker for PuppyPi robot')
+        parser.add_argument('--distance', type=float, help='Target distance to walk in meters (default: infinite)')
+        parser.add_argument('--time', type=float, help='Maximum time to walk in seconds (default: infinite)')
+        parser.add_argument('--cycles', type=int, help='Number of walking cycles to perform (default: infinite)')
+        args = parser.parse_args()
+        
         rospy.loginfo("=== Starting Autonomous Walker ===")
         walker = AutonomousWalker()
         
+        # Set parameters based on command line arguments
+        if args.distance is not None:
+            walker.target_distance = args.distance
+            rospy.loginfo(f"Target distance set to: {args.distance} meters")
+        
+        if args.time is not None:
+            walker.max_walk_time = args.time
+            rospy.loginfo(f"Maximum walk time set to: {args.time} seconds")
+        
+        cycles = None
+        if args.cycles is not None:
+            cycles = args.cycles
+            rospy.loginfo(f"Number of cycles set to: {args.cycles}")
+        
         # Start continuous walking
-        walker.walk_cycle()
-            
-        # Return to standing position on shutdown
+        walker.walk_cycle(cycles)
+        
+        # Ensure we stand at the end
         walker.stand()
         
     except rospy.ROSInterruptException:
         pass
-```

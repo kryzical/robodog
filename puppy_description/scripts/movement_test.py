@@ -550,6 +550,95 @@ class MovementTest:
         rospy.sleep(1.0)  # Give time to stabilize
         return self.current_position is not None
 
+    def has_initial_position(self):
+        """Check if initial position has been set"""
+        return self.initial_position is not None
+    
+    def walk_sequence(self):
+        """Execute one complete walking sequence for the robot"""
+        try:
+            # Start a new walking cycle - prepare
+            # Offset values for improved movement
+            hip_forward = self.HIP_FORWARD 
+            hip_mid = self.HIP_MID
+            hip_back = self.HIP_BACK
+            knee_up = self.KNEE_UP
+            knee_mid = self.KNEE_MID
+            knee_down = self.KNEE_DOWN
+            
+            # Prepare all legs for better balance before starting walking movement
+            self.set_leg_position('rf', hip_mid, knee_mid, self.PHASE_1_TIME * 0.5)
+            self.set_leg_position('lf', hip_mid, knee_mid, self.PHASE_1_TIME * 0.5)
+            self.set_leg_position('rb', hip_mid, knee_mid, self.PHASE_1_TIME * 0.5)
+            self.set_leg_position('lb', hip_mid, knee_mid, self.PHASE_1_TIME * 0.5)
+            rospy.sleep(self.PHASE_1_TIME * 0.05)
+            
+            # DIAGONAL GAIT PATTERN
+            # Diagonal pairs: (Right Front + Left Back) and (Left Front + Right Back)
+            
+            # === First Diagonal Pair (Left Front + Right Back) ===
+            
+            # Phase 1: Lift LF+RB legs while adjusting other legs for balance
+            self.set_leg_position('lf', hip_forward - 0.02, knee_up, self.PHASE_1_TIME)
+            self.set_leg_position('rb', hip_forward - 0.02, knee_up, self.PHASE_1_TIME)
+            # Stabilize with other diagonal pair
+            self.set_leg_position('rf', hip_back + 0.02, knee_down + 0.05, self.PHASE_1_TIME)
+            self.set_leg_position('lb', hip_back + 0.02, knee_down + 0.05, self.PHASE_1_TIME)
+            rospy.sleep(self.PHASE_1_TIME)
+            
+            # Phase 2: Move LF+RB legs forward
+            self.set_leg_position('lf', hip_forward, knee_up, self.PHASE_2_TIME)
+            self.set_leg_position('rb', hip_forward, knee_up, self.PHASE_2_TIME)
+            rospy.sleep(self.PHASE_2_TIME)
+            
+            # Phase 3: Lower LF+RB legs
+            self.set_leg_position('lf', hip_forward, knee_down, self.PHASE_3_TIME)
+            self.set_leg_position('rb', hip_forward, knee_down, self.PHASE_3_TIME)
+            rospy.sleep(self.PHASE_3_TIME)
+            
+            # Phase 4: Push with LF+RB legs while beginning to shift weight for next step
+            self.set_leg_position('lf', hip_mid, knee_down, self.PHASE_4_TIME)
+            self.set_leg_position('rb', hip_mid, knee_down, self.PHASE_4_TIME)
+            # Pre-adjust the second diagonal pair to prepare for their movement
+            self.set_leg_position('rf', hip_mid, knee_mid, self.PHASE_4_TIME)
+            self.set_leg_position('lb', hip_mid, knee_mid, self.PHASE_4_TIME)
+            rospy.sleep(self.PHASE_4_TIME)
+            
+            # === Second Diagonal Pair (Right Front + Left Back) ===
+            
+            # Phase 5: Lift RF+LB legs while maintaining pressure on first pair
+            self.set_leg_position('rf', hip_forward - 0.02, knee_up, self.PHASE_1_TIME)
+            self.set_leg_position('lb', hip_forward - 0.02, knee_up, self.PHASE_1_TIME)
+            # Maintain stability with first diagonal pair
+            self.set_leg_position('lf', hip_back + 0.02, knee_down + 0.05, self.PHASE_1_TIME)
+            self.set_leg_position('rb', hip_back + 0.02, knee_down + 0.05, self.PHASE_1_TIME)
+            rospy.sleep(self.PHASE_1_TIME)
+            
+            # Phase 6: Move RF+LB legs forward
+            self.set_leg_position('rf', hip_forward, knee_up, self.PHASE_2_TIME)
+            self.set_leg_position('lb', hip_forward, knee_up, self.PHASE_2_TIME)
+            rospy.sleep(self.PHASE_2_TIME)
+            
+            # Phase 7: Lower RF+LB legs
+            self.set_leg_position('rf', hip_forward, knee_down, self.PHASE_3_TIME)
+            self.set_leg_position('lb', hip_forward, knee_down, self.PHASE_3_TIME)
+            rospy.sleep(self.PHASE_3_TIME)
+            
+            # Phase 8: Push with RF+LB legs while returning other legs to neutral
+            self.set_leg_position('rf', hip_mid, knee_down, self.PHASE_4_TIME)
+            self.set_leg_position('lb', hip_mid, knee_down, self.PHASE_4_TIME)
+            # Return first diagonal pair to ready position for next cycle
+            self.set_leg_position('lf', hip_mid, knee_mid, self.PHASE_4_TIME)
+            self.set_leg_position('rb', hip_mid, knee_mid, self.PHASE_4_TIME)
+            rospy.sleep(self.PHASE_4_TIME)
+            
+            # End walking cycle in balanced position to maintain stability
+            return True
+            
+        except Exception as e:
+            rospy.logerr(f"Error in walk_sequence: {e}")
+            return False
+
 if __name__ == '__main__':
     try:
         walker = MovementTest()

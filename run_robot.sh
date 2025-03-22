@@ -1,1 +1,0 @@
-scripts/run_robot.sh

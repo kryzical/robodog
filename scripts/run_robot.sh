@@ -1,62 +1,23 @@
 #!/bin/bash
 
-# Script to launch the PuppyPi robot simulation with multiple options
-# Usage: ./run_robot.sh [simulation|dev|rviz|help]
+# Script to launch the robot with Gazebo through Docker
 
-# Function to display help
-show_help() {
-  echo "PuppyPi Robot Simulation Launcher"
-  echo ""
-  echo "Usage: ./run_robot.sh [MODE]"
-  echo ""
-  echo "Modes:"
-  echo "  simulation  - Launch Gazebo simulation with controllers (default)"
-  echo "  dev         - Launch interactive development environment"
-  echo "  rviz        - Launch RViz visualization only"
-  echo "  help        - Display this help message"
-  echo ""
-  echo "Examples:"
-  echo "  ./run_robot.sh           # Launch default simulation"
-  echo "  ./run_robot.sh dev       # Launch development environment"
-  echo "  ./run_robot.sh rviz      # Launch RViz visualization"
-  exit 0
-}
+echo "Starting robot simulation with X11 forwarding..."
 
-# Change to the project root directory
-SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
-PROJECT_ROOT=$(dirname "$SCRIPT_DIR")
-cd "$PROJECT_ROOT"
+# Allow X server connections from Docker
+xhost +local:docker
 
-# Check for help
-if [[ "$1" == "help" || "$1" == "--help" || "$1" == "-h" ]]; then
-  show_help
-fi
+# Kill any existing docker containers
+echo "Stopping any existing Docker containers..."
+docker-compose -f docker/docker-compose.yml down
 
-# Default mode
-MODE=${1:-simulation}
+# Run the Docker container with X11 forwarding
+echo "Launching Docker container with Gazebo and robot..."
+docker-compose -f docker/docker-compose.yml run --rm \
+  -e DISPLAY=$DISPLAY \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  dev \
+  /bin/bash -c "cd /ros_ws && source devel/setup.bash && /ros_ws/src/puppy_description/scripts/run_simple_walker.sh"
 
-# Check for valid mode
-if [[ "$MODE" != "simulation" && "$MODE" != "dev" && "$MODE" != "rviz" ]]; then
-  echo "Error: Invalid mode. Choose from: simulation, dev, rviz"
-  echo "For help, use: ./run_robot.sh help"
-  exit 1
-fi
-
-# Stop and remove any existing containers
-echo "Cleaning up existing containers..."
-docker stop puppy_robot_simulation puppy_robot_dev puppy_robot_rviz &>/dev/null || true
-docker rm puppy_robot_simulation puppy_robot_dev puppy_robot_rviz &>/dev/null || true
-
-# Allow X11 connections (Linux only)
-echo "Setting up X11 forwarding..."
-xhost +local:docker &>/dev/null
-
-# Build and run using Docker Compose
-echo "Building and launching in $MODE mode..."
-cd docker
-docker-compose build $MODE
-docker-compose run --rm $MODE
-
-# Cleanup on exit
-echo "Cleaning up..."
-docker-compose down
+# Reset X server permissions
+xhost -local:docker

@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Launch only the velocity walker node -->
+    <node name="velocity_walker" pkg="puppy_description" type="velocity_walker.py" output="screen"/>
+</launch> 

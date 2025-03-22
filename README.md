@@ -1,131 +1,81 @@
-# PuppyPi Robot Simulation
+# PuppyPi Quadruped Robot
 
-This repository contains a ROS1 Noetic setup for simulating the PuppyPi quadruped robot using Docker.
-
-## Prerequisites
-
-- Docker
-- Docker Compose
-- X11 for GUI applications (for visualization)
+This repository contains the code for the PuppyPi robot, a quadruped robot with modular movement controls.
 
 ## Quick Start
 
-The simulation can be launched with a single command:
+To launch the robot simulation with the default movement (forward):
 
 ```bash
-# Launch the default simulation mode
-./run_robot.sh
+./test_robot.sh
 ```
 
-## Launch Modes
+This script will:
+1. Launch Docker with proper X11 forwarding
+2. Build the ROS workspace if needed
+3. Launch Gazebo in a paused state
+4. Wait for you to press the play button in Gazebo
+5. Start the velocity walker controller
+6. Execute the selected movement
 
-The project supports three launch modes:
+## Movement Types
 
-### 1. Simulation Mode (Default)
-
-Launches the robot in Gazebo simulation with controllers and standing pose:
+You can select different movement types by passing parameters:
 
 ```bash
-./run_robot.sh simulation
-# or simply
-./run_robot.sh
+# Format: ./test_robot.sh [movement_type] [speed] [duration]
+
+# Walk forward at 0.2 m/s for 10 seconds (default)
+./test_robot.sh forward 0.2 10.0
+
+# Walk backward at 0.15 m/s for 8 seconds
+./test_robot.sh backward 0.15 8.0
+
+# Rotate left (counterclockwise) at 0.5 rad/s for 5 seconds
+./test_robot.sh rotate_left 0.5 5.0
+
+# Rotate right (clockwise) at 0.3 rad/s for 3 seconds
+./test_robot.sh rotate_right 0.3 3.0
 ```
 
-### 2. Development Mode
+## Testing Multiple Movements
 
-Opens an interactive shell for development and debugging:
+After the initial movement completes, the simulation will continue running. You can execute additional movement commands manually within the Docker container:
 
 ```bash
-./run_robot.sh dev
-```
+# Forward walking
+python3 /ros_ws/src/puppy_description/scripts/movements/walk_forward.py --speed 0.2 --duration 10.0
 
-Inside the container, you can manually run:
-```bash
-# Launch the Gazebo simulation
-roslaunch puppy_description gazebo.launch
+# Backward walking
+python3 /ros_ws/src/puppy_description/scripts/movements/walk_backward.py --speed 0.2 --duration 10.0
 
-# Or run RViz visualization
-roslaunch puppy_description display.launch
+# Left rotation
+python3 /ros_ws/src/puppy_description/scripts/movements/rotate_left.py --speed 0.5 --duration 5.0
 
-# Or any other ROS commands
-rostopic list
-rosnode list
-```
-
-### 3. RViz Visualization Mode
-
-Launches only the RViz visualization (lighter weight, no physics simulation):
-
-```bash
-./run_robot.sh rviz
-```
-
-## Project Structure
-
-The project is organized as follows:
-
-```
-├── docker/                   # Docker configuration
-│   ├── Dockerfile            # Base image definition
-│   ├── docker-compose.yml    # Service configurations
-│   └── ros_entrypoint.sh     # ROS container entrypoint script
-├── docs/                     # Documentation
-│   ├── DOCKER_GUIDE.md       # Docker setup details
-│   └── PROJECT_STRUCTURE.md  # Project organization info
-├── puppy_description/        # ROS package with robot model
-│   ├── config/               # Controller configuration
-│   ├── launch/               # Launch files
-│   ├── meshes/               # 3D model files
-│   ├── rviz/                 # RViz configuration
-│   ├── scripts/              # Python code for robot control
-│   └── urdf/                 # Robot URDF/Xacro files
-├── scripts/                  # Utility scripts
-│   └── run_robot.sh          # Main launcher script
-├── reference/                # Reference materials
-└── run_robot.sh              # Symlink to launcher script
-```
-
-For more detailed information about the project structure, see [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md).
-
-## Docker Configuration
-
-The project uses Docker to ensure consistent environment setup. Key features:
-
-- ROS Noetic with Gazebo and all required packages
-- X11 forwarding for GUI applications
-- Volume mounts for development without rebuilding
-
-For detailed information about Docker configuration, see [docs/DOCKER_GUIDE.md](docs/DOCKER_GUIDE.md).
-
-## Development
-
-The `puppy_description` package is mounted as a volume, so any changes you make to the files on your host machine will be reflected inside the container. Use the development mode for interactive testing:
-
-```bash
-./run_robot.sh dev
+# Right rotation
+python3 /ros_ws/src/puppy_description/scripts/movements/rotate_right.py --speed 0.5 --duration 5.0
 ```
 
 ## Troubleshooting
 
-### Display Issues
+If you encounter issues:
 
-If you encounter issues with the GUI display:
+- **X11 Forwarding**: Make sure your X server allows connections from Docker
+- **Multiple Gazebo Instances**: The script tries to clean up existing instances, but you might need to kill processes manually
+- **Controller Errors**: Follow the prompts to make sure you press play in Gazebo before continuing
+- **Robot Stability**: If the robot falls over, try a slower speed (e.g., 0.1 m/s for walking or 0.3 rad/s for rotation)
 
-```bash
-# Allow X11 connections (Linux)
-xhost +local:docker
-```
+## Project Structure
 
-### Docker Issues
-
-If you encounter Docker-related issues:
-
-```bash
-# Clean up Docker system
-docker system prune -a
-
-# Rebuild without cache
-docker-compose build --no-cache
-```
-
-For more troubleshooting tips, see [docs/DOCKER_GUIDE.md](docs/DOCKER_GUIDE.md).
+- `puppy_description/`: Main ROS package containing the robot description and controllers
+  - `scripts/`: Python scripts for controlling the robot
+    - `velocity_walker.py`: Main walker implementation
+    - `movements/`: Modular movement scripts
+      - `walk_forward.py`: Forward walking implementation
+      - `walk_backward.py`: Backward walking implementation
+      - `rotate_left.py`: Left rotation implementation
+      - `rotate_right.py`: Right rotation implementation
+  - `launch/`: ROS launch files
+    - `gazebo.launch`: Launches Gazebo with the robot
+    - `just_walker.launch`: Launches just the velocity walker node
+- `docker/`: Docker configuration for running the simulation
