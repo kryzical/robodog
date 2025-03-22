@@ -10,7 +10,7 @@ def walk_forward(linear_speed=0.2, duration=10.0):
     Make the robot walk forward at the specified speed for the specified duration.
     
     Args:
-        linear_speed (float): Forward speed in m/s
+        linear_speed (float): Forward speed in m/s (positive value)
         duration (float): How long to walk in seconds
     """
     rospy.init_node('walk_forward', anonymous=True)
@@ -22,7 +22,7 @@ def walk_forward(linear_speed=0.2, duration=10.0):
     
     # Create the velocity command
     cmd = Twist()
-    cmd.linear.x = linear_speed
+    cmd.linear.x = linear_speed  # Positive linear velocity for forward motion
     cmd.angular.z = 0.0  # No rotation
     
     rospy.loginfo(f"Walking forward at {linear_speed:.2f} m/s for {duration:.1f} seconds")
@@ -35,10 +35,10 @@ def walk_forward(linear_speed=0.2, duration=10.0):
         pub.publish(cmd)
         rate.sleep()
     
-    # Send stop command
+    # Send stop command (multiple times to ensure it's received)
     stop_cmd = Twist()
     rospy.loginfo("Sending stop command")
-    for i in range(5):  # Send multiple times to ensure it's received
+    for i in range(10):  # Send multiple times to ensure it's received
         pub.publish(stop_cmd)
         rate.sleep()
     
