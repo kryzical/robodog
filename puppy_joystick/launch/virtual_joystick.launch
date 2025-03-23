@@ -1,0 +1,56 @@
+<!-- Launch file for virtual joystick interface -->
+<launch>
+    <!-- Parameters for virtual joystick -->
+    <arg name="dev" default="virtual_joystick" />
+    <arg name="autorepeat_rate" default="20.0" />
+    <arg name="deadzone" default="0.05" />
+    <arg name="coalesce_interval" default="0.01" /> <!-- Reduce interval for faster response -->
+    <arg name="button_mapping" default="ps4" /> <!-- Default to PS4-style mapping -->
+    
+    <!-- Launch the virtual joystick node -->
+    <node name="virtual_joystick" pkg="rqt_virtual_joy" type="virtual_joy" output="screen">
+        <param name="~dev" value="$(arg dev)" />
+        <param name="~autorepeat_rate" value="$(arg autorepeat_rate)" />
+        <param name="~coalesce_interval" value="$(arg coalesce_interval)" />
+    </node>
+    
+    <!-- Launch joystick driver -->
+    <node name="joy_node" pkg="joy" type="joy_node" output="screen">
+        <param name="dev" value="/dev/input/$(arg dev)" />
+        <param name="deadzone" value="$(arg deadzone)" />
+        <param name="autorepeat_rate" value="$(arg autorepeat_rate)" />
+        <param name="coalesce_interval" value="$(arg coalesce_interval)" />
+    </node>
+    
+    <!-- Launch joystick controller -->
+    <node name="joypad_controller" pkg="puppy_joystick" type="joypad_controller.py" output="screen">
+        <!-- PS4-style button mappings -->
+        <param if="$(eval button_mapping == 'ps4')" name="forward_button" value="4" /> <!-- Triangle -->
+        <param if="$(eval button_mapping == 'ps4')" name="backward_button" value="6" /> <!-- X -->
+        <param if="$(eval button_mapping == 'ps4')" name="left_button" value="7" /> <!-- Square -->
+        <param if="$(eval button_mapping == 'ps4')" name="right_button" value="5" /> <!-- Circle -->
+        <param if="$(eval button_mapping == 'ps4')" name="stop_button" value="2" /> <!-- Share -->
+        
+        <!-- Xbox-style button mappings -->
+        <param if="$(eval button_mapping == 'xbox')" name="forward_button" value="3" /> <!-- Y -->
+        <param if="$(eval button_mapping == 'xbox')" name="backward_button" value="0" /> <!-- A -->
+        <param if="$(eval button_mapping == 'xbox')" name="left_button" value="2" /> <!-- X -->
+        <param if="$(eval button_mapping == 'xbox')" name="right_button" value="1" /> <!-- B -->
+        <param if="$(eval button_mapping == 'xbox')" name="stop_button" value="6" /> <!-- Back -->
+        
+        <!-- Axes mapping -->
+        <param name="linear_axis" value="1" /> <!-- Left stick up/down -->
+        <param name="angular_axis" value="0" /> <!-- Left stick left/right -->
+        
+        <!-- Velocity scaling -->
+        <param name="linear_scale" value="0.2" /> <!-- m/s for full stick -->
+        <param name="angular_scale" value="0.8" /> <!-- rad/s for full stick -->
+        
+        <!-- Additional parameters -->
+        <param name="dead_zone" value="$(arg deadzone)" />
+        <param name="analog_mode" value="true" />
+    </node>
+    
+    <!-- Display debug info -->
+    <node name="rqt_console" pkg="rqt_console" type="rqt_console" />
+</launch> 

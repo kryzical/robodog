@@ -11,7 +11,7 @@ import math
 
 class RightRotationController:
     """
-    Joint controller for RIGHT rotation of the PuppyPi robot.
+    Joint controller for RIGHT (CLOCKWISE) rotation of the PuppyPi robot.
     Implements powerful movements for effective right rotation.
     """
     def __init__(self):
@@ -147,20 +147,28 @@ class RightRotationController:
         self.current_leg_positions[leg_name] = target_position.copy()
     
     def get_rotation_positions(self):
-        """Define the optimized positions for effective right rotation"""
-        # Positions optimized specifically for right rotation
+        """Define the optimized positions for effective right rotation - FIXED FOR TRUE CLOCKWISE ROTATION"""
+        # Positions optimized specifically for right (CLOCKWISE) rotation
         positions = {
             'stand': {
                 'hip': 0.8,
                 'knee': 0.0
             },
-            # Clear right rotation positions - opposite of left rotation
-            'right_forward': {  # Right legs push forward
-                'hip': 1.4,     # Forward for right legs 
+            # Diagonal movement pattern for effective right rotation
+            'right_front_diagonal': {  # Right front leg pulls backward
+                'hip': 0.2,     # Backward position 
                 'knee': 0.2     # Slight bend for traction
             },
-            'left_backward': {  # Left legs push backward
-                'hip': 0.2,     # Backward for left legs
+            'right_back_diagonal': {  # Right back leg pulls backward 
+                'hip': 0.2,     # Backward position
+                'knee': 0.2     # Slight bend for traction
+            },
+            'left_front_diagonal': {  # Left front leg pushes forward
+                'hip': 1.4,     # Forward position
+                'knee': 0.2     # Slight bend for traction
+            },
+            'left_back_diagonal': {  # Left back leg pushes forward
+                'hip': 1.4,     # Forward position
                 'knee': 0.2     # Slight bend for traction
             },
             # Clearance positions
@@ -176,51 +184,56 @@ class RightRotationController:
         return positions
     
     def rotation_cycle(self):
-        """Execute a right rotation cycle with clear, effective movements"""
+        """Execute a right (CLOCKWISE) rotation cycle with clear, effective movements"""
         # Get positions
         positions = self.get_rotation_positions()
         
         # Calculate phase timing
         phase_time = self.BASE_PHASE_TIME / self.rotation_speed
         
-        # ---------- RIGHT ROTATION CYCLE ----------
+        # ---------- RIGHT (CLOCKWISE) ROTATION CYCLE ----------
         
-        # Phase 1: Lift left legs to prepare for backward push
-        self.smooth_transition_to_position('lf', positions['left_lift'])
-        self.smooth_transition_to_position('lb', positions['left_lift'])
-        rospy.sleep(phase_time * 0.2)
-        
-        # Phase 2: Right legs push forward, left legs push backward
-        # This creates a rightward torque
-        self.smooth_transition_to_position('rf', positions['right_forward'])
-        self.smooth_transition_to_position('rb', positions['right_forward'])
-        self.smooth_transition_to_position('lf', positions['left_backward'])
-        self.smooth_transition_to_position('lb', positions['left_backward'])
-        rospy.sleep(phase_time * 0.3)
-        
-        # Phase 3: Apply downward pressure for better grip
-        for leg in ['rf', 'rb', 'lf', 'lb']:
-            current = self.current_leg_positions[leg].copy()
-            current['knee'] = 0.3  # Downward pressure for traction
-            self.smooth_transition_to_position(leg, current)
-        rospy.sleep(phase_time * 0.3)
-        
-        # Phase 4: Lift right legs to reposition
+        # Phase 1: Quickly lift right legs to prepare for repositioning
         self.smooth_transition_to_position('rf', positions['right_lift'])
         self.smooth_transition_to_position('rb', positions['right_lift'])
-        rospy.sleep(phase_time * 0.2)
+        rospy.sleep(phase_time * 0.15)  # Short wait time
         
-        # Phase 5: Return to start positions
-        self.smooth_transition_to_position('rf', positions['right_forward'])
-        self.smooth_transition_to_position('rb', positions['right_forward'])
-        self.smooth_transition_to_position('lf', positions['left_backward'])
-        self.smooth_transition_to_position('lb', positions['left_backward'])
-        rospy.sleep(phase_time * 0.2)
+        # Phase 2: Position legs for clockwise rotation
+        # Left legs push forward, right legs pull backward - creates clockwise torque
+        self.smooth_transition_to_position('lf', positions['left_front_diagonal'])
+        self.smooth_transition_to_position('lb', positions['left_back_diagonal'])
+        self.smooth_transition_to_position('rf', positions['right_front_diagonal'])
+        self.smooth_transition_to_position('rb', positions['right_back_diagonal'])
+        rospy.sleep(phase_time * 0.3)
+        
+        # Phase 3: Apply optimized pressure for grip
+        # More pressure on right legs for better traction during rotation
+        for leg in ['rf', 'rb']:
+            current = self.current_leg_positions[leg].copy()
+            current['knee'] = 0.25  # More pressure on right side
+            self.smooth_transition_to_position(leg, current)
+            
+        for leg in ['lf', 'lb']:
+            current = self.current_leg_positions[leg].copy()
+            current['knee'] = 0.15  # Less pressure on left side
+            self.smooth_transition_to_position(leg, current)
+            
+        rospy.sleep(phase_time * 0.25)  # Allow pressure to be applied
+        
+        # Phase 4: Lift left legs for repositioning
+        self.smooth_transition_to_position('lf', positions['left_lift'])
+        self.smooth_transition_to_position('lb', positions['left_lift'])
+        rospy.sleep(phase_time * 0.15)
+        
+        # Phase 5: Return to diagonal positions to maintain continuous rotation
+        self.smooth_transition_to_position('lf', positions['left_front_diagonal'])
+        self.smooth_transition_to_position('lb', positions['left_back_diagonal'])
+        rospy.sleep(phase_time * 0.15)
     
     def rotate_continuously(self, duration=None):
-        """Rotate right continuously for the specified duration with smooth transitions"""
+        """Rotate right (CLOCKWISE) continuously for the specified duration with smooth transitions"""
         self.rotating = True
-        rospy.loginfo(f"Starting right rotation at speed factor {self.rotation_speed:.2f}...")
+        rospy.loginfo(f"Starting RIGHT (CLOCKWISE) rotation at speed factor {self.rotation_speed:.2f}...")
         
         start_time = time.time()
         cycle_count = 0
@@ -228,7 +241,7 @@ class RightRotationController:
         try:
             while (duration is None or time.time() - start_time < duration) and not rospy.is_shutdown():
                 cycle_count += 1
-                rospy.loginfo(f"Right rotation cycle {cycle_count}")
+                rospy.loginfo(f"RIGHT (CLOCKWISE) rotation cycle {cycle_count}")
                 self.rotation_cycle()
                 
                 # Check if we've reached the duration
@@ -252,7 +265,7 @@ def main():
         rospy.sleep(2.0)
         
         # Parse command line arguments
-        parser = argparse.ArgumentParser(description='Rotate the robot to the right with powerful movement')
+        parser = argparse.ArgumentParser(description='Rotate the robot to the right (CLOCKWISE) with powerful movement')
         parser.add_argument('--duration', type=float, default=5.0, help='Duration to rotate in seconds')
         parser.add_argument('--speed', type=float, default=0.3, help='Rotation speed factor')
         args = parser.parse_args()
@@ -261,7 +274,7 @@ def main():
         controller.rotation_speed = args.speed
         
         # Rotate for the specified duration
-        rospy.loginfo(f"Starting right rotation for {args.duration} seconds at speed factor {args.speed}")
+        rospy.loginfo(f"Starting RIGHT (CLOCKWISE) rotation for {args.duration} seconds at speed factor {args.speed}")
         controller.rotate_continuously(args.duration)
         
     except rospy.ROSInterruptException:

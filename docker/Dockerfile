@@ -9,7 +9,10 @@ RUN apt-get update && apt-get install -y \
     ros-noetic-joint-state-controller \
     ros-noetic-effort-controllers \
     ros-noetic-position-controllers \
+    ros-noetic-joy \
     python3-catkin-tools \
+    python3-pyqt5 \
+    joystick \
     && rm -rf /var/lib/apt/lists/*
 
 # Create workspace directory

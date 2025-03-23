@@ -1,4 +1,41 @@
 #!/usr/bin/env python3
+"""
+PuppyPi Velocity Walker
+
+This module implements a ROS node that converts velocity commands (linear and angular)
+from the cmd_vel topic into joint movements that make the PuppyPi robot walk or rotate.
+It implements a simple walking gait using diagonal leg pairs and a statically stable
+rotation method.
+
+Features:
+- Translation between velocity commands and joint movements
+- Diagonal gait walking pattern for efficient movement
+- Status monitoring and connection management
+- Rotation control for turning the robot
+- Simple standing position for stability
+
+Usage:
+  rosrun puppy_description velocity_walker.py
+
+Published Topics:
+  /puppy/joint{1-8}_position_controller/command (std_msgs/Float64): 
+    Joint position commands for each of the 8 joints of the robot
+
+Subscribed Topics:
+  /cmd_vel (geometry_msgs/Twist): 
+    Velocity commands for the robot
+  /joint_states (sensor_msgs/JointState): 
+    Current joint positions for verification
+  /gazebo/model_states (gazebo_msgs/ModelStates): 
+    Robot position in the simulation
+
+Parameters:
+  None (all parameters are hardcoded in the class)
+
+Author: PuppyPi Development Team
+License: MIT
+"""
+
 import rospy
 from std_msgs.msg import Float64
 from geometry_msgs.msg import Twist
@@ -41,8 +78,8 @@ class VelocityWalker:
         # Subscribe to model states for position tracking
         rospy.Subscriber('/gazebo/model_states', ModelStates, self.model_states_callback)
         
-        # Subscribe to cmd_vel topic for velocity commands
-        rospy.Subscriber('/cmd_vel', Twist, self.cmd_vel_callback)
+        # Subscribe to cmd_vel topic for velocity commands with a large queue size
+        self.cmd_vel_sub = rospy.Subscriber('/cmd_vel', Twist, self.cmd_vel_callback, queue_size=10)
         
         # Load IK module if available
         try:
@@ -73,6 +110,8 @@ class VelocityWalker:
         self.walking = False
         self.last_cmd_time = rospy.Time.now()
         self.cmd_timeout = rospy.Duration(1.0)  # Stop if no commands received for 1 second
+        self.last_cmd_count = 0
+        self.cmd_count = 0
         
         # State tracking
         self.joint_positions = {}
@@ -82,8 +121,25 @@ class VelocityWalker:
         # Setup signal handler for clean shutdown
         signal.signal(signal.SIGINT, self.signal_handler)
         
+        # Add status timer
+        rospy.Timer(rospy.Duration(2.0), self.status_timer_callback)
+        
         # Start in standing position
         self.stand()
+    
+    def status_timer_callback(self, event):
+        """Output status information periodically"""
+        if self.cmd_count > self.last_cmd_count:
+            rospy.loginfo("✓ Receiving velocity commands - count: %d", self.cmd_count)
+            self.last_cmd_count = self.cmd_count
+        else:
+            rospy.logwarn("✗ No new velocity commands - last command %.2f seconds ago", 
+                      (rospy.Time.now() - self.last_cmd_time).to_sec())
+        
+        # Re-subscribe to cmd_vel to ensure connection is active
+        self.cmd_vel_sub.unregister()
+        self.cmd_vel_sub = rospy.Subscriber('/cmd_vel', Twist, self.cmd_vel_callback, queue_size=10)
+        rospy.loginfo("Re-subscribed to /cmd_vel topic")
         
     def signal_handler(self, sig, frame):
         """Handle SIGINT for clean shutdown"""
@@ -96,14 +152,20 @@ class VelocityWalker:
         self.linear_vel_x = msg.linear.x
         self.angular_vel_z = msg.angular.z
         self.last_cmd_time = rospy.Time.now()
+        self.cmd_count += 1
+        
+        # Log command reception
+        rospy.loginfo("Received velocity command: linear.x=%.2f, angular.z=%.2f", 
+                   self.linear_vel_x, self.angular_vel_z)
         
         # Start walking if not already walking and linear velocity is non-zero
-        if abs(self.linear_vel_x) > 0.01 and not self.walking:
+        if (abs(self.linear_vel_x) > 0.01 or abs(self.angular_vel_z) > 0.01) and not self.walking:
             self.walking = True
-            rospy.loginfo(f"Starting to walk with linear velocity: {self.linear_vel_x:.2f} m/s")
+            rospy.loginfo(f"Starting to walk with linear velocity: {self.linear_vel_x:.2f} m/s, " 
+                       f"angular velocity: {self.angular_vel_z:.2f} rad/s")
         
-        # Stop walking if linear velocity is zero
-        if abs(self.linear_vel_x) < 0.01 and self.walking:
+        # Stop walking if both velocities are zero
+        if abs(self.linear_vel_x) < 0.01 and abs(self.angular_vel_z) < 0.01 and self.walking:
             self.walking = False
             rospy.loginfo("Stopping walk and returning to standing position")
             self.stand()
@@ -250,7 +312,7 @@ class VelocityWalker:
             self.set_leg_position('lb', 'forward')
             rospy.sleep(self.PHASE_2_TIME * 0.5)
             
-            # Phase 7: Second diagonal pair lower
+            # Phase 7: Second diagonal pair lower to ground
             self.set_leg_position('rf', 'lower')
             self.set_leg_position('lb', 'lower')
             rospy.sleep(self.PHASE_3_TIME * 0.5)
@@ -269,75 +331,127 @@ class VelocityWalker:
             rospy.loginfo("Walk cycle interrupted")
             return False
     
-    def stand(self):
-        """Put the robot in a standing position"""
-        rospy.loginfo("Setting standing position...")
-        
-        # Move all legs to standing position with a slight delay for stability
-        for leg in ['rf', 'lf', 'rb', 'lb']:
-            self.set_leg_position(leg, 'stand')
-            rospy.sleep(0.1)
-        
-        rospy.loginfo("Standing position achieved")
-    
-    def joint_states_callback(self, msg):
-        """Store joint positions for verification"""
-        joint_name_to_position = {}
-        for i, name in enumerate(msg.name):
-            joint_name_to_position[name] = msg.position[i]
-            
-        # Map Gazebo joint names to our joint names
-        joint_mapping = {
-            'rf_joint1': 'puppy::rf_joint1',
-            'lf_joint1': 'puppy::lf_joint1',
-            'rb_joint1': 'puppy::rb_joint1',
-            'lb_joint1': 'puppy::lb_joint1',
-            'rf_joint2': 'puppy::rf_joint2',
-            'lf_joint2': 'puppy::lf_joint2',
-            'rb_joint2': 'puppy::rb_joint2',
-            'lb_joint2': 'puppy::lb_joint2'
-        }
-        
-        for our_name, gazebo_name in joint_mapping.items():
-            if gazebo_name in joint_name_to_position:
-                self.joint_positions[our_name] = joint_name_to_position[gazebo_name]
-        
-    def model_states_callback(self, msg):
-        """Track robot position using model states"""
+    def rotate_cycle(self):
+        """Execute one rotation cycle based on angular velocity"""
         try:
-            # Find the puppy model in the model_states message
-            if 'puppy' in msg.name:
-                idx = msg.name.index('puppy')
-                pose = msg.pose[idx]
-                
-                # Update current position
-                self.current_position = pose.position
-                
-                # Initialize start position if not set
-                if self.initial_position is None:
-                    self.initial_position = pose.position
-                    rospy.loginfo(f"Initial position set: x={pose.position.x:.3f}, y={pose.position.y:.3f}, z={pose.position.z:.3f}")
-        except:
-            rospy.logwarn("Error processing model states")
-    
-    def run(self):
-        """Main loop to process commands and control the robot"""
-        rospy.loginfo("Velocity Walker is running - listening for cmd_vel messages...")
-        
-        while not rospy.is_shutdown():
-            current_time = rospy.Time.now()
+            # Scale rotation based on angular velocity
+            rotation_scale = min(1.0, abs(self.angular_vel_z) / 0.5)  # Cap at max rotation of 0.5 rad/s
+            rotation_amount = 0.05 * rotation_scale  # Scale rotation with velocity
             
-            # Check for timeout - stop if no commands received recently
-            if (current_time - self.last_cmd_time) > self.cmd_timeout and self.walking:
-                rospy.loginfo("Command timeout - stopping and returning to stand")
+            # Determine rotation direction
+            direction = 1 if self.angular_vel_z > 0 else -1  # 1 for left, -1 for right
+            
+            # Set all legs in a more compact stance for rotation
+            for leg in ['rf', 'lf', 'rb', 'lb']:
+                self.set_leg_position(leg, 'stand')
+            rospy.sleep(0.1)
+            
+            # Lift all legs slightly to reduce friction
+            # Lift diagonal pairs alternately for stability
+            self.set_leg_position('lf', 'lift')
+            self.set_leg_position('rb', 'lift')
+            rospy.sleep(0.1)
+            
+            # Adjust position for rotation - move left legs left, right legs right
+            if direction > 0:  # Left rotation
+                rospy.loginfo("Executing left rotation step")
+                # For left turn, right legs move forward, left legs move backward
+                self.set_leg_position('rf', 'forward')  # Right front moves forward
+                self.set_leg_position('rb', 'push')     # Right back moves back
+                self.set_leg_position('lf', 'push')     # Left front moves back
+                self.set_leg_position('lb', 'forward')  # Left back moves forward
+            else:  # Right rotation
+                rospy.loginfo("Executing right rotation step")
+                # For right turn, left legs move forward, right legs move backward
+                self.set_leg_position('rf', 'push')     # Right front moves back
+                self.set_leg_position('rb', 'forward')  # Right back moves forward
+                self.set_leg_position('lf', 'forward')  # Left front moves forward
+                self.set_leg_position('lb', 'push')     # Left back moves back
+            
+            rospy.sleep(0.2)
+            
+            # Lower the first diagonal pair
+            self.set_leg_position('lf', 'stand')
+            self.set_leg_position('rb', 'stand')
+            rospy.sleep(0.1)
+            
+            # Lift the other diagonal pair
+            self.set_leg_position('rf', 'lift')
+            self.set_leg_position('lb', 'lift')
+            rospy.sleep(0.1)
+            
+            # Complete the rotation step
+            for leg in ['rf', 'lf', 'rb', 'lb']:
+                self.set_leg_position(leg, 'stand')
+            rospy.sleep(0.1)
+            
+            # Check if we should continue rotating
+            time_since_last_cmd = (rospy.Time.now() - self.last_cmd_time).to_sec()
+            if time_since_last_cmd > self.cmd_timeout.to_sec():
+                rospy.loginfo("Command timeout reached, stopping rotation")
                 self.walking = False
                 self.stand()
+                
+            return True
+        except Exception as e:
+            rospy.logerr(f"Error in rotation cycle: {e}")
+            return False
+    
+    def joint_states_callback(self, data):
+        """Store current joint positions for verification"""
+        for i, name in enumerate(data.name):
+            if name in self.joint_pubs:
+                self.joint_positions[name] = data.position[i]
+    
+    def model_states_callback(self, data):
+        """Track robot position in the world"""
+        try:
+            robot_idx = data.name.index('puppy')
+            pos = data.pose[robot_idx].position
             
-            # If we should be walking, execute a walk cycle
-            if self.walking:
-                self.walk_cycle()
+            if self.initial_position is None:
+                self.initial_position = (pos.x, pos.y, pos.z)
+                rospy.loginfo(f"Initial position set: x={pos.x:.3f}, y={pos.y:.3f}, z={pos.z:.3f}")
             
-            self.rate.sleep()
+            self.current_position = (pos.x, pos.y, pos.z)
+        except ValueError:
+            # Robot model not found in list, probably still spawning
+            pass
+    
+    def stand(self):
+        """Set the robot to a standing position"""
+        rospy.loginfo("Setting standing position...")
+        
+        for leg in ['rf', 'lf', 'rb', 'lb']:
+            self.set_leg_position(leg, 'stand')
+        
+        rospy.sleep(0.5)  # Give time for the robot to reach standing position
+        rospy.loginfo("Standing position achieved")
+    
+    def run(self):
+        """Main control loop"""
+        self.stand()
+        rospy.loginfo("Velocity Walker is running - listening for cmd_vel messages...")
+        
+        # Wait for the first cmd_vel message
+        rospy.loginfo("Waiting for joystick commands - press buttons or move joystick")
+        
+        while not rospy.is_shutdown():
+            # Check for timeout
+            time_since_last_cmd = (rospy.Time.now() - self.last_cmd_time).to_sec()
+            
+            # If we're walking and velocity commands are still valid
+            if self.walking and time_since_last_cmd < self.cmd_timeout.to_sec():
+                if abs(self.angular_vel_z) > abs(self.linear_vel_x) * 2:
+                    # If angular velocity dominates, execute a rotation cycle
+                    self.rotate_cycle()
+                else:
+                    # Otherwise, execute a walking cycle
+                    self.walk_cycle()
+            else:
+                # Wait for the next command
+                self.rate.sleep()
+
 
 if __name__ == '__main__':
     try:

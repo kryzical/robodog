@@ -1,0 +1,27 @@
+# Build and temporary files
+*.pyc
+__pycache__/
+.vscode/
+.idea/
+
+# Backup files
+*~
+*.bak
+*.swp
+
+# ROS generated files
+build/
+devel/
+logs/
+.catkin_workspace
+
+# Docker related
+.env
+
+# Ignore reference materials but track the directory
+reference/*
+!reference/.gitkeep
+
+# Other
+*.log
+.DS_Store 

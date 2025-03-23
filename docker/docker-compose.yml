@@ -13,7 +13,10 @@ services:
       - QT_X11_NO_MITSHM=1
     volumes:
       - ../puppy_description:/ros_ws/src/puppy_description
+      - ../puppy_joystick:/ros_ws/src/puppy_joystick
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /dev/input:/dev/input:rw
+    privileged: true
     working_dir: /ros_ws
     command: bash -c "cd /ros_ws && catkin config --extend /opt/ros/noetic && catkin build && source /opt/ros/noetic/setup.bash && source /ros_ws/devel/setup.bash && roslaunch puppy_description gazebo.launch"
 
@@ -29,7 +32,10 @@ services:
       - QT_X11_NO_MITSHM=1
     volumes:
       - ../puppy_description:/ros_ws/src/puppy_description
+      - ../puppy_joystick:/ros_ws/src/puppy_joystick
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /dev/input:/dev/input:rw
+    privileged: true
     working_dir: /ros_ws
     command: bash -c "cd /ros_ws && catkin config --extend /opt/ros/noetic && catkin build && source /opt/ros/noetic/setup.bash && source /ros_ws/devel/setup.bash && bash"
 
@@ -45,6 +51,7 @@ services:
       - QT_X11_NO_MITSHM=1
     volumes:
       - ../puppy_description:/ros_ws/src/puppy_description
+      - ../puppy_joystick:/ros_ws/src/puppy_joystick
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
     working_dir: /ros_ws
     command: bash -c "cd /ros_ws && catkin config --extend /opt/ros/noetic && catkin build && source /opt/ros/noetic/setup.bash && source /ros_ws/devel/setup.bash && roslaunch puppy_description display.launch" 

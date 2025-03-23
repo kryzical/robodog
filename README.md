@@ -1,81 +1,231 @@
-# PuppyPi Quadruped Robot
+# PuppyPi Robot Simulation
 
-This repository contains the code for the PuppyPi robot, a quadruped robot with modular movement controls.
+This repository contains a Gazebo simulation setup for a quadruped robot called PuppyPi. It provides tools to simulate the robot in Gazebo, control it using ROS, and offers multiple ways to interact with the robot including joystick control.
+
+## Features
+
+- Gazebo simulation with realistic physics
+- Joint position and velocity control
+- Joystick/gamepad control (virtual and physical)
+- Movement scripts for basic locomotion
+- Command-line tools for testing
+- Support for a ROS1-ROS2 bridge (experimental)
 
 ## Quick Start
 
-To launch the robot simulation with the default movement (forward):
+1. **Clone the repository**
 
 ```bash
-./test_robot.sh
+git clone https://github.com/yourusername/puppypi_v3.git
+cd puppypi_v3
 ```
 
-This script will:
-1. Launch Docker with proper X11 forwarding
-2. Build the ROS workspace if needed
-3. Launch Gazebo in a paused state
-4. Wait for you to press the play button in Gazebo
-5. Start the velocity walker controller
-6. Execute the selected movement
-
-## Movement Types
-
-You can select different movement types by passing parameters:
+2. **Run the test script (with Docker)**
 
 ```bash
-# Format: ./test_robot.sh [movement_type] [speed] [duration]
-
-# Walk forward at 0.2 m/s for 10 seconds (default)
-./test_robot.sh forward 0.2 10.0
-
-# Walk backward at 0.15 m/s for 8 seconds
-./test_robot.sh backward 0.15 8.0
-
-# Rotate left (counterclockwise) at 0.5 rad/s for 5 seconds
-./test_robot.sh rotate_left 0.5 5.0
-
-# Rotate right (clockwise) at 0.3 rad/s for 3 seconds
-./test_robot.sh rotate_right 0.3 3.0
+cd robodog
+./test.sh
 ```
 
-## Testing Multiple Movements
+This will run a complete simulation setup inside Docker, including Gazebo with the PuppyPi robot.
 
-After the initial movement completes, the simulation will continue running. You can execute additional movement commands manually within the Docker container:
+3. **Test with joystick control**
 
 ```bash
-# Forward walking
-python3 /ros_ws/src/puppy_description/scripts/movements/walk_forward.py --speed 0.2 --duration 10.0
-
-# Backward walking
-python3 /ros_ws/src/puppy_description/scripts/movements/walk_backward.py --speed 0.2 --duration 10.0
-
-# Left rotation
-python3 /ros_ws/src/puppy_description/scripts/movements/rotate_left.py --speed 0.5 --duration 5.0
-
-# Right rotation
-python3 /ros_ws/src/puppy_description/scripts/movements/rotate_right.py --speed 0.5 --duration 5.0
+cd robodog
+./test_minimal_simulation.sh
 ```
 
-## Troubleshooting
+This will run a minimal simulation with joystick control.
 
-If you encounter issues:
+## Joystick Control
 
-- **X11 Forwarding**: Make sure your X server allows connections from Docker
-- **Multiple Gazebo Instances**: The script tries to clean up existing instances, but you might need to kill processes manually
-- **Controller Errors**: Follow the prompts to make sure you press play in Gazebo before continuing
-- **Robot Stability**: If the robot falls over, try a slower speed (e.g., 0.1 m/s for walking or 0.3 rad/s for rotation)
+PuppyPi can be controlled using either a physical joystick/gamepad or a virtual joystick interface.
+
+### Using a Physical Joystick
+
+1. Connect your joystick/gamepad to your computer
+2. Run the joystick test script:
+
+```bash
+cd robodog
+./test_joystick_control.sh
+```
+
+### Default Button Mapping (PS4 Controller)
+
+- **Triangle** (Button 4): Move forward
+- **X** (Button 6): Move backward
+- **Square** (Button 7): Rotate left
+- **Circle** (Button 5): Rotate right
+- **Share** (Button 2): Stop all movement
+- **Left Analog Stick**: Move (forward/backward/turn)
+
+### Using the Virtual Joystick
+
+The virtual joystick provides a GUI interface for controlling the robot when a physical gamepad is not available.
+
+```bash
+cd robodog
+./test_virtual_joystick.sh
+```
+
+## Movement Commands
+
+The PuppyPi robot can be directly controlled using movement commands sent via ROS topics. These commands offer precise control for specific movements.
+
+### Movement Command Reference
+
+| Movement | Command | Parameters |
+|----------|---------|------------|
+| **Forward walk** | `cmd_vel_publisher.py` | `--linear 0.2 --duration 10.0` |
+| **Backward walk** | `reverse_velocity_walker.py` | `--duration 10.0 --speed 0.3` |
+
+### Forward Movement
+
+The robot walks forward by sending positive linear velocity commands through the `/cmd_vel` topic.
+
+```bash
+# Example command for forward movement
+rosrun puppy_description cmd_vel_publisher.py --linear 0.2 --duration 10.0
+```
+
+Parameters:
+- `--linear`: Speed in m/s (positive values for forward)
+- `--duration`: How long to walk in seconds
+- `--angular`: Optional rotation rate for turning (radians/s)
+
+### Backward Movement
+
+For backward movement, a specialized controller is implemented that directly controls joint positions.
+
+```bash
+# Example command for backward movement
+python3 /ros_ws/src/puppy_description/scripts/movements/reverse_velocity_walker.py --duration 10.0 --speed 0.3
+```
+
+Parameters:
+- `--duration`: How long to walk backward in seconds
+- `--speed`: Movement speed factor (higher is faster)
+
+### Implementation Notes
+
+Forward movement uses the velocity walker controller via cmd_vel messages and is stable up to about 0.3 m/s.
+
+Backward movement uses direct joint control which is more effective than the cmd_vel interface for this direction.
+
+## Architecture
+
+The PuppyPi simulation is built on ROS1 (Noetic) and consists of several key components:
+
+1. **Robot Description Package (`puppy_description`)**: Contains the URDF model, control configuration, and simulation setup for the robot.
+
+2. **Joystick Controller Package (`puppy_joystick`)**: Handles joystick inputs and converts them to velocity commands.
+
+3. **Velocity Walker**: The main control script that translates velocity commands into joint movements, implementing a simple walking gait.
+
+### Control Flow
+
+```
+Joystick Input → Joy Messages → Joystick Controller → cmd_vel → Velocity Walker → Joint Commands → Robot
+```
+
+## ROS1-ROS2 Bridge (Experimental)
+
+An experimental bridge setup is included for future integration with ROS2 systems:
+
+- Bridge configuration: `ros1_bridge_config/bridge_mapping.yaml` 
+- Launch script: `ros1_bridge_config/launch_bridge.sh`
+- ROS2 controller template: `puppy_control_ros2/`
+
+To use the bridge (requires ROS2 installation):
+```bash
+./ros1_bridge_config/launch_bridge.sh
+```
 
 ## Project Structure
 
-- `puppy_description/`: Main ROS package containing the robot description and controllers
-  - `scripts/`: Python scripts for controlling the robot
-    - `velocity_walker.py`: Main walker implementation
-    - `movements/`: Modular movement scripts
-      - `walk_forward.py`: Forward walking implementation
-      - `walk_backward.py`: Backward walking implementation
-      - `rotate_left.py`: Left rotation implementation
-      - `rotate_right.py`: Right rotation implementation
-  - `launch/`: ROS launch files
-    - `gazebo.launch`: Launches Gazebo with the robot
-    - `just_walker.launch`: Launches just the velocity walker node
-- `docker/`: Docker configuration for running the simulation
+- `puppy_description/`: Robot description package containing URDF, meshes, and controller configurations
+- `puppy_joystick/`: Joystick control package
+- `ros1_bridge_config/`: Configuration for the ROS1-ROS2 bridge
+- `puppy_control_ros2/`: Template for ROS2 control implementation
+- `test_minimal_simulation.sh`: Main test script with joystick control
+- `test_virtual_joystick.sh`: Test script for the virtual joystick interface
+- `test_joystick_control.sh`: Test script for physical joystick control
+- `JOYSTICK_IMPLEMENTATION.md`: Detailed documentation of joystick implementation and fixes
+
+## Documentation
+
+- For detailed joystick implementation information, see `JOYSTICK_IMPLEMENTATION.md`
+- For a complete overview of the project directory structure, see `PROJECT_STRUCTURE.md`
+- Each package includes its own README with specific details
+
+## Troubleshooting
+
+### ROS Core System Issues
+
+If you encounter errors related to `roscore` already running:
+
+```bash
+# List running Docker containers
+docker ps
+
+# Stop all containers
+docker stop $(docker ps -q)
+```
+
+### Joystick Not Working in Simulation
+
+If the joystick control is not working properly:
+
+1. **Verify joystick input**: Check if joy messages are being published:
+   ```bash
+   rostopic echo /joy
+   ```
+
+2. **Verify velocity commands**: Check if velocity commands are being published:
+   ```bash
+   rostopic echo /cmd_vel
+   ```
+
+3. **Debug the velocity walker**: Check if the velocity walker is receiving commands:
+   ```bash
+   # In the log output, look for lines containing:
+   "Received velocity command: linear.x=X.XX, angular.z=X.XX"
+   ```
+
+4. **Restart communication**: Sometimes restarting the joystick controller helps:
+   ```bash
+   rosnode kill /joypad_controller
+   rosrun puppy_joystick joypad_controller.py
+   ```
+
+5. **Ensure simulation is running**: The robot will only respond to commands when Gazebo is in running state, not paused.
+
+### X11 Display Issues
+
+If you encounter X11 display problems:
+
+```bash
+xhost +local:
+```
+
+### Joystick Not Detected
+
+If your physical joystick is not detected:
+
+```bash
+# Check if joystick is detected
+ls -l /dev/input/js*
+
+# Run jstest to verify inputs
+jstest /dev/input/js0
+```
+
+## Contributing
+
+Contributions to improve the PuppyPi simulation are welcome! Please feel free to submit pull requests or open issues for bugs and feature requests.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
