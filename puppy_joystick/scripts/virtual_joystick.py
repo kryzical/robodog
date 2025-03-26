@@ -98,11 +98,11 @@ class VirtualJoystickGUI:
         # These indices match standard joy_node mapping:
         # Triangle (4), Circle (5), X (6), Square (7)
         self.buttons = [
-            {"text": "▲", "index": 4, "row": 0, "col": 1, "command": self.forward_pressed},
-            {"text": "◄", "index": 7, "row": 1, "col": 0, "command": self.left_pressed},
-            {"text": "■", "index": 2, "row": 1, "col": 1, "command": self.stop_pressed},
-            {"text": "►", "index": 5, "row": 1, "col": 2, "command": self.right_pressed},
-            {"text": "▼", "index": 6, "row": 2, "col": 1, "command": self.backward_pressed}
+            {"text": "▲", "index": 4, "row": 0, "col": 1, "command": self.forward_pressed},  # Triangle
+            {"text": "◄", "index": 7, "row": 1, "col": 0, "command": self.left_pressed},     # Square
+            {"text": "■", "index": 2, "row": 1, "col": 1, "command": self.stop_pressed},     # Share
+            {"text": "►", "index": 5, "row": 1, "col": 2, "command": self.right_pressed},    # Circle
+            {"text": "▼", "index": 6, "row": 2, "col": 1, "command": self.backward_pressed}  # X
         ]
         
         # Create the buttons
@@ -248,43 +248,37 @@ class VirtualJoystickGUI:
         """Publish Joy messages at a regular interval"""
         current_time = time.time()
         
-        # Publish at the specified rate
-        if current_time - self.last_publish_time >= self.publish_interval:
-            self.last_publish_time = current_time
-            
-            # Create Joy message
-            joy_msg = Joy()
-            joy_msg.header.stamp = rospy.Time.now()
-            
-            # Set axes: [left_stick_x, left_stick_y, ...]
-            # Standard order is 0=left-right, 1=up-down
-            joy_msg.axes = [self.joystick_x, -self.joystick_y]
-            
-            # Add dummy axes to match expected number (8 total)
-            for _ in range(6):
-                joy_msg.axes.append(0.0)
-            
-            # Set buttons state
-            joy_msg.buttons = self.button_states
-            
-            # Publish message
-            self.joy_pub.publish(joy_msg)
-            
-            # Update message count
-            self.msg_count += 1
-            self.msg_count_var.set(f"Messages sent: {self.msg_count}")
+        # Create a Joy message
+        joy_msg = Joy()
+        joy_msg.header.stamp = rospy.Time.now()
         
-        # Schedule next update
+        # Set up axes (left stick x,y, right stick x,y, triggers)
+        joy_msg.axes = [0.0] * 8  # Initialize with 8 axes
+        
+        # Set up buttons (12 buttons for PS4-like controller)
+        joy_msg.buttons = self.button_states
+        
+        # Map joystick position to axes
+        # Left stick: axes[0] = x, axes[1] = y
+        joy_msg.axes[0] = self.joystick_x  # Left stick X
+        joy_msg.axes[1] = self.joystick_y  # Left stick Y
+        
+        # Publish the message
+        self.joy_pub.publish(joy_msg)
+        self.msg_count += 1
+        self.msg_count_var.set(f"Messages sent: {self.msg_count}")
+        
+        # Schedule next publish
         self.root.after(10, self.publish_joy)
     
     def run(self):
-        """Run the main GUI loop"""
+        """Run the GUI main loop"""
         self.root.mainloop()
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     try:
-        virtual_joystick = VirtualJoystickGUI()
-        virtual_joystick.run()
+        gui = VirtualJoystickGUI()
+        gui.run()
     except rospy.ROSInterruptException:
         pass
     except Exception as e:

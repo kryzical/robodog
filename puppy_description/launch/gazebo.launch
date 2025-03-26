@@ -22,11 +22,11 @@
     <param name="robot_description" command="$(find xacro)/xacro $(find puppy_description)/urdf/puppy.urdf.xacro"/>
 
     <!-- Load controller configuration -->
-    <rosparam file="$(find puppy_description)/config/gazebo_control.yaml" command="load"/>
+    <rosparam file="$(find puppy_description)/config/gazebo_control.yaml" command="load" ns="puppy"/>
     
-    <!-- Attempt to delete the model if it exists - proper quoting to fix YAML syntax error -->
+    <!-- Delete existing model if it exists -->
     <node if="$(arg delete_model)" pkg="rosservice" type="rosservice" name="delete_model" 
-          args="call --wait /gazebo/delete_model &quot;{model_name: 'puppy'}&quot;" 
+          args="call /gazebo/delete_model '{model_name: puppy}'" 
           output="screen" 
           respawn="false"
           launch-prefix="bash -c 'sleep 2.0; $0 $@'" />
@@ -45,8 +45,17 @@
       <rosparam param="/source_list">[/puppy/joint_states]</rosparam>
     </node>
 
+    <!-- Launch robot state publisher -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+      <param name="publish_rate" value="100"/>
+      <remap from="/joint_states" to="/puppy/joint_states" />
+    </node>
+
+    <!-- Initialize controller manager -->
+    <node name="controller_manager" pkg="controller_manager" type="controller_manager" respawn="false" output="screen" ns="puppy"/>
+
     <!-- Spawn controllers with NO waiting for joint_states -->
-    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" ns="/puppy"
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
           output="screen" args="joint_state_controller
                           joint1_position_controller
                           joint2_position_controller
@@ -57,11 +66,6 @@
                           joint7_position_controller
                           joint8_position_controller"
           required="true"
+          ns="puppy"
           launch-prefix="bash -c 'sleep 5.0; $0 $@'" />
-
-    <!-- Launch robot state publisher -->
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
-      <param name="publish_rate" value="100"/>
-      <remap from="/joint_states" to="/puppy/joint_states" />
-    </node>
 </launch>

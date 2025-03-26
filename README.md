@@ -1,6 +1,134 @@
-# PuppyPi Robot Simulation
+# PuppyPi ROS1 Robot Simulation
 
-This repository contains a Gazebo simulation setup for a quadruped robot called PuppyPi. It provides tools to simulate the robot in Gazebo, control it using ROS, and offers multiple ways to interact with the robot including joystick control.
+This repository contains the ROS1 simulation for the PuppyPi robot, including Gazebo simulation, virtual joystick control, and velocity-based walking.
+
+## Prerequisites
+
+- ROS1 Noetic
+- Gazebo
+- Python 3
+- Required ROS packages:
+  - `ros-noetic-effort-controllers`
+  - `ros-noetic-joy`
+  - `ros-noetic-rqt-console`
+
+## Setup
+
+1. Clone this repository into your ROS workspace:
+```bash
+cd ~/catkin_ws/src
+git clone <repository-url>
+```
+
+2. Build the workspace:
+```bash
+cd ~/catkin_ws
+catkin build
+```
+
+3. Source the workspace:
+```bash
+source ~/catkin_ws/devel/setup.bash
+```
+
+## Running the Simulation
+
+### Quick Start
+The easiest way to run the simulation is using the test script:
+```bash
+./test_virtual_joystick.sh
+```
+
+### Manual Launch
+To launch components manually:
+
+1. Start Gazebo with the robot:
+```bash
+roslaunch puppy_description gazebo.launch
+```
+
+2. Launch the velocity walker:
+```bash
+roslaunch puppy_description just_walker.launch
+```
+
+3. Start the virtual joystick:
+```bash
+rosrun puppy_joystick virtual_joystick.py
+```
+
+4. Launch the joypad controller:
+```bash
+rosrun puppy_joystick joypad_controller.py
+```
+
+## Controller Configuration
+
+The robot uses effort controllers for joint position control. The configuration is located in `puppy_description/config/gazebo_control.yaml`. Key points:
+
+- Each joint has a position controller with PID parameters
+- Joint limits are set for velocity and position
+- The configuration is loaded under the `puppy` namespace
+
+### Default Button Mappings
+- Forward: Button 4 (Triangle/Up)
+- Backward: Button 6 (X/Down)
+- Left: Button 7 (Square/Left)
+- Right: Button 5 (Circle/Right)
+- Stop: Button 2 (Share/Center)
+
+### Analog Controls
+- Linear velocity: Axis 1 (Up/down)
+- Angular velocity: Axis 0 (Left/right)
+- Linear scale: 0.2 m/s
+- Angular scale: 0.8 rad/s
+- Dead zone: 0.05
+
+## Important Notes
+
+1. **Controller Manager Initialization**
+   - The controller manager must be initialized before spawning controllers
+   - Controllers are spawned under the `puppy` namespace
+   - A delay is added to ensure proper initialization order
+
+2. **Joint State Publishing**
+   - Joint states are published at 100Hz
+   - The robot state publisher remaps joint states to `/puppy/joint_states`
+
+3. **Initial Robot Pose**
+   - The robot spawns at z=0.15
+   - Initial joint positions are set for a standing pose:
+     - Joint1 (lf_joint1): 0.8
+     - Joint2 (rf_joint1): 0.8
+     - Joint3 (lb_joint1): 0.8
+     - Joint4 (rb_joint1): 0.8
+     - Joint5-8 (lf_joint2, rf_joint2, lb_joint2, rb_joint2): 0.0
+
+4. **Troubleshooting**
+   - If controllers fail to spawn, check the controller manager logs
+   - Ensure the effort controllers package is installed
+   - Verify the robot model is properly loaded in Gazebo
+   - Check that joint names match between URDF and controller configuration
+
+## Directory Structure
+
+```
+puppy_description/
+├── config/
+│   └── gazebo_control.yaml    # Controller configuration
+├── launch/
+│   ├── gazebo.launch         # Main Gazebo launch file
+│   └── just_walker.launch    # Velocity walker launch file
+└── urdf/
+    └── puppy.urdf.xacro      # Robot description
+
+puppy_joystick/
+├── launch/
+│   └── gazebo_with_joystick.launch  # Combined launch file
+└── scripts/
+    ├── virtual_joystick.py   # Virtual joystick GUI
+    └── joypad_controller.py  # Joypad control node
+```
 
 ## Features
 

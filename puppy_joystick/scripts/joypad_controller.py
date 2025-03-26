@@ -99,8 +99,8 @@ class JoypadController:
         # Create velocity publisher for continuous control
         self.vel_pub = rospy.Publisher('cmd_vel', Twist, queue_size=10)
         
-        # Set up Joy subscriber
-        self.joy_sub = rospy.Subscriber('joy', Joy, self.joy_callback, queue_size=10)
+        # Set up Joy subscriber with correct topic name
+        self.joy_sub = rospy.Subscriber('/joy', Joy, self.joy_callback, queue_size=10)
         
         # Add status timer
         rospy.Timer(rospy.Duration(1.0), self.status_timer_callback)
@@ -127,11 +127,6 @@ class JoypadController:
         
         # Force a zero velocity command every second to keep connection active
         self.send_zero_velocity()
-        
-        # Re-subscribe to joy to ensure connection is active
-        self.joy_sub.unregister()
-        self.joy_sub = rospy.Subscriber('joy', Joy, self.joy_callback, queue_size=10)
-        rospy.loginfo("Re-subscribed to Joy topic")
         
     def send_zero_velocity(self):
         """Send a zero velocity command to keep the connection active"""

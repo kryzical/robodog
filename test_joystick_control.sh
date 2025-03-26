@@ -25,7 +25,7 @@ docker run --rm -it \
   -v $(pwd)/puppy_joystick:/ros_ws/src/puppy_joystick \
   -v $(pwd)/puppy_description:/ros_ws/src/puppy_description \
   --privileged \
-  docker-dev bash -c "
+  puppypi-dev bash -c "
     cd /ros_ws
     source /opt/ros/noetic/setup.bash
     

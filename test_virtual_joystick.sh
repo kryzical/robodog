@@ -1,29 +1,38 @@
 #!/bin/bash
 
 echo "=============================="
-echo "   Testing PuppyPi Virtual Joystick"
+echo "   PuppyPi Virtual Joystick Test"
 echo "=============================="
 echo ""
+
+# Function to check if a command exists
+check_command() {
+    if ! command -v $1 &> /dev/null; then
+        echo "Error: $1 is not installed"
+        exit 1
+    fi
+}
+
+# Check for required commands
+check_command "docker"
+check_command "xhost"
+
+# Set up display for WSL
+export DISPLAY=:0
+echo "Using DISPLAY: $DISPLAY"
 
 # Allow X server connections
 xhost +local:
 
-# Check if puppy_joystick directory exists
-if [ ! -d "puppy_joystick" ]; then
-  echo "Error: puppy_joystick directory not found!"
-  echo "Make sure you're running this script from the robodog directory."
-  exit 1
-fi
-
-echo "Starting the Docker container with virtual joystick..."
+echo "Starting the Docker container..."
 docker run --rm -it \
-  --network=host \
-  -e DISPLAY=$DISPLAY \
-  -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
+  --net=host \
+  -e DISPLAY=:0 \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
   -v $(pwd)/puppy_joystick:/ros_ws/src/puppy_joystick \
   -v $(pwd)/puppy_description:/ros_ws/src/puppy_description \
   --privileged \
-  docker-dev bash -c "
+  puppypi-dev bash -c "
     cd /ros_ws
     source /opt/ros/noetic/setup.bash
     
@@ -31,16 +40,15 @@ docker run --rm -it \
     catkin config --extend /opt/ros/noetic
     catkin build
     
-    source /ros_ws/devel/setup.bash
+    source devel/setup.bash
     
     # Make scripts executable
     chmod +x /ros_ws/src/puppy_joystick/scripts/*.py
+    chmod +x /ros_ws/src/puppy_description/scripts/velocity_walker.py
+    chmod +x /ros_ws/src/puppy_description/scripts/movements/*.py
     
-    # Kill any existing processes
-    pkill -9 -f virtual_joystick.py 2>/dev/null || true
-    
-    echo ''
-    echo 'VIRTUAL JOYSTICK CONTROLS:'
+    echo 'Starting Gazebo simulation with virtual joystick control...'
+    echo 'CONTROLS:'
     echo '  - ▲ Button or drag up: Walk Forward'
     echo '  - ▼ Button or drag down: Walk Backward'
     echo '  - ◄ Button or drag left: Rotate Left'
@@ -49,15 +57,11 @@ docker run --rm -it \
     echo '  - Virtual Joystick: Drag for continuous directional control'
     echo ''
     
-    # Start ROS core in the background
-    roscore &
-    sleep 5
-    
-    # Start the virtual joystick
-    echo 'Starting virtual joystick...'
-    rosrun puppy_joystick virtual_joystick.py
+    # Launch everything using the combined launch file
+    roslaunch puppy_joystick gazebo_with_joystick.launch
 "
 
 # Reset X server permissions
 xhost -local:
-echo "Test completed." 
+
+echo "Test terminated." 
