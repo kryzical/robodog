@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Launch Gazebo with the robot -->
+    <include file="$(find puppy_description)/launch/gazebo.launch" />
+    
+    <!-- Launch the velocity walker -->
+    <include file="$(find puppy_description)/launch/just_walker.launch" />
+    
+    <!-- Launch the joystick control -->
+    <node name="virtual_joystick" pkg="puppy_joystick" type="virtual_joystick.py" output="screen" />
+    
+    <!-- Launch joystick controller -->
+    <node name="joypad_controller" pkg="puppy_joystick" type="joypad_controller.py" output="screen">
+        <!-- Button mappings -->
+        <param name="forward_button" value="4" /> <!-- Triangle/Up button -->
+        <param name="backward_button" value="6" /> <!-- X/Down button -->
+        <param name="left_button" value="7" /> <!-- Square/Left button -->
+        <param name="right_button" value="5" /> <!-- Circle/Right button -->
+        <param name="stop_button" value="2" /> <!-- Share/Center button -->
+        
+        <!-- Axes mapping -->
+        <param name="linear_axis" value="1" /> <!-- Up/down -->
+        <param name="angular_axis" value="0" /> <!-- Left/right -->
+        
+        <!-- Velocity scaling -->
+        <param name="linear_scale" value="0.2" /> <!-- m/s for full stick -->
+        <param name="angular_scale" value="0.8" /> <!-- rad/s for full stick -->
+        
+        <!-- Additional parameters -->
+        <param name="dead_zone" value="0.05" />
+        <param name="analog_mode" value="true" />
+    </node>
+    
+    <!-- Monitor cmd_vel topic -->
+    <node name="cmd_vel_monitor" pkg="rostopic" type="rostopic" args="echo /cmd_vel" output="screen" />
+</launch> 

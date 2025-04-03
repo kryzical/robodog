@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Launch the main gazebo simulation -->
+  <include file="$(find puppy_description)/launch/gazebo.launch" />
+  
+  <!-- Wait for simulation to be fully loaded before starting controllers -->
+  <node pkg="rospy" type="sleep.py" name="wait_for_gazebo" args="5.0" />
+  
+  <!-- Launch the simple keyboard leg controller -->
+  <node pkg="puppy_description" type="simple_keyboard_controller.py" name="simple_keyboard_controller" output="screen" launch-prefix="bash -c 'sleep 7; $0 $@'">
+    <!-- Parameters for right front leg control -->
+    <param name="max_angle_change" value="0.7" /> <!-- Maximum angle change in radians from standing position -->
+  </node>
+</launch>

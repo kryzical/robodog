@@ -1,0 +1,38 @@
+<!-- Launch file for virtual joystick interface -->
+<launch>
+    <!-- Parameters for joystick -->
+    <arg name="autorepeat_rate" default="20.0" />
+    <arg name="deadzone" default="0.05" />
+    <arg name="button_mapping" default="ps4" /> <!-- Default to PS4-style mapping -->
+    
+    <!-- Launch the custom Python virtual joystick node -->
+    <node name="virtual_joystick" pkg="puppy_joystick" type="virtual_joystick.py" output="screen" />
+    
+    <!-- Launch joystick controller -->
+    <node name="joypad_controller" pkg="puppy_joystick" type="joypad_controller.py" output="screen">
+        <!-- Button mappings for our virtual joystick -->
+        <param name="forward_button" value="4" /> <!-- Triangle/Up button -->
+        <param name="backward_button" value="6" /> <!-- X/Down button -->
+        <param name="left_button" value="7" /> <!-- Square/Left button -->
+        <param name="right_button" value="5" /> <!-- Circle/Right button -->
+        <param name="stop_button" value="2" /> <!-- Share/Center button -->
+        
+        <!-- Axes mapping -->
+        <param name="linear_axis" value="1" /> <!-- Up/down -->
+        <param name="angular_axis" value="0" /> <!-- Left/right -->
+        
+        <!-- Velocity scaling -->
+        <param name="linear_scale" value="0.2" /> <!-- m/s for full stick -->
+        <param name="angular_scale" value="0.8" /> <!-- rad/s for full stick -->
+        
+        <!-- Additional parameters -->
+        <param name="dead_zone" value="$(arg deadzone)" />
+        <param name="analog_mode" value="true" />
+    </node>
+    
+    <!-- Display debug info -->
+    <node name="rqt_console" pkg="rqt_console" type="rqt_console" />
+    
+    <!-- Topic monitor -->
+    <node name="rostopic_cmd_vel" pkg="rostopic" type="rostopic" args="echo /cmd_vel" output="screen" />
+</launch> 

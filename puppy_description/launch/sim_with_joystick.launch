@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Launch the main gazebo simulation -->
+  <include file="$(find puppy_description)/launch/gazebo.launch" />
+  
+  <!-- Wait for simulation to be fully loaded before starting controllers -->
+  <node pkg="rospy" type="sleep.py" name="wait_for_gazebo" args="5.0" />
+  
+  <!-- Launch joystick driver with increased publishing rate -->
+  <node pkg="joy" type="joy_node" name="joy_node" output="screen">
+    <param name="dev" value="/dev/input/js0" />
+    <param name="deadzone" value="0.05" /> <!-- Reduced deadzone for better responsiveness -->
+    <param name="autorepeat_rate" value="30" /> <!-- Increased rate for more responsive control -->
+  </node>
+  
+  <!-- Launch the leg joystick controller (for right front leg only) -->
+  <node pkg="puppy_description" type="leg_joystick_control.py" name="leg_joystick_control" output="screen" launch-prefix="bash -c 'sleep 10; $0 $@'">
+    <!-- Parameters for right front leg control -->
+    <param name="leg" value="rf" /> <!-- Right front leg -->
+    <param name="axis" value="1" /> <!-- Vertical axis on left stick -->
+    <param name="max_angle_change" value="0.7" /> <!-- Increased for more noticeable movement -->
+  </node>
+</launch>

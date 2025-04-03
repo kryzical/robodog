@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Arguments to choose between physical and virtual joystick -->
+    <arg name="use_virtual_joystick" default="false" />
+    <arg name="gazebo" default="false" />
+    
+    <!-- Launch Gazebo if requested -->
+    <group if="$(arg gazebo)">
+        <!-- Launch Gazebo with empty world -->
+        <include file="$(find gazebo_ros)/launch/empty_world.launch">
+            <arg name="paused" value="false"/>
+            <arg name="use_sim_time" value="true"/>
+            <arg name="gui" value="true"/>
+            <arg name="verbose" value="true"/>
+        </include>
+
+        <!-- Load robot model -->
+        <param name="robot_description" command="$(find xacro)/xacro $(find puppy_description)/urdf/puppy.urdf.xacro" />
+        
+        <!-- Spawn robot in Gazebo -->
+        <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" 
+              args="-param robot_description -urdf -model puppy" />
+              
+        <!-- Load joint controllers -->
+        <include file="$(find puppy_description)/launch/velocity_control.launch" />
+    </group>
+
+    <!-- Physical Joystick -->
+    <group unless="$(arg use_virtual_joystick)">
+        <!-- Launch physical joystick driver -->
+        <node pkg="joy" type="joy_node" name="joy_node">
+            <param name="dev" value="/dev/input/js0" />
+            <param name="deadzone" value="0.1" />
+            <param name="autorepeat_rate" value="20" />
+        </node>
+        
+        <!-- Launch the leg joystick controller -->
+        <node pkg="puppy_description" type="leg_joystick_control.py" name="leg_joystick_control" output="screen">
+            <param name="leg" value="rf" />
+            <param name="axis" value="1" />
+            <param name="max_angle_change" value="0.5" />
+        </node>
+    </group>
+
+    <!-- Virtual Joystick -->
+    <group if="$(arg use_virtual_joystick)">
+        <!-- Launch the virtual joystick interface -->
+        <node name="virtual_joystick" pkg="puppy_joystick" type="virtual_joystick.py" output="screen" />
+        
+        <!-- Launch joystick controller -->
+        <node name="joypad_controller" pkg="puppy_joystick" type="joypad_controller.py" output="screen">
+            <!-- Button mappings for our virtual joystick -->
+            <param name="forward_button" value="4" /> <!-- Triangle/Up button -->
+            <param name="backward_button" value="6" /> <!-- X/Down button -->
+            <param name="left_button" value="7" /> <!-- Square/Left button -->
+            <param name="right_button" value="5" /> <!-- Circle/Right button -->
+            <param name="stop_button" value="2" /> <!-- Share/Center button -->
+            
+            <!-- Axes mapping -->
+            <param name="linear_axis" value="1" /> <!-- Up/down -->
+            <param name="angular_axis" value="0" /> <!-- Left/right -->
+            
+            <!-- Velocity scaling -->
+            <param name="linear_scale" value="0.2" /> <!-- m/s for full stick -->
+            <param name="angular_scale" value="0.8" /> <!-- rad/s for full stick -->
+            
+            <!-- Additional parameters -->
+            <param name="dead_zone" value="0.05" />
+            <param name="analog_mode" value="true" />
+        </node>
+    </group>
+
+    <!-- Common visualization tools -->
+    <node name="rqt_console" pkg="rqt_console" type="rqt_console" />
+    <node name="rostopic_cmd_vel" pkg="rostopic" type="rostopic" args="echo /cmd_vel" output="screen" />
+</launch> 

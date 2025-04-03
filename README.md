@@ -1,0 +1,1 @@
+ros1 project without ros1bridge, direct connection of publishing joint commands to the simulation robot 

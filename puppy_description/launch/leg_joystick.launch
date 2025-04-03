@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Launch joystick driver -->
+  <node pkg="joy" type="joy_node" name="joy_node">
+    <param name="dev" value="/dev/input/js0" />
+    <param name="deadzone" value="0.1" />
+    <param name="autorepeat_rate" value="20" />
+  </node>
+  
+  <!-- Launch the leg joystick controller -->
+  <node pkg="puppy_description" type="leg_joystick_control.py" name="leg_joystick_control" output="screen">
+    <!-- Parameters - change these to control different legs or use different axes -->
+    <param name="leg" value="rf" /> <!-- Options: rf (right front), lf (left front), rb (right back), lb (left back) -->
+    <param name="axis" value="1" /> <!-- Typically 1 is the vertical axis on left stick -->
+    <param name="max_angle_change" value="0.5" /> <!-- Maximum angle change in radians from standing position -->
+  </node>
+</launch>

@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  ros_robot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./puppy_description:/ros_ws/src/puppy_description
+      - ./puppy_joystick:/ros_ws/src/puppy_joystick
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - XAUTHORITY=/tmp/.docker.xauth
+    network_mode: host
+    privileged: true
+    command: >
+      bash -c "
+        source /opt/ros/noetic/setup.bash &&
+        cd /ros_ws &&
+        catkin build &&
+        source devel/setup.bash &&
+        sleep 5 &&
+        roslaunch puppy_joystick gazebo_with_joystick.launch
+      " 
