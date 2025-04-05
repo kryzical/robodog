@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  gazebo_garden:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: gazebo_garden
+    network_mode: host
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - XAUTHORITY=/tmp/.docker.xauth
+      - GZ_SIM_RESOURCE_PATH=/workspace/models:/workspace/src
+      - GZ_RESOURCE_PATH=/workspace/models:/workspace/src
+      - IGN_GAZEBO_RESOURCE_PATH=/workspace/models:/workspace/src
+      - IGN_FILE_PATH=/workspace/models:/workspace/src
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /tmp/.docker.xauth:/tmp/.docker.xauth:rw
+      - ./puppy_ros2_ws:/workspace:rw
+      - /tmp/mesh_copy:/workspace/models/puppybot/meshes:rw
+      - /dev/shm:/dev/shm
+    devices:
+      - /dev/dri:/dev/dri
+    command: tail -f /dev/null 

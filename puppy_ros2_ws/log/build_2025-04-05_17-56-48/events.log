@@ -1,0 +1,54 @@
+[0.000000] (-) TimerEvent: {}
+[0.001108] (puppy_description) JobQueued: {'identifier': 'puppy_description', 'dependencies': OrderedDict()}
+[0.001246] (puppy_description) JobStarted: {'identifier': 'puppy_description'}
+[0.012231] (puppy_description) JobProgress: {'identifier': 'puppy_description', 'progress': 'cmake'}
+[0.013084] (puppy_description) JobProgress: {'identifier': 'puppy_description', 'progress': 'build'}
+[0.014243] (puppy_description) Command: {'cmd': ['/usr/bin/cmake', '--build', '/workspace/build/puppy_description', '--', '-j12', '-l12'], 'cwd': '/workspace/build/puppy_description', 'env': OrderedDict([('GZ_SIM_RESOURCE_PATH', '/workspace/models:/workspace/src'), ('MESA_LOADER_DRIVER_OVERRIDE', 'iris'), ('HOSTNAME', 'kyppy'), ('SHLVL', '0'), ('LD_LIBRARY_PATH', '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib::/usr/lib/x86_64-linux-gnu/mesa:/usr/lib/x86_64-linux-gnu/mesa-egl:/usr/lib/x86_64-linux-gnu/pulseaudio'), ('HOME', '/root'), ('OLDPWD', '/workspace'), ('ROS_PYTHON_VERSION', '3'), ('ROS_DISTRO', 'humble'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('NVIDIA_DRIVER_CAPABILITIES', 'all'), ('TERM', 'xterm'), ('GAZEBO_MODEL_PATH', '/workspace/src:/workspace/models'), ('ROS_LOCALHOST_ONLY', '0'), ('QT_X11_NO_MITSHM', '1'), ('OGRE_RESOURCE_PATH', '/usr/lib/x86_64-linux-gnu/OGRE-1.9.0'), ('PATH', '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'), ('DISPLAY', ':0'), ('IGN_FILE_PATH', '/workspace/models:/workspace/src'), ('LANG', 'C.UTF-8'), ('XAUTHORITY', '/tmp/.docker.xauth'), ('GZ_RESOURCE_PATH', '/workspace/models:/workspace/src'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('IGN_GAZEBO_RESOURCE_PATH', '/workspace/models:/workspace/src'), ('GAZEBO_RESOURCE_PATH', '/workspace/src:/workspace/models'), ('GZ_VERSION', 'garden'), ('PWD', '/workspace/build/puppy_description'), ('LC_ALL', 'C.UTF-8'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('NVIDIA_VISIBLE_DEVICES', 'all'), ('COLCON', '1'), ('CMAKE_PREFIX_PATH', '/opt/ros/humble')]), 'shell': False}
+[0.062479] (puppy_description) CommandEnded: {'returncode': 0}
+[0.064391] (puppy_description) JobProgress: {'identifier': 'puppy_description', 'progress': 'install'}
+[0.073863] (puppy_description) Command: {'cmd': ['/usr/bin/cmake', '--install', '/workspace/build/puppy_description'], 'cwd': '/workspace/build/puppy_description', 'env': OrderedDict([('GZ_SIM_RESOURCE_PATH', '/workspace/models:/workspace/src'), ('MESA_LOADER_DRIVER_OVERRIDE', 'iris'), ('HOSTNAME', 'kyppy'), ('SHLVL', '0'), ('LD_LIBRARY_PATH', '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib::/usr/lib/x86_64-linux-gnu/mesa:/usr/lib/x86_64-linux-gnu/mesa-egl:/usr/lib/x86_64-linux-gnu/pulseaudio'), ('HOME', '/root'), ('OLDPWD', '/workspace'), ('ROS_PYTHON_VERSION', '3'), ('ROS_DISTRO', 'humble'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('NVIDIA_DRIVER_CAPABILITIES', 'all'), ('TERM', 'xterm'), ('GAZEBO_MODEL_PATH', '/workspace/src:/workspace/models'), ('ROS_LOCALHOST_ONLY', '0'), ('QT_X11_NO_MITSHM', '1'), ('OGRE_RESOURCE_PATH', '/usr/lib/x86_64-linux-gnu/OGRE-1.9.0'), ('PATH', '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'), ('DISPLAY', ':0'), ('IGN_FILE_PATH', '/workspace/models:/workspace/src'), ('LANG', 'C.UTF-8'), ('XAUTHORITY', '/tmp/.docker.xauth'), ('GZ_RESOURCE_PATH', '/workspace/models:/workspace/src'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('IGN_GAZEBO_RESOURCE_PATH', '/workspace/models:/workspace/src'), ('GAZEBO_RESOURCE_PATH', '/workspace/src:/workspace/models'), ('GZ_VERSION', 'garden'), ('PWD', '/workspace/build/puppy_description'), ('LC_ALL', 'C.UTF-8'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('NVIDIA_VISIBLE_DEVICES', 'all'), ('COLCON', '1'), ('CMAKE_PREFIX_PATH', '/opt/ros/humble')]), 'shell': False}
+[0.081893] (puppy_description) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[0.082185] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/urdf\n'}
+[0.082336] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/urdf/puppy.transmission.xacro\n'}
+[0.082435] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/urdf/puppy.gazebo.xacro\n'}
+[0.083281] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/urdf/puppy.urdf.xacro\n'}
+[0.083736] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/urdf/materials.xacro\n'}
+[0.083998] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/meshes\n'}
+[0.084213] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/meshes/rf_link2.STL\n'}
+[0.084631] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/meshes/lf_link1.STL\n'}
+[0.084761] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/meshes/base_link.STL\n'}
+[0.084960] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/meshes/lb_link1.STL\n'}
+[0.085160] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/meshes/lf_link2.STL\n'}
+[0.085346] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/meshes/rb_link2.STL\n'}
+[0.085563] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/meshes/lb_link2.STL\n'}
+[0.085721] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/meshes/rb_link1.STL\n'}
+[0.085908] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/meshes/rf_link1.STL\n'}
+[0.086106] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/meshes/camera_link.STL\n'}
+[0.086316] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/launch\n'}
+[0.086525] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/launch/mesh_test.launch.py\n'}
+[0.086744] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/launch/gazebo_ignition.launch.py\n'}
+[0.087024] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/launch/test_gazebo.launch.py\n'}
+[0.087245] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/launch/simple_gazebo.launch.py\n'}
+[0.087462] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/launch/display.launch.py\n'}
+[0.087676] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/config\n'}
+[0.088167] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/config/gazebo_controllers.yaml\n'}
+[0.088345] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/config/display.rviz\n'}
+[0.088512] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/ament_index/resource_index/package_run_dependencies/puppy_description\n'}
+[0.088678] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/ament_index/resource_index/parent_prefix_path/puppy_description\n'}
+[0.089915] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/environment/ament_prefix_path.sh\n'}
+[0.090408] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/environment/ament_prefix_path.dsv\n'}
+[0.090614] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/environment/path.sh\n'}
+[0.090801] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/environment/path.dsv\n'}
+[0.091013] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/local_setup.bash\n'}
+[0.091202] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/local_setup.sh\n'}
+[0.091562] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/local_setup.zsh\n'}
+[0.091760] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/local_setup.dsv\n'}
+[0.091962] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/package.dsv\n'}
+[0.092163] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/ament_index/resource_index/packages/puppy_description\n'}
+[0.092350] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/cmake/puppy_descriptionConfig.cmake\n'}
+[0.092530] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/cmake/puppy_descriptionConfig-version.cmake\n'}
+[0.092702] (puppy_description) StdoutLine: {'line': b'-- Up-to-date: /workspace/install/puppy_description/share/puppy_description/package.xml\n'}
+[0.092923] (puppy_description) CommandEnded: {'returncode': 0}
+[0.099457] (-) TimerEvent: {}
+[0.119206] (puppy_description) JobEnded: {'identifier': 'puppy_description', 'rc': 0}
+[0.120927] (-) EventReactorShutdown: {}

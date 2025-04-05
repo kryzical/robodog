@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  gazebo:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: gazebo_garden
+    network_mode: host
+    privileged: true
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${HOME}/.Xauthority:/root/.Xauthority
+      - ../puppy_ros2_ws/src:/workspace/src
+      - ../models:/workspace/models
+    command: bash 

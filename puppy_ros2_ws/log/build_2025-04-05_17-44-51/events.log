@@ -1,0 +1,82 @@
+[0.000000] (-) TimerEvent: {}
+[0.001400] (puppy_description) JobQueued: {'identifier': 'puppy_description', 'dependencies': OrderedDict()}
+[0.001482] (puppy_description) JobStarted: {'identifier': 'puppy_description'}
+[0.015787] (puppy_description) JobProgress: {'identifier': 'puppy_description', 'progress': 'cmake'}
+[0.018005] (puppy_description) Command: {'cmd': ['/usr/bin/cmake', '/workspace/src/puppy_description', '-DCMAKE_INSTALL_PREFIX=/workspace/install/puppy_description'], 'cwd': '/workspace/build/puppy_description', 'env': OrderedDict([('GZ_SIM_RESOURCE_PATH', '/workspace/models:/workspace/src'), ('MESA_LOADER_DRIVER_OVERRIDE', 'iris'), ('HOSTNAME', 'kyppy'), ('SHLVL', '0'), ('LD_LIBRARY_PATH', '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib::/usr/lib/x86_64-linux-gnu/mesa:/usr/lib/x86_64-linux-gnu/mesa-egl:/usr/lib/x86_64-linux-gnu/pulseaudio'), ('HOME', '/root'), ('OLDPWD', '/workspace'), ('ROS_PYTHON_VERSION', '3'), ('ROS_DISTRO', 'humble'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('NVIDIA_DRIVER_CAPABILITIES', 'all'), ('TERM', 'xterm'), ('GAZEBO_MODEL_PATH', '/workspace/src:/workspace/models'), ('ROS_LOCALHOST_ONLY', '0'), ('QT_X11_NO_MITSHM', '1'), ('OGRE_RESOURCE_PATH', '/usr/lib/x86_64-linux-gnu/OGRE-1.9.0'), ('PATH', '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'), ('DISPLAY', ':0'), ('IGN_FILE_PATH', '/workspace/models:/workspace/src'), ('LANG', 'C.UTF-8'), ('XAUTHORITY', '/tmp/.docker.xauth'), ('GZ_RESOURCE_PATH', '/workspace/models:/workspace/src'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('IGN_GAZEBO_RESOURCE_PATH', '/workspace/models:/workspace/src'), ('GAZEBO_RESOURCE_PATH', '/workspace/src:/workspace/models'), ('GZ_VERSION', 'garden'), ('PWD', '/workspace/build/puppy_description'), ('LC_ALL', 'C.UTF-8'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('NVIDIA_VISIBLE_DEVICES', 'all'), ('COLCON', '1'), ('CMAKE_PREFIX_PATH', '/opt/ros/humble')]), 'shell': False}
+[0.099150] (-) TimerEvent: {}
+[0.115221] (puppy_description) StdoutLine: {'line': b'-- The C compiler identification is GNU 11.4.0\n'}
+[0.191750] (puppy_description) StdoutLine: {'line': b'-- The CXX compiler identification is GNU 11.4.0\n'}
+[0.199303] (-) TimerEvent: {}
+[0.201914] (puppy_description) StdoutLine: {'line': b'-- Detecting C compiler ABI info\n'}
+[0.299454] (-) TimerEvent: {}
+[0.300350] (puppy_description) StdoutLine: {'line': b'-- Detecting C compiler ABI info - done\n'}
+[0.309833] (puppy_description) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc - skipped\n'}
+[0.310402] (puppy_description) StdoutLine: {'line': b'-- Detecting C compile features\n'}
+[0.311330] (puppy_description) StdoutLine: {'line': b'-- Detecting C compile features - done\n'}
+[0.315697] (puppy_description) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info\n'}
+[0.399607] (-) TimerEvent: {}
+[0.432075] (puppy_description) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info - done\n'}
+[0.441124] (puppy_description) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++ - skipped\n'}
+[0.441573] (puppy_description) StdoutLine: {'line': b'-- Detecting CXX compile features\n'}
+[0.442120] (puppy_description) StdoutLine: {'line': b'-- Detecting CXX compile features - done\n'}
+[0.445986] (puppy_description) StdoutLine: {'line': b'-- Found ament_cmake: 1.3.11 (/opt/ros/humble/share/ament_cmake/cmake)\n'}
+[0.499745] (-) TimerEvent: {}
+[0.600201] (-) TimerEvent: {}
+[0.650403] (puppy_description) StdoutLine: {'line': b'-- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter \n'}
+[0.700276] (-) TimerEvent: {}
+[0.800666] (-) TimerEvent: {}
+[0.877467] (puppy_description) StdoutLine: {'line': b'-- Configuring done\n'}
+[0.883035] (puppy_description) StdoutLine: {'line': b'-- Generating done\n'}
+[0.888234] (puppy_description) StdoutLine: {'line': b'-- Build files have been written to: /workspace/build/puppy_description\n'}
+[0.896029] (puppy_description) CommandEnded: {'returncode': 0}
+[0.897010] (puppy_description) JobProgress: {'identifier': 'puppy_description', 'progress': 'build'}
+[0.898400] (puppy_description) Command: {'cmd': ['/usr/bin/cmake', '--build', '/workspace/build/puppy_description', '--', '-j12', '-l12'], 'cwd': '/workspace/build/puppy_description', 'env': OrderedDict([('GZ_SIM_RESOURCE_PATH', '/workspace/models:/workspace/src'), ('MESA_LOADER_DRIVER_OVERRIDE', 'iris'), ('HOSTNAME', 'kyppy'), ('SHLVL', '0'), ('LD_LIBRARY_PATH', '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib::/usr/lib/x86_64-linux-gnu/mesa:/usr/lib/x86_64-linux-gnu/mesa-egl:/usr/lib/x86_64-linux-gnu/pulseaudio'), ('HOME', '/root'), ('OLDPWD', '/workspace'), ('ROS_PYTHON_VERSION', '3'), ('ROS_DISTRO', 'humble'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('NVIDIA_DRIVER_CAPABILITIES', 'all'), ('TERM', 'xterm'), ('GAZEBO_MODEL_PATH', '/workspace/src:/workspace/models'), ('ROS_LOCALHOST_ONLY', '0'), ('QT_X11_NO_MITSHM', '1'), ('OGRE_RESOURCE_PATH', '/usr/lib/x86_64-linux-gnu/OGRE-1.9.0'), ('PATH', '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'), ('DISPLAY', ':0'), ('IGN_FILE_PATH', '/workspace/models:/workspace/src'), ('LANG', 'C.UTF-8'), ('XAUTHORITY', '/tmp/.docker.xauth'), ('GZ_RESOURCE_PATH', '/workspace/models:/workspace/src'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('IGN_GAZEBO_RESOURCE_PATH', '/workspace/models:/workspace/src'), ('GAZEBO_RESOURCE_PATH', '/workspace/src:/workspace/models'), ('GZ_VERSION', 'garden'), ('PWD', '/workspace/build/puppy_description'), ('LC_ALL', 'C.UTF-8'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('NVIDIA_VISIBLE_DEVICES', 'all'), ('COLCON', '1'), ('CMAKE_PREFIX_PATH', '/opt/ros/humble')]), 'shell': False}
+[0.900788] (-) TimerEvent: {}
+[0.951957] (puppy_description) CommandEnded: {'returncode': 0}
+[0.953199] (puppy_description) JobProgress: {'identifier': 'puppy_description', 'progress': 'install'}
+[0.966219] (puppy_description) Command: {'cmd': ['/usr/bin/cmake', '--install', '/workspace/build/puppy_description'], 'cwd': '/workspace/build/puppy_description', 'env': OrderedDict([('GZ_SIM_RESOURCE_PATH', '/workspace/models:/workspace/src'), ('MESA_LOADER_DRIVER_OVERRIDE', 'iris'), ('HOSTNAME', 'kyppy'), ('SHLVL', '0'), ('LD_LIBRARY_PATH', '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib::/usr/lib/x86_64-linux-gnu/mesa:/usr/lib/x86_64-linux-gnu/mesa-egl:/usr/lib/x86_64-linux-gnu/pulseaudio'), ('HOME', '/root'), ('OLDPWD', '/workspace'), ('ROS_PYTHON_VERSION', '3'), ('ROS_DISTRO', 'humble'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('NVIDIA_DRIVER_CAPABILITIES', 'all'), ('TERM', 'xterm'), ('GAZEBO_MODEL_PATH', '/workspace/src:/workspace/models'), ('ROS_LOCALHOST_ONLY', '0'), ('QT_X11_NO_MITSHM', '1'), ('OGRE_RESOURCE_PATH', '/usr/lib/x86_64-linux-gnu/OGRE-1.9.0'), ('PATH', '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'), ('DISPLAY', ':0'), ('IGN_FILE_PATH', '/workspace/models:/workspace/src'), ('LANG', 'C.UTF-8'), ('XAUTHORITY', '/tmp/.docker.xauth'), ('GZ_RESOURCE_PATH', '/workspace/models:/workspace/src'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('IGN_GAZEBO_RESOURCE_PATH', '/workspace/models:/workspace/src'), ('GAZEBO_RESOURCE_PATH', '/workspace/src:/workspace/models'), ('GZ_VERSION', 'garden'), ('PWD', '/workspace/build/puppy_description'), ('LC_ALL', 'C.UTF-8'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('NVIDIA_VISIBLE_DEVICES', 'all'), ('COLCON', '1'), ('CMAKE_PREFIX_PATH', '/opt/ros/humble')]), 'shell': False}
+[0.975096] (puppy_description) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[0.975729] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/urdf\n'}
+[0.977530] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/urdf/puppy.transmission.xacro\n'}
+[0.978045] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/urdf/puppy.gazebo.xacro\n'}
+[0.978292] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/urdf/puppy.urdf.xacro\n'}
+[0.978500] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/urdf/materials.xacro\n'}
+[0.978788] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/meshes\n'}
+[0.978877] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/meshes/rf_link2.STL\n'}
+[0.979076] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/meshes/lf_link1.STL\n'}
+[0.979911] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/meshes/base_link.STL\n'}
+[0.981467] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/meshes/lb_link1.STL\n'}
+[0.982884] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/meshes/lf_link2.STL\n'}
+[0.983232] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/meshes/rb_link2.STL\n'}
+[0.983694] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/meshes/lb_link2.STL\n'}
+[0.983975] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/meshes/rb_link1.STL\n'}
+[0.985028] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/meshes/rf_link1.STL\n'}
+[0.986020] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/meshes/camera_link.STL\n'}
+[0.986496] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/launch\n'}
+[0.986873] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/launch/mesh_test.launch.py\n'}
+[0.987205] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/launch/gazebo_ignition.launch.py\n'}
+[0.987595] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/launch/test_gazebo.launch.py\n'}
+[0.987720] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/launch/simple_gazebo.launch.py\n'}
+[0.987820] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/launch/display.launch.py\n'}
+[0.987934] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/config\n'}
+[0.989021] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/config/gazebo_controllers.yaml\n'}
+[0.989494] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/config/display.rviz\n'}
+[0.991352] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/ament_index/resource_index/package_run_dependencies/puppy_description\n'}
+[0.991848] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/ament_index/resource_index/parent_prefix_path/puppy_description\n'}
+[0.992373] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/environment/ament_prefix_path.sh\n'}
+[0.992700] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/environment/ament_prefix_path.dsv\n'}
+[0.992794] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/environment/path.sh\n'}
+[0.992932] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/environment/path.dsv\n'}
+[0.993072] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/local_setup.bash\n'}
+[0.993240] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/local_setup.sh\n'}
+[0.993526] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/local_setup.zsh\n'}
+[0.993633] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/local_setup.dsv\n'}
+[0.993907] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/package.dsv\n'}
+[0.994320] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/ament_index/resource_index/packages/puppy_description\n'}
+[0.994861] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/cmake/puppy_descriptionConfig.cmake\n'}
+[0.995132] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/cmake/puppy_descriptionConfig-version.cmake\n'}
+[0.995324] (puppy_description) StdoutLine: {'line': b'-- Installing: /workspace/install/puppy_description/share/puppy_description/package.xml\n'}
+[0.998165] (puppy_description) CommandEnded: {'returncode': 0}
+[1.000892] (-) TimerEvent: {}
+[1.029534] (puppy_description) JobEnded: {'identifier': 'puppy_description', 'rc': 0}
+[1.031333] (-) EventReactorShutdown: {}
