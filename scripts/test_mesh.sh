@@ -15,6 +15,14 @@ docker run -it --rm \
   --network host \
   -e DISPLAY=$DISPLAY \
   -e QT_X11_NO_MITSHM=1 \
+  -e GZ_SIM_SYSTEM_PLUGIN_PATH=/usr/lib/x86_64-linux-gnu/gz-sim-7/plugins \
+  -e GZ_SIM_RENDER_ENGINE_PATH=/usr/lib/x86_64-linux-gnu/gz-sim-7/plugins/render-engines \
+  -e GZ_SIM_RESOURCE_PATH=/usr/share/gz/gz-sim-7 \
+  -e GZ_SIM_SERVER_CONFIG_PATH=/usr/share/gz/gz-sim-7/server \
+  -e GZ_SIM_SYSTEM_PLUGIN_PATH=/usr/share/gz/gz-sim-7/plugins \
+  -e GZ_GPU_SYNC=1 \
+  -e GZ_RENDERING_USE_SHADOWMAPS=0 \
+  -e GZ_RENDERING_USE_PBR=0 \
   -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
   -v $(pwd)/puppy_ros2_ws:/workspace:rw \
   -v /dev/dri:/dev/dri \
@@ -72,7 +80,7 @@ docker run -it --rm \
     
     <!-- Left Back leg parts -->
     <link name=\"lb_link1\">
-      <pose>0.042 0.0778 0.126 -0.752 0 0</pose>
+      <pose>0.0421 0.0779 0.125 -0.752 0 0</pose>
       <inertial>
         <mass>0.0101</mass>
         <inertia>
@@ -110,6 +118,7 @@ docker run -it --rm \
     <joint name=\"lb_joint1\" type=\"revolute\">
       <parent>base_link</parent>
       <child>lb_link1</child>
+      <pose>0 0 0 0 0 0</pose>
       <axis>
         <xyz>1 0 0</xyz>
         <limit>
@@ -120,7 +129,7 @@ docker run -it --rm \
     </joint>
     
     <link name=\"lb_link2\">
-      <pose>0.054 0.13 0.073 -0.752 0 3.14159</pose>
+      <pose relative_to=\"lb_link1\">0.0120 0.0525 -0.0529 0 0 0</pose>
       <inertial>
         <mass>0.0054</mass>
         <inertia>
@@ -158,6 +167,7 @@ docker run -it --rm \
     <joint name=\"lb_joint2\" type=\"revolute\">
       <parent>lb_link1</parent>
       <child>lb_link2</child>
+      <pose>0 0 0 0 0 0</pose>
       <axis>
         <xyz>1 0 0</xyz>
         <limit>
@@ -169,16 +179,16 @@ docker run -it --rm \
     
     <!-- Right Back leg parts -->
     <link name=\"rb_link1\">
-      <pose>-0.042 0.0778 0.126 -0.752 0 0</pose>
+      <pose>0.0421 -0.0779 0.125 -0.752 0 0</pose>
       <inertial>
         <mass>0.0101</mass>
         <inertia>
-          <ixx>4.75129811236989E-06</ixx>
-          <iyy>2.87660393694748E-06</iyy>
-          <izz>2.92897914074097E-06</izz>
-          <ixy>-2.1017569726548E-08</ixy>
-          <ixz>-1.89306363229736E-08</ixz>
-          <iyz>2.14913401997947E-06</iyz>
+          <ixx>4.75129190044601E-06</ixx>
+          <iyy>2.87659318790812E-06</iyy>
+          <izz>2.92897619209419E-06</izz>
+          <ixy>2.10473016237263E-08</ixy>
+          <ixz>1.88925228411051E-08</ixz>
+          <iyz>2.14913235084379E-06</iyz>
         </inertia>
       </inertial>
       <visual name=\"visual\">
@@ -207,6 +217,7 @@ docker run -it --rm \
     <joint name=\"rb_joint1\" type=\"revolute\">
       <parent>base_link</parent>
       <child>rb_link1</child>
+      <pose>0 0 0 0 0 0</pose>
       <axis>
         <xyz>1 0 0</xyz>
         <limit>
@@ -217,16 +228,16 @@ docker run -it --rm \
     </joint>
     
     <link name=\"rb_link2\">
-      <pose>-0.0605 0.13 0.073 -0.752 0 3.14159</pose>
+      <pose relative_to=\"rb_link1\">0.0120 -0.0525 -0.0529 0 0 0</pose>
       <inertial>
         <mass>0.0054</mass>
         <inertia>
-          <ixx>4.05444909186485E-06</ixx>
-          <iyy>1.97885521739198E-06</iyy>
-          <izz>2.19064599300475E-06</izz>
-          <ixy>1.22890997212443E-15</ixy>
-          <ixz>5.5049632107985E-16</ixz>
-          <iyz>-1.87063799892702E-06</iyz>
+          <ixx>4.05444909185018E-06</ixx>
+          <iyy>1.97885521739999E-06</iyy>
+          <izz>2.19064599298264E-06</izz>
+          <ixy>1.22817063923314E-15</ixy>
+          <ixz>5.50500791639953E-16</ixz>
+          <iyz>-1.87063799891709E-06</iyz>
         </inertia>
       </inertial>
       <visual name=\"visual\">
@@ -255,200 +266,7 @@ docker run -it --rm \
     <joint name=\"rb_joint2\" type=\"revolute\">
       <parent>rb_link1</parent>
       <child>rb_link2</child>
-      <axis>
-        <xyz>1 0 0</xyz>
-        <limit>
-          <lower>-2</lower>
-          <upper>2</upper>
-        </limit>
-      </axis>
-    </joint>
-    
-    <!-- Left Front leg parts -->
-    <link name=\"lf_link1\">
-      <pose>0.042 -0.0778 0.121 -0.752 0 0</pose>
-      <inertial>
-        <mass>0.0101</mass>
-        <inertia>
-          <ixx>4.75131109114716E-06</ixx>
-          <iyy>2.87660804474965E-06</iyy>
-          <izz>2.92898830803666E-06</izz>
-          <ixy>2.10480769743655E-08</ixy>
-          <ixz>1.88912920202068E-08</ixz>
-          <iyz>2.14914102954077E-06</iyz>
-        </inertia>
-      </inertial>
-      <visual name=\"visual\">
-        <geometry>
-          <mesh>
-            <uri>file:///workspace/models/puppybot/meshes/lf_link1.STL</uri>
-            <scale>1 1 1</scale>
-          </mesh>
-        </geometry>
-        <material>
-          <ambient>0 0 0 1</ambient>
-          <diffuse>0 0 0 1</diffuse>
-          <specular>0.1 0.1 0.1 1</specular>
-        </material>
-      </visual>
-      <collision name=\"collision\">
-        <geometry>
-          <mesh>
-            <uri>file:///workspace/models/puppybot/meshes/lf_link1.STL</uri>
-            <scale>1 1 1</scale>
-          </mesh>
-        </geometry>
-      </collision>
-    </link>
-    
-    <joint name=\"lf_joint1\" type=\"revolute\">
-      <parent>base_link</parent>
-      <child>lf_link1</child>
-      <axis>
-        <xyz>1 0 0</xyz>
-        <limit>
-          <lower>-2</lower>
-          <upper>2</upper>
-        </limit>
-      </axis>
-    </joint>
-    
-    <link name=\"lf_link2\">
-      <pose>0.054 -0.13 0.068 -0.752 0 3.14159</pose>
-      <inertial>
-        <mass>0.0054</mass>
-        <inertia>
-          <ixx>0.0001</ixx>
-          <iyy>0.0001</iyy>
-          <izz>0.0001</izz>
-          <ixy>0</ixy>
-          <ixz>0</ixz>
-          <iyz>0</iyz>
-        </inertia>
-      </inertial>
-      <visual name=\"visual\">
-        <geometry>
-          <mesh>
-            <uri>file:///workspace/models/puppybot/meshes/lf_link2.STL</uri>
-            <scale>1 1 1</scale>
-          </mesh>
-        </geometry>
-        <material>
-          <ambient>0 0 0 1</ambient>
-          <diffuse>0 0 0 1</diffuse>
-          <specular>0.1 0.1 0.1 1</specular>
-        </material>
-      </visual>
-      <collision name=\"collision\">
-        <geometry>
-          <mesh>
-            <uri>file:///workspace/models/puppybot/meshes/lf_link2.STL</uri>
-            <scale>1 1 1</scale>
-          </mesh>
-        </geometry>
-      </collision>
-    </link>
-    
-    <joint name=\"lf_joint2\" type=\"revolute\">
-      <parent>lf_link1</parent>
-      <child>lf_link2</child>
-      <axis>
-        <xyz>1 0 0</xyz>
-        <limit>
-          <lower>-2</lower>
-          <upper>2</upper>
-        </limit>
-      </axis>
-    </joint>
-    
-    <!-- Right Front leg parts -->
-    <link name=\"rf_link1\">
-      <pose>-0.042 -0.0778 0.121 -0.752 0 0</pose>
-      <inertial>
-        <mass>0.0101</mass>
-        <inertia>
-          <ixx>4.75129811233804E-06</ixx>
-          <iyy>2.87660393692374E-06</iyy>
-          <izz>2.9289791407718E-06</izz>
-          <ixy>-2.1017569770552E-08</ixy>
-          <ixz>-1.89306363663801E-08</ixz>
-          <iyz>2.14913401996578E-06</iyz>
-        </inertia>
-      </inertial>
-      <visual name=\"visual\">
-        <geometry>
-          <mesh>
-            <uri>file:///workspace/models/puppybot/meshes/rf_link1.STL</uri>
-            <scale>1 1 1</scale>
-          </mesh>
-        </geometry>
-        <material>
-          <ambient>0 0 0 1</ambient>
-          <diffuse>0 0 0 1</diffuse>
-          <specular>0.1 0.1 0.1 1</specular>
-        </material>
-      </visual>
-      <collision name=\"collision\">
-        <geometry>
-          <mesh>
-            <uri>file:///workspace/models/puppybot/meshes/rf_link1.STL</uri>
-            <scale>1 1 1</scale>
-          </mesh>
-        </geometry>
-      </collision>
-    </link>
-    
-    <joint name=\"rf_joint1\" type=\"revolute\">
-      <parent>base_link</parent>
-      <child>rf_link1</child>
-      <axis>
-        <xyz>1 0 0</xyz>
-        <limit>
-          <lower>-2</lower>
-          <upper>2</upper>
-        </limit>
-      </axis>
-    </joint>
-    
-    <link name=\"rf_link2\">
-      <pose>-0.0605 -0.13 0.068 -0.752 0 3.14159</pose>
-      <inertial>
-        <mass>0.0054</mass>
-        <inertia>
-          <ixx>4.05444909185018E-06</ixx>
-          <iyy>1.97885521739999E-06</iyy>
-          <izz>2.19064599298264E-06</izz>
-          <ixy>1.22817063923314E-15</ixy>
-          <ixz>5.50500791639953E-16</ixz>
-          <iyz>-1.87063799891709E-06</iyz>
-        </inertia>
-      </inertial>
-      <visual name=\"visual\">
-        <geometry>
-          <mesh>
-            <uri>file:///workspace/models/puppybot/meshes/rf_link2.STL</uri>
-            <scale>1 1 1</scale>
-          </mesh>
-        </geometry>
-        <material>
-          <ambient>0 0 0 1</ambient>
-          <diffuse>0 0 0 1</diffuse>
-          <specular>0.1 0.1 0.1 1</specular>
-        </material>
-      </visual>
-      <collision name=\"collision\">
-        <geometry>
-          <mesh>
-            <uri>file:///workspace/models/puppybot/meshes/rf_link2.STL</uri>
-            <scale>1 1 1</scale>
-          </mesh>
-        </geometry>
-      </collision>
-    </link>
-    
-    <joint name=\"rf_joint2\" type=\"revolute\">
-      <parent>rf_link1</parent>
-      <child>rf_link2</child>
+      <pose>0 0 0 0 0 0</pose>
       <axis>
         <xyz>1 0 0</xyz>
         <limit>
@@ -460,7 +278,7 @@ docker run -it --rm \
     
     <!-- Camera link -->
     <link name=\"camera_link\">
-      <pose>0 -0.101 0.127 0.0342 0 0</pose>
+      <pose>0 -0.1 0.11 0 0 0</pose>
       <inertial>
         <mass>0.01</mass>
         <inertia>
@@ -508,12 +326,16 @@ EOF
     source /opt/ros/humble/setup.bash
     
     # Run Gazebo with empty world
-    gz sim -r empty.sdf --headless-rendering false -p &
+    gz sim -r --render-engine=ogre empty.sdf &
     sleep 5
     
-    # Spawn the puppy model
+    # Pause physics using the correct service type
+    gz service -s /world/empty/control --reqtype gz.msgs.WorldControl --reptype gz.msgs.Boolean --timeout 1000 --req 'pause: true'
+    sleep 2
+    
+    # Spawn the puppy model much higher in the air
     echo 'Spawning puppy model...'
-    gz service -s /world/empty/create --reqtype ignition.msgs.EntityFactory --reptype ignition.msgs.Boolean --timeout 1000 --req 'sdf_filename: \"/tmp/puppy_model.sdf\", name: \"puppy\", pose: {position: {x: 0, y: 0, z: 0.5}}'
+    gz service -s /world/empty/create --reqtype ignition.msgs.EntityFactory --reptype ignition.msgs.Boolean --timeout 1000 --req 'sdf_filename: \"/tmp/puppy_model.sdf\", name: \"puppy\", pose: {position: {x: 0, y: 0, z: 5.0}}'
     
     # Keep the container running
     echo 'Puppy model spawned. Press Ctrl+C to exit.'
