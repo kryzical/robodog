@@ -1,21 +1,96 @@
-version: '3'
+name: robodog
 
 services:
   gazebo:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile
-    container_name: gazebo_garden
+    image: docker_gazebo
+    container_name: gazebo_robot
     network_mode: host
     privileged: true
     environment:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
-      - NVIDIA_VISIBLE_DEVICES=all
-      - NVIDIA_DRIVER_CAPABILITIES=all
+      - LIBGL_ALWAYS_SOFTWARE=1
+      - GZ_SIM_RESOURCE_PATH=/workspace/src:/workspace/models
+      - IGN_GAZEBO_RESOURCE_PATH=/workspace/src:/workspace/models
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix
-      - ${HOME}/.Xauthority:/root/.Xauthority
-      - ../puppy_ros2_ws/src:/workspace/src
-      - ../models:/workspace/models
-    command: bash 
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ${HOME}/.Xauthority:/root/.Xauthority:rw
+      - ../puppy_ros2_ws:/workspace:rw
+      - ../launch/launch-with-robot.sh:/launch.sh:ro
+    command: ["/bin/bash", "/launch.sh"]
+
+  # The following lines are commented out as they are not provided in the original file or the new file
+  # entrypoint: ["/bin/bash", "-c"]
+  # command: |
+  #   source /opt/ros/humble/setup.bash
+  #   source /workspace/install/setup.bash 2>/dev/null || echo 'Warning: Could not source workspace'
+  #   
+  #   # Start Gazebo with default empty world
+  #   echo 'Starting Gazebo with empty world...'
+  #   gz sim -v 4 empty.sdf &
+  #   sleep 5
+  #   
+  #   # Setup mesh paths
+  #   if [ -d '/workspace/src/puppy_description/meshes' ]; then
+  #     mkdir -p /workspace/models/puppybot/meshes
+  #     ln -sf /workspace/src/puppy_description/meshes/* /workspace/models/puppybot/meshes/ 2>/dev/null
+  #   fi
+  #   
+  #   # Try to spawn the real robot
+  #   if [ -f '/workspace/src/puppy_description/urdf/puppy.urdf.xacro' ]; then
+  #     xacro /workspace/src/puppy_description/urdf/puppy.urdf.xacro > /tmp/puppy.urdf
+  #     gz sdf -p /tmp/puppy.urdf > /tmp/puppy.sdf
+  #     gz service -s /world/empty/create --reqtype gz.msgs.EntityFactory --reptype gz.msgs.Boolean --timeout 5000 --req 'sdf_filename: "/tmp/puppy.sdf", name: "puppy", pose: {position: {x: 0, y: 0, z: 0.2}}'
+  #   else
+  #     # Spawn simple model
+  #     cat > /tmp/simple.sdf << 'EOF'
+  # <?xml version='1.0'?>
+  # <sdf version='1.6'>
+  #   <model name='simple_puppy'>
+  #     <pose>0 0 0.1 0 0 0</pose>
+  #     <link name='base'>
+  #       <visual name='visual'>
+  #         <geometry><box><size>0.3 0.15 0.05</size></box></geometry>
+  #         <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse></material>
+  #       </visual>
+  #       <collision name='collision'>
+  #         <geometry><box><size>0.3 0.15 0.05</size></box></geometry>
+  #       </collision>
+  #     </link>
+  #     <link name='fl_leg'><pose>0.1 0.06 -0.05 0 0 0</pose>
+  #       <visual name='visual'>
+  #         <geometry><cylinder><radius>0.01</radius><length>0.1</length></cylinder></geometry>
+  #         <material><ambient>1 0 0 1</ambient><diffuse>1 0 0 1</diffuse></material>
+  #       </visual>
+  #     </link>
+  #     <joint name='fl_joint' type='fixed'><parent>base</parent><child>fl_leg</child></joint>
+  #     <link name='fr_leg'><pose>0.1 -0.06 -0.05 0 0 0</pose>
+  #       <visual name='visual'>
+  #         <geometry><cylinder><radius>0.01</radius><length>0.1</length></cylinder></geometry>
+  #         <material><ambient>1 0 0 1</ambient><diffuse>1 0 0 1</diffuse></material>
+  #       </visual>
+  #     </link>
+  #     <joint name='fr_joint' type='fixed'><parent>base</parent><child>fr_leg</child></joint>
+  #     <link name='bl_leg'><pose>-0.1 0.06 -0.05 0 0 0</pose>
+  #       <visual name='visual'>
+  #         <geometry><cylinder><radius>0.01</radius><length>0.1</length></cylinder></geometry>
+  #         <material><ambient>1 0 0 1</ambient><diffuse>1 0 0 1</diffuse></material>
+  #       </visual>
+  #     </link>
+  #     <joint name='bl_joint' type='fixed'><parent>base</parent><child>bl_leg</child></joint>
+  #     <link name='br_leg'><pose>-0.1 -0.06 -0.05 0 0 0</pose>
+  #       <visual name='visual'>
+  #         <geometry><cylinder><radius>0.01</radius><length>0.1</length></cylinder></geometry>
+  #         <material><ambient>1 0 0 1</ambient><diffuse>1 0 0 1</diffuse></material>
+  #       </visual>
+  #     </link>
+  #     <joint name='br_joint' type='fixed'><parent>base</parent><child>br_leg</child></joint>
+  #   </model>
+  # </sdf>
+  # EOF
+  #         gz service -s /world/empty/create --reqtype gz.msgs.EntityFactory --reptype gz.msgs.Boolean --timeout 5000 --req 'sdf_filename: "/tmp/simple.sdf", name: "simple_puppy", pose: {position: {x: 0, y: 0, z: 0.2}}'
+  #       fi
+  #       
+  #       # Keep container running
+  #       echo 'Gazebo started. Press Ctrl+C to exit.'
+  #       tail -f /dev/null 
