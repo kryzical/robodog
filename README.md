@@ -1,8 +1,5 @@
 WORKING BRANCHES
-- ros1_nb
-  - basic simulation startup in ros1 gazebo classic
-  - basic standing when launching
-  - no ros control
+- ros2
  
-NOT WORKING BRANCHES
+ARCHIVED BRANCHES
 - EVERYTHING ELSE
