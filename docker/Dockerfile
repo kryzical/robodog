@@ -1,4 +1,10 @@
-FROM ros:humble
+FROM ros:humble-ros-base
+
+# Install Gazebo
+RUN apt-get update && apt-get install -y \
+    gazebo \
+    ros-humble-gazebo-ros-pkgs \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Gazebo Garden and dependencies
 RUN apt-get update && apt-get install -y \
@@ -71,50 +77,9 @@ RUN find /workspace -name "*.STL" -exec chmod 644 {} \; || true
 # Return to workspace directory
 WORKDIR /workspace
 
-# Create display setup test script
-RUN echo '#!/bin/bash\n\
-echo "--- Checking graphics capabilities ---"\n\
-echo "OpenGL vendor: $(glxinfo | grep \"OpenGL vendor\" || echo \"Not available\")" \n\
-echo "OpenGL renderer: $(glxinfo | grep \"OpenGL renderer\" || echo \"Not available\")"\n\
-echo "Checking if direct rendering is enabled: $(glxinfo | grep "direct rendering" || echo "Not available")"\n\
-echo "--- Checking environment variables ---"\n\
-echo "GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH"\n\
-echo "GZ_RESOURCE_PATH=$GZ_RESOURCE_PATH"\n\
-echo "IGN_GAZEBO_RESOURCE_PATH=$IGN_GAZEBO_RESOURCE_PATH"\n\
-echo "--- Checking mesh files ---"\n\
-find /workspace -name "*.STL" -ls\n\
-echo "--- Creating simple test model ---"\n\
-mkdir -p /tmp/meshtest\n\
-cat > /tmp/meshtest/model.sdf << EOF\n\
-<?xml version="1.0" ?>\n\
-<sdf version="1.6">\n\
-  <model name="test_mesh">\n\
-    <link name="link">\n\
-      <visual name="visual">\n\
-        <geometry>\n\
-          <mesh>\n\
-            <uri>file:///workspace/models/puppybot/meshes/base_link.STL</uri>\n\
-            <scale>0.001 0.001 0.001</scale>\n\
-          </mesh>\n\
-        </geometry>\n\
-        <material>\n\
-          <ambient>0 0 1 1</ambient>\n\
-          <diffuse>0 0 1 1</diffuse>\n\
-        </material>\n\
-      </visual>\n\
-      <collision name="collision">\n\
-        <geometry>\n\
-          <box>\n\
-            <size>0.1 0.1 0.1</size>\n\
-          </box>\n\
-        </geometry>\n\
-      </collision>\n\
-    </link>\n\
-  </model>\n\
-</sdf>\n\
-EOF\n\
-echo "Test model created at /tmp/meshtest/model.sdf"\n\
-echo "--- Test complete ---"' > /workspace/check_graphics.sh && chmod +x /workspace/check_graphics.sh
+# Copy and make startup script executable
+COPY docker/startup.sh /startup.sh
+RUN chmod +x /startup.sh
 
 # Build workspace
 RUN /bin/bash -c "source /opt/ros/humble/setup.bash && \
@@ -131,7 +96,7 @@ RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc && \
     echo "export IGN_FILE_PATH=/workspace/src:/workspace/models" >> ~/.bashrc
 
 # Skip the welcome screen
-RUN mkdir -p ~/.gz && echo '<?xml version="1.0"?><gz><gui><plugin filename="GzScene3D" name="3D View"><gz-gui><title>3D View</title><property key="showTitleBar" type="bool">false</property><property key="state" type="string">docked</property></gz-gui></plugin><plugin filename="WorldControl" name="World control"><gz-gui><title>World control</title><property key="showTitleBar" type="bool">false</property><property key="state" type="string">docked</property></gz-gui></plugin><plugin filename="WorldStats" name="World stats"><gz-gui><title>World stats</title><property key="showTitleBar" type="bool">false</property><property key="state" type="string">docked</property></gz-gui></plugin></gz></gz>' > ~/.gz/gui.config 
+RUN mkdir -p ~/.gz && echo '<?xml version="1.0"?><gz><gui><plugin filename="GzScene3D" name="3D View"><gz-gui><title>3D View</title><property key="showTitleBar" type="bool">false</property><property key="state" type="string">docked</property></gz-gui></plugin><plugin filename="WorldControl" name="World control"><gz-gui><title>World control</title><property key="showTitleBar" type="bool">false</property><property key="state" type="string">docked</property></gz-gui></plugin><plugin filename="WorldStats" name="World stats"><gz-gui><title>World stats</title><property key="showTitleBar" type="bool">false</property><property key="state" type="string">docked</property></gz-gui></plugin></gz></gz>' > ~/.gz/gui.config
 
 # Set the command to run when container starts
-CMD ["bash"] 
+CMD ["/startup.sh"] 
