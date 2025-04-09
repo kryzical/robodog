@@ -1,1 +1,0 @@
-bool[4] contacts
