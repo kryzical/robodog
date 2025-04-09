@@ -1,0 +1,756 @@
+<sdf version='1.10'>
+  <model name='puppy'>
+    <link name='base_footprint'>
+      <inertial>
+        <pose>0.0040416908867565056 -0.00027915734289201712 0.12871846001879331 0 0 0</pose>
+        <mass>0.13375638805793291</mass>
+        <inertia>
+          <ixx>9.4683443097610172e-05</ixx>
+          <ixy>3.8011011307870353e-08</ixy>
+          <ixz>9.2273010808787055e-06</ixz>
+          <iyy>0.00022354890438854811</iyy>
+          <iyz>-1.7893896796313631e-08</iyz>
+          <izz>0.00029556717030406989</izz>
+        </inertia>
+      </inertial>
+      <collision name='base_footprint_fixed_joint_lump__base_link_collision'>
+        <pose>0 0 0.11 0 0 1.5700000000000001</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///workspace/src/puppy_description/meshes/base_link.STL</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <collision name='base_footprint_fixed_joint_lump__base_dummy_collision_1'>
+        <pose>0 0 0.11 0 0 1.5700000000000001</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///workspace/src/puppy_description/meshes/base_link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='base_footprint_fixed_joint_lump__camera_link_collision_2'>
+        <pose>0.10068662900489619 -8.0179477512640207e-05 0.127109543359257 0.03425376043188872 3.4694469519536142e-18 1.5700000000000001</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///workspace/src/puppy_description/meshes/camera_link.STL</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='base_footprint_fixed_joint_lump__base_link_visual'>
+        <pose>0 0 0.11 0 0 1.5700000000000001</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///workspace/src/puppy_description/meshes/base_link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>1 1 1 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+      <visual name='base_footprint_fixed_joint_lump__camera_link_visual'>
+        <pose>0.10068662900489619 -8.0179477512640207e-05 0.127109543359257 0.03425376043188872 3.4694469519536142e-18 1.5700000000000001</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///workspace/src/puppy_description/meshes/camera_link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0 0 0 1</ambient>
+          <diffuse>0 0 0 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+      <gravity>true</gravity>
+    </link>
+    <joint name='lb_joint1' type='revolute'>
+      <pose relative_to='base_footprint'>-0.077835831227501137 0.042072561045228329 0.12598800600210069 -0.75200000000000011 -5.5511151231257827e-17 1.5700000000000001</pose>
+      <parent>base_footprint</parent>
+      <child>lb_link1</child>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-2</lower>
+          <upper>2</upper>
+          <effort>0.5</effort>
+          <velocity>2</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+      <initial_position>0.5</initial_position>
+    </joint>
+    <link name='lb_link1'>
+      <pose relative_to='lb_joint1'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-0.01399117355409 0.0129616152700151 -0.0150641319635249 0 0 0</pose>
+        <mass>0.010153623628180499</mass>
+        <inertia>
+          <ixx>4.7512981123380403e-06</ixx>
+          <ixy>-2.1017569770552001e-08</ixy>
+          <ixz>-1.89306363663801e-08</ixz>
+          <iyy>2.8766039369237398e-06</iyy>
+          <iyz>2.1491340199657799e-06</iyz>
+          <izz>2.9289791407717999e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='lb_link1_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///workspace/src/puppy_description/meshes/lb_link1.STL</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='lb_link1_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///workspace/src/puppy_description/meshes/lb_link1.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0 0 0 1</ambient>
+          <diffuse>0 0 0 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+      <gravity>true</gravity>
+    </link>
+    <joint name='lb_joint2' type='revolute'>
+      <pose relative_to='lb_link1'>0.012049890278959601 0.052523572837077703 -0.052877465200695001 0 0 0</pose>
+      <parent>lb_link1</parent>
+      <child>lb_link2</child>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-2</lower>
+          <upper>2</upper>
+          <effort>0.5</effort>
+          <velocity>2</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+      <initial_position>-1.0</initial_position>
+    </joint>
+    <link name='lb_link2'>
+      <pose relative_to='lb_joint2'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0.00039796635195907921 -0.049853054748494538 -0.049313772540050073 0 0 0</pose>
+        <mass>0.044555925991089033</mass>
+        <inertia>
+          <ixx>1.155555707309345e-05</ixx>
+          <ixy>-3.9989806330953277e-07</ixy>
+          <ixz>-4.6842735006022668e-07</ixz>
+          <iyy>6.3683150869472466e-06</iyy>
+          <iyz>-5.5747592082152004e-06</iyz>
+          <izz>5.4034424660950561e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='lb_link2_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///workspace/src/puppy_description/meshes/lb_link2.STL</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <collision name='lb_link2_fixed_joint_lump__lb_link3_collision_1'>
+        <pose>0.0032000000000000002 -0.05370327941920041 -0.052289086461987717 1.5699913561081291 0.79079600628499913 1.5696640220506439</pose>
+        <geometry>
+          <cylinder>
+            <length>0.01</length>
+            <radius>0.0094999999999999998</radius>
+          </cylinder>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1000000</kp>
+              <kd>1</kd>
+              <min_depth>0.00020000000000000001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0.40000000000000002</mu>
+              <mu2>0.40000000000000002</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='lb_link2_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///workspace/src/puppy_description/meshes/lb_link2.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0 0 0 1</ambient>
+          <diffuse>0 0 0 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+      <gravity>true</gravity>
+    </link>
+    <joint name='lf_joint1' type='revolute'>
+      <pose relative_to='base_footprint'>0.077902706201962352 0.041948524292934122 0.1206512951072731 -0.75200000000000011 -5.5511151231257827e-17 1.5700000000000001</pose>
+      <parent>base_footprint</parent>
+      <child>lf_link1</child>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-2</lower>
+          <upper>2</upper>
+          <effort>0.5</effort>
+          <velocity>2</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+      <initial_position>0.5</initial_position>
+    </joint>
+    <link name='lf_link1'>
+      <pose relative_to='lf_joint1'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0.0139910660045694 0.0129616626428829 -0.015064085905731101 0 0 0</pose>
+        <mass>0.0101534902703093</mass>
+        <inertia>
+          <ixx>4.7512919004460098e-06</ixx>
+          <ixy>2.1047301623726299e-08</ixy>
+          <ixz>1.8892522841105099e-08</ixz>
+          <iyy>2.8765931879081202e-06</iyy>
+          <iyz>2.1491323508437898e-06</iyz>
+          <izz>2.9289761920941899e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='lf_link1_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///workspace/src/puppy_description/meshes/lf_link1.STL</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='lf_link1_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///workspace/src/puppy_description/meshes/lf_link1.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0 0 0 1</ambient>
+          <diffuse>0 0 0 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+      <gravity>true</gravity>
+    </link>
+    <joint name='lf_joint2' type='revolute'>
+      <pose relative_to='lf_link1'>0.012049890278959601 0.052523572837077703 -0.052877465200695001 0 0 0</pose>
+      <parent>lf_link1</parent>
+      <child>lf_link2</child>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-2</lower>
+          <upper>2</upper>
+          <effort>0.5</effort>
+          <velocity>2</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+      <initial_position>-1.0</initial_position>
+    </joint>
+    <link name='lf_link2'>
+      <pose relative_to='lf_joint2'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0.00039796635197010798 -0.049853054748467462 -0.049313772540056998 0 0 0</pose>
+        <mass>0.044555925991369448</mass>
+        <inertia>
+          <ixx>1.155555707279326e-05</ixx>
+          <ixy>-3.9989806330601748e-07</ixy>
+          <ixz>-4.6842735005119948e-07</ixz>
+          <iyy>6.3683150867357459e-06</iyy>
+          <iyz>-5.574759208088796e-06</iyz>
+          <izz>5.403442466007439e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='lf_link2_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///workspace/src/puppy_description/meshes/lf_link2.STL</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <collision name='lf_link2_fixed_joint_lump__lf_link3_collision_1'>
+        <pose>0.0032000000000000002 -0.05370327941920041 -0.052289086461987717 1.5699913561081291 0.79079600628499913 1.5696640220506439</pose>
+        <geometry>
+          <cylinder>
+            <length>0.01</length>
+            <radius>0.0094999999999999998</radius>
+          </cylinder>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1000000</kp>
+              <kd>1</kd>
+              <min_depth>0.00020000000000000001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0.40000000000000002</mu>
+              <mu2>0.40000000000000002</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='lf_link2_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///workspace/src/puppy_description/meshes/lf_link2.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0 0 0 1</ambient>
+          <diffuse>0 0 0 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+      <gravity>true</gravity>
+    </link>
+    <joint name='rb_joint1' type='revolute'>
+      <pose relative_to='base_footprint'>-0.077835831227501137 -0.041948524292934122 0.1206512951072731 -0.75200000000000011 -5.5511151231257827e-17 1.5700000000000001</pose>
+      <parent>base_footprint</parent>
+      <child>rb_link1</child>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-2</lower>
+          <upper>2</upper>
+          <effort>0.5</effort>
+          <velocity>2</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+      <initial_position>0.3</initial_position>
+    </joint>
+    <link name='rb_link1'>
+      <pose relative_to='rb_joint1'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-0.01399117355691 0.0129616152695224 -0.0150641319628959 0 0 0</pose>
+        <mass>0.010153623628407899</mass>
+        <inertia>
+          <ixx>4.7512981123698896e-06</ixx>
+          <ixy>-2.1017569726548001e-08</ixy>
+          <ixz>-1.8930636322973599e-08</ixz>
+          <iyy>2.87660393694748e-06</iyy>
+          <iyz>2.1491340199794701e-06</iyz>
+          <izz>2.92897914074097e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='rb_link1_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///workspace/src/puppy_description/meshes/rb_link1.STL</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='rb_link1_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///workspace/src/puppy_description/meshes/rb_link1.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0 0 0 1</ambient>
+          <diffuse>0 0 0 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+      <gravity>true</gravity>
+    </link>
+    <joint name='rb_joint2' type='revolute'>
+      <pose relative_to='rb_link1'>0.012049890278959601 0.052523572837077703 -0.052877465200695001 0 0 0</pose>
+      <parent>rb_link1</parent>
+      <child>rb_link2</child>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-2</lower>
+          <upper>2</upper>
+          <effort>0.5</effort>
+          <velocity>2</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+      <initial_position>-0.8</initial_position>
+    </joint>
+    <link name='rb_link2'>
+      <pose relative_to='rb_joint2'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0.0003979663519567524 -0.049853054748501179 -0.04931377254008134 0 0 0</pose>
+        <mass>0.044555925991370697</mass>
+        <inertia>
+          <ixx>1.1555557072807949e-05</ixx>
+          <ixy>-3.9989806331102509e-07</ixy>
+          <ixz>-4.6842735006624278e-07</ixz>
+          <iyy>6.3683150867398786e-06</iyy>
+          <iyz>-5.574759208089189e-06</iyz>
+          <izz>5.4034424660264803e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='rb_link2_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///workspace/src/puppy_description/meshes/rb_link2.STL</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <collision name='rb_link2_fixed_joint_lump__rb_link3_collision_1'>
+        <pose>0.0032000000000000002 -0.05370327941920041 -0.052289086461987717 1.5699913561081291 0.79079600628499913 1.5696640220506439</pose>
+        <geometry>
+          <cylinder>
+            <length>0.01</length>
+            <radius>0.0094999999999999998</radius>
+          </cylinder>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1000000</kp>
+              <kd>1</kd>
+              <min_depth>0.00020000000000000001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0.40000000000000002</mu>
+              <mu2>0.40000000000000002</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='rb_link2_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///workspace/src/puppy_description/meshes/rb_link2.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0 0 0 1</ambient>
+          <diffuse>0 0 0 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+      <gravity>true</gravity>
+    </link>
+    <joint name='rf_joint1' type='revolute'>
+      <pose relative_to='base_footprint'>0.077902706201962352 -0.042072561045228329 0.12598800600210069 -0.75200000000000011 -5.5511151231257827e-17 1.5700000000000001</pose>
+      <parent>base_footprint</parent>
+      <child>rf_link1</child>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-2</lower>
+          <upper>2</upper>
+          <effort>0.5</effort>
+          <velocity>2</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+      <initial_position>0.5</initial_position>
+    </joint>
+    <link name='rf_link1'>
+      <pose relative_to='rf_joint1'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-0.01399117355409 0.0129616152700151 -0.0150641319635249 0 0 0</pose>
+        <mass>0.010153623628180499</mass>
+        <inertia>
+          <ixx>4.7512981123380403e-06</ixx>
+          <ixy>-2.1017569770552001e-08</ixy>
+          <ixz>-1.89306363663801e-08</ixz>
+          <iyy>2.8766039369237398e-06</iyy>
+          <iyz>2.1491340199657799e-06</iyz>
+          <izz>2.9289791407717999e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='rf_link1_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///workspace/src/puppy_description/meshes/rf_link1.STL</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='rf_link1_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///workspace/src/puppy_description/meshes/rf_link1.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0 0 0 1</ambient>
+          <diffuse>0 0 0 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+      <gravity>true</gravity>
+    </link>
+    <joint name='rf_joint2' type='revolute'>
+      <pose relative_to='rf_link1'>0.012049890278959601 0.052523572837077703 -0.052877465200695001 0 0 0</pose>
+      <parent>rf_link1</parent>
+      <child>rf_link2</child>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-2</lower>
+          <upper>2</upper>
+          <effort>0.5</effort>
+          <velocity>2</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+      <initial_position>-1.0</initial_position>
+    </joint>
+    <link name='rf_link2'>
+      <pose relative_to='rf_joint2'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0.00039796635195907921 -0.049853054748494538 -0.049313772540050073 0 0 0</pose>
+        <mass>0.044555925991089033</mass>
+        <inertia>
+          <ixx>1.155555707309345e-05</ixx>
+          <ixy>-3.9989806330953277e-07</ixy>
+          <ixz>-4.6842735006022668e-07</ixz>
+          <iyy>6.3683150869472466e-06</iyy>
+          <iyz>-5.5747592082152004e-06</iyz>
+          <izz>5.4034424660950561e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='rf_link2_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///workspace/src/puppy_description/meshes/rf_link2.STL</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <collision name='rf_link2_fixed_joint_lump__rf_link3_collision_1'>
+        <pose>0.0032000000000000002 -0.05370327941920041 -0.052289086461987717 1.5699913561081291 0.79079600628499913 1.5696640220506439</pose>
+        <geometry>
+          <cylinder>
+            <length>0.01</length>
+            <radius>0.0094999999999999998</radius>
+          </cylinder>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1000000</kp>
+              <kd>1</kd>
+              <min_depth>0.00020000000000000001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0.40000000000000002</mu>
+              <mu2>0.40000000000000002</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='rf_link2_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///workspace/src/puppy_description/meshes/rf_link2.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0 0 0 1</ambient>
+          <diffuse>0 0 0 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+      <gravity>true</gravity>
+    </link>
+    <frame name='camera_joint' attached_to='base_dummy'>
+      <pose>0 -0.100686660929431 0.017109543359257001 0.0342537604318887 0 0</pose>
+    </frame>
+    <frame name='camera_link' attached_to='camera_joint'>
+      <pose>0 0 0 0 0 0</pose>
+    </frame>
+    <frame name='dummy_joint' attached_to='base_link'>
+      <pose>0 0 0 0 0 0</pose>
+    </frame>
+    <frame name='base_dummy' attached_to='dummy_joint'>
+      <pose>0 0 0 0 0 0</pose>
+    </frame>
+    <frame name='lb_joint3' attached_to='lb_link2'>
+      <pose>0 -0.052999999999999999 -0.052999999999999999 0.78000000000000003 0 0</pose>
+    </frame>
+    <frame name='lb_link3' attached_to='lb_joint3'>
+      <pose>0 0 0 0 0 0</pose>
+    </frame>
+    <frame name='lf_joint3' attached_to='lf_link2'>
+      <pose>0 -0.052999999999999999 -0.052999999999999999 0.78000000000000003 0 0</pose>
+    </frame>
+    <frame name='lf_link3' attached_to='lf_joint3'>
+      <pose>0 0 0 0 0 0</pose>
+    </frame>
+    <frame name='rb_joint3' attached_to='rb_link2'>
+      <pose>0 -0.052999999999999999 -0.052999999999999999 0.78000000000000003 0 0</pose>
+    </frame>
+    <frame name='rb_link3' attached_to='rb_joint3'>
+      <pose>0 0 0 0 0 0</pose>
+    </frame>
+    <frame name='rf_joint3' attached_to='rf_link2'>
+      <pose>0 -0.052999999999999999 -0.052999999999999999 0.78000000000000003 0 0</pose>
+    </frame>
+    <frame name='rf_link3' attached_to='rf_joint3'>
+      <pose>0 0 0 0 0 0</pose>
+    </frame>
+    <frame name='base_joint' attached_to='base_footprint'>
+      <pose>0 0 0.11 0 0 1.5700000000000001</pose>
+    </frame>
+    <frame name='base_link' attached_to='base_joint'>
+      <pose>0 0 0 0 0 0</pose>
+    </frame>
+  </model>
+</sdf>
