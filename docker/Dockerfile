@@ -1,12 +1,6 @@
 FROM ros:humble-ros-base
 
-# Install Gazebo
-RUN apt-get update && apt-get install -y \
-    gazebo \
-    ros-humble-gazebo-ros-pkgs \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Gazebo Garden and dependencies
+# Install Gazebo Fortress and dependencies
 RUN apt-get update && apt-get install -y \
     wget \
     curl \
@@ -33,26 +27,12 @@ RUN apt-get update && apt-get install -y \
     libswscale-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Add Gazebo Garden repository and install
+# Add Gazebo Fortress repository and install
 RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
     && apt-get update \
-    && apt-get install -y gz-garden \
+    && apt-get install -y gz-fortress \
     && rm -rf /var/lib/apt/lists/*
-
-# Set Gazebo version for ROS
-ENV GZ_VERSION=garden
-
-# Set critical environment variables for mesh loading
-ENV GZ_SIM_RESOURCE_PATH=/workspace/src:/workspace/models
-ENV GZ_RESOURCE_PATH=/workspace/src:/workspace/models
-ENV IGN_GAZEBO_RESOURCE_PATH=/workspace/src:/workspace/models
-ENV IGN_FILE_PATH=/workspace/src:/workspace/models
-ENV GAZEBO_MODEL_PATH=/workspace/src:/workspace/models
-ENV GAZEBO_RESOURCE_PATH=/workspace/src:/workspace/models
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/mesa:/usr/lib/x86_64-linux-gnu/mesa-egl:/usr/lib/x86_64-linux-gnu/pulseaudio
-ENV MESA_LOADER_DRIVER_OVERRIDE=iris
-ENV OGRE_RESOURCE_PATH=/usr/lib/x86_64-linux-gnu/OGRE-1.9.0
 
 # Set up workspace
 WORKDIR /workspace
@@ -77,10 +57,6 @@ RUN find /workspace -name "*.STL" -exec chmod 644 {} \; || true
 # Return to workspace directory
 WORKDIR /workspace
 
-# Copy and make startup script executable
-COPY docker/startup.sh /startup.sh
-RUN chmod +x /startup.sh
-
 # Build workspace
 RUN /bin/bash -c "source /opt/ros/humble/setup.bash && \
     cd /workspace && \
@@ -89,7 +65,7 @@ RUN /bin/bash -c "source /opt/ros/humble/setup.bash && \
 # Set up environment in bashrc
 RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc && \
     echo "source /workspace/install/setup.bash" >> ~/.bashrc && \
-    echo "export GZ_VERSION=garden" >> ~/.bashrc && \
+    echo "export GZ_VERSION=fortress" >> ~/.bashrc && \
     echo "export GZ_SIM_RESOURCE_PATH=/workspace/src:/workspace/models" >> ~/.bashrc && \
     echo "export GZ_RESOURCE_PATH=/workspace/src:/workspace/models" >> ~/.bashrc && \
     echo "export IGN_GAZEBO_RESOURCE_PATH=/workspace/src:/workspace/models" >> ~/.bashrc && \

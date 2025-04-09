@@ -1,0 +1,18 @@
+services:
+  puppy_gazebo:
+    container_name: puppy_gazebo
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    network_mode: host
+    environment:
+      - DISPLAY=${DISPLAY}
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ${XAUTHORITY:-~/.Xauthority}:/root/.Xauthority
+      - ../puppy_ros2_ws:/workspace:rw
+    command: bash -c "cd /workspace && source /opt/ros/humble/setup.bash && source /workspace/install/setup.bash && ign gazebo -v 4 -r /workspace/src/puppy_description/sdf/puppy_world.sdf"
+    stdin_open: true
+    tty: true 
