@@ -5,6 +5,9 @@
 build/
 install/
 log/
+puppy_ros2_ws/build/
+puppy_ros2_ws/install/
+puppy_ros2_ws/log/
 
 # Docker artifacts
 .docker/
@@ -37,4 +40,69 @@ venv.bak/
 .Spotlight-V100
 .Trashes
 ehthumbs.db
-Thumbs.db 
+Thumbs.db
+
+# Temporary SDF files
+/puppy_permanent.sdf
+/puppy_robot.sdf
+
+# Docker temp files
+.docker/
+
+# Environment files
+.env
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Cursor rules
+.cursor/
+
+# Models and meshes (these are generated/compiled)
+models/
+*.stl
+*.obj
+*.dae
+
+# Additional build artifacts
+*.o
+*.a
+*.la
+*.lo
+*.la
+*.al
+*.libs
+*.so
+*.so.*
+*.dylib
+*.dll
+*.swp
+*.swo
+*.swn
+*.bak
+*.backup
+*.tmp
+*.temp
+*.pid
+*.seed
+*.pid.lock
+*.pdb
+*.idb
+*.pdb
+*.ilk
+*.manifest
+*.rc
+*.res
+*.suo
+*.ncb
+*.opensdf
+*.sdf
+*.cache
+*.classpath
+*.project
+*.settings/
+*.sublime-workspace
+*.sublime-project 

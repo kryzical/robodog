@@ -38,7 +38,7 @@
           filename="file:///workspace/models/puppybot/meshes/base_link.STL" />
       </geometry>
       <material
-        name="black">
+        name="white">
       </material>
     </visual>
     <collision>
@@ -68,7 +68,7 @@
       <mass
         value="0.0656002451111466" />
       <material
-        name="black">
+        name="white">
       </material>
       <inertia
         ixx="0.0001015640290354"
@@ -114,7 +114,7 @@
           filename="file:///workspace/models/puppybot/meshes/lb_link1.STL" />
       </geometry>
       <material
-        name="black">
+        name="white">
       </material>
     </visual>
     <collision>
@@ -170,7 +170,7 @@
           filename="file:///workspace/models/puppybot/meshes/lb_link2.STL" />
       </geometry>
       <material
-        name="black">
+        name="white">
       </material>
     </visual>
     <collision>
@@ -226,7 +226,7 @@
           filename="file:///workspace/models/puppybot/meshes/rb_link1.STL" />
       </geometry>
       <material
-        name="black">
+        name="white">
       </material>
     </visual>
     <collision>
@@ -282,7 +282,7 @@
           filename="file:///workspace/models/puppybot/meshes/rb_link2.STL" />
       </geometry>
       <material
-        name="black">
+        name="white">
       </material>
     </visual>
     <collision>
@@ -338,7 +338,7 @@
           filename="file:///workspace/models/puppybot/meshes/rf_link1.STL" />
       </geometry>
       <material
-        name="black">
+        name="white">
       </material>
     </visual>
     <collision>
@@ -394,7 +394,7 @@
           filename="file:///workspace/models/puppybot/meshes/rf_link2.STL" />
       </geometry>
       <material
-        name="black">
+        name="white">
       </material>
     </visual>
     <collision>
@@ -450,7 +450,7 @@
           filename="file:///workspace/models/puppybot/meshes/lf_link1.STL" />
       </geometry>
       <material
-        name="black">
+        name="white">
       </material>
     </visual>
     <collision>
@@ -506,7 +506,7 @@
           filename="file:///workspace/models/puppybot/meshes/lf_link2.STL" />
       </geometry>
       <material
-        name="black">
+        name="white">
       </material>
     </visual>
     <collision>
@@ -562,7 +562,7 @@
           filename="file:///workspace/models/puppybot/meshes/camera_link.STL" />
       </geometry>
       <material
-        name="black">
+        name="white">
       </material>
     </visual>
     <collision>

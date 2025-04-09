@@ -12,10 +12,13 @@
 /workspace/install/puppy_description/share/puppy_description/meshes/rb_link1.STL
 /workspace/install/puppy_description/share/puppy_description/meshes/rf_link1.STL
 /workspace/install/puppy_description/share/puppy_description/meshes/camera_link.STL
+/workspace/install/puppy_description/share/puppy_description/launch/controlled_robot.launch.py
+/workspace/install/puppy_description/share/puppy_description/launch/fallback_primitive.launch.py
 /workspace/install/puppy_description/share/puppy_description/launch/mesh_test.launch.py
 /workspace/install/puppy_description/share/puppy_description/launch/gazebo_ignition.launch.py
 /workspace/install/puppy_description/share/puppy_description/launch/test_gazebo.launch.py
 /workspace/install/puppy_description/share/puppy_description/launch/simple_gazebo.launch.py
+/workspace/install/puppy_description/share/puppy_description/launch/controlled_robot.launch.py.bak
 /workspace/install/puppy_description/share/puppy_description/launch/display.launch.py
 /workspace/install/puppy_description/share/puppy_description/config/gazebo_controllers.yaml
 /workspace/install/puppy_description/share/puppy_description/config/display.rviz

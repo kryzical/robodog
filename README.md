@@ -1,137 +1,108 @@
-# PuppyPi ROS2 Robot Simulation
+# RoboDog Simulation
 
-This repository contains the configuration and launch files for running the PuppyPi robot in a Gazebo simulation environment using Docker.
+This project provides a simple way to run a robot dog simulation in Gazebo using Docker. It includes scripts for launching and stopping the simulation, as well as different model files for the robot.
 
-## Directory Structure
+## Project Structure
 
 ```
-├── docker/             # Docker configuration files
-│   ├── Dockerfile      # Docker image definition
-│   ├── docker-compose.yml # Docker Compose configuration
-│   └── cleanup-containers.sh # Script to remove conflicting containers
-├── launch/             # Launch scripts used inside the container
-│   ├── cleanup.sh      # Script to clean up containers
-│   ├── launch-with-robot.sh # Main robot launch script
-│   └── run-sim.sh      # Secondary launch script
-├── models/             # Model files
-├── puppy_ros2_ws/      # ROS2 workspace with robot packages
-├── start-robot.sh      # Main script to start the simulation
-├── stop-robot.sh       # Script to stop the simulation
-└── README.md           # This file
+robodog/
+├── config/                    # Configuration files
+│   └── launch-with-robot.sh   # Main robot launch script used inside container
+├── docker/                    # Docker configuration files
+│   ├── config/                # Docker configuration backups
+│   └── docker-compose.yml     # Docker Compose configuration
+├── launch/                    # Launch scripts used inside the container
+├── models/                    # Model files
+│   └── sdf/                   # SDF model files for direct use in Gazebo
+│       ├── puppy_white_body.sdf  # Permanent SDF with white body, black legs/camera
+│       └── puppy_custom.sdf      # Custom SDF robot model with dog-like features
+├── puppy_ros2_ws/             # ROS 2 workspace containing the robot description package
+└── scripts/                   # User scripts
+    ├── model-selector.sh      # Script to select which robot model to use
+    ├── start-robot.sh         # Script to start the simulation
+    └── stop-robot.sh          # Script to stop the simulation
 ```
-
-## Prerequisites
-
-- Docker
-- Docker Compose
-- X11 (for GUI display)
 
 ## Quick Start
 
-### 1. Starting the Simulation
-
-To start the Gazebo simulation with the robot:
+To launch the robot simulation:
 
 ```bash
-./start-robot.sh
+./scripts/start-robot.sh
 ```
 
-This script will:
-- Set the necessary X11 permissions
-- Start a Gazebo container
-- Launch Gazebo with an empty world
-- Attempt to spawn your robot model
-
-### 2. Stopping the Simulation
-
-To stop the simulation and clean up containers:
+To stop the robot simulation:
 
 ```bash
-./stop-robot.sh
+./scripts/stop-robot.sh
 ```
 
-## Robot Appearance
+To select which robot model to use:
 
-The simulation will attempt to load your actual robot model from the ROS workspace. If your model is found, it will be displayed with a white body color.
+```bash
+./scripts/model-selector.sh
+```
 
-If your robot model is not found, a simple robot model with the following properties will be used:
-- White box for the body
-- Red cylinders for the legs
+## Robot Models
+
+The project includes multiple robot models:
+
+1. **URDF/XACRO Robot Model**: The original robot model defined in the `puppy_ros2_ws/src/puppy_description/urdf/` directory. This model is used by ROS 2 for control and simulation.
+
+2. **Permanent SDF Model**: A pre-generated SDF file (`models/sdf/puppy_white_body.sdf`) converted from the URDF with a white body and black legs/camera. This is used by default when launching the simulation.
+
+3. **Custom SDF Model**: A manually created SDF file (`models/sdf/puppy_custom.sdf`) with dog-like features.
+
+## Configuration
+
+The launch script in `config/launch-with-robot.sh` prioritizes loading robot models in the following order:
+
+1. The permanent SDF file if available (`puppy_permanent.sdf`)
+2. A custom robot SDF file if available (`puppy_robot.sdf`)
+3. The URDF/XACRO files, which are processed and converted to SDF
+
+## Development Workflow
+
+To modify the robot appearance or behavior:
+
+1. Edit the URDF/XACRO files in `puppy_ros2_ws/src/puppy_description/urdf/`
+2. Launch the simulation to see the changes
+3. If you want to save the current model as a permanent SDF file, use the launch script which will automatically create it
+
+## Docker Configuration
+
+The Docker configuration in this project is set up to provide:
+
+1. X11 forwarding for GUI applications
+2. Volume mounting of relevant directories
+3. A container environment with all necessary dependencies
+
+All Docker-related files are in the `docker/` directory, with the main configuration in `docker-compose.yml`.
 
 ## Advanced Usage
 
-### Manual Docker Compose Commands
+### Modifying Launch Scripts
 
-If you prefer to use Docker Compose directly:
+If you need to modify how the robot is launched inside the container:
 
-1. First, set X11 permissions:
-   ```bash
-   xhost +local:docker
-   ```
+1. Edit the `config/launch-with-robot.sh` script
+2. Restart the simulation for changes to take effect
 
-2. Navigate to the docker directory:
-   ```bash
-   cd docker
-   ```
+### Working with ROS 2
 
-3. If you're having issues with existing containers, run the cleanup script:
-   ```bash
-   ./cleanup-containers.sh
-   ```
+To work with ROS 2 directly:
 
-4. Start the simulation:
-   ```bash
-   docker compose up
-   ```
+1. Enter the container: `docker exec -it puppy_gazebo bash`
+2. Source the ROS 2 workspace: `source /workspace/puppy_ros2_ws/install/setup.bash`
+3. Use ROS 2 commands as needed
 
-5. To stop (in another terminal):
-   ```bash
-   cd docker && docker compose down
-   ```
+## Troubleshooting
 
-### Troubleshooting Container Conflicts
+If the robot doesn't appear in the simulation:
+- Check that the Docker container is running (`docker ps`)
+- Verify that Gazebo is running inside the container (`docker exec -it puppy_gazebo ps aux | grep gz`)
+- Check the logs for any errors (`docker logs puppy_gazebo`)
 
-If you see errors like "container name already in use" or "cannot start service", try these steps:
+## License
 
-```bash
-cd docker
-./cleanup-containers.sh
-docker compose up
-```
-
-This will forcefully stop and remove all Docker containers, resolving any conflicts.
-
-### Modifying the Robot Model
-
-To modify the robot's appearance or properties:
-
-1. Edit the appropriate files in `puppy_ros2_ws/src/puppy_description/urdf/`
-2. Rebuild the workspace if necessary: 
-   ```bash
-   cd puppy_ros2_ws && colcon build
-   ```
-3. Restart the simulation to see your changes
-
-### Troubleshooting
-
-- **Display Issues**: If Gazebo doesn't appear, make sure X11 permissions are set correctly with `xhost +local:docker`
-- **Robot Not Spawning**: Check the Docker logs for error messages
-- **Mesh Loading Issues**: Verify mesh paths in your URDF files and check that they are correctly linked in the filesystem
-
-## Development Notes
-
-### Adding New Features
-
-To add new functionality to the robot:
-1. Make changes to the robot model in the ROS workspace
-2. Test in simulation using the provided scripts
-3. Update `launch-with-robot.sh` if you need to modify how the robot is spawned
-
-### Building a New Docker Image
-
-If you need to update the Docker image:
-
-```bash
-cd docker
-docker build -t docker_gazebo .
-``` 
+This project is for educational purposes.
