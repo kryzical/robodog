@@ -104,11 +104,15 @@ namespace custom_hardware{
 
     //the function will read position of each servo motor, we will probably have to write a seperate file using adafruit library 
     hardware_interface::return_type CustomHardwareInterfaceAdafruitPWMHat::read(const rclcpp::Time & time, const rclcpp::Duration & period){
+        //Code in here will probably be fully custom, we will need to create a c++ file including adafruit library that connect sto motors,
+        //we will use said file to read te states of each servo motor
         return hardware_interface::return_type::OK;
     }
 
     //same as above but will be writing to the motors
     hardware_interface::return_type CustomHardwareInterfaceAdafruitPWMHat::write(const rclcpp::Time & time, const rclcpp::Duration & period){
+        //Same as read function, we will have the file that connects to the servo motors but this function will send states to write to the serv
+        //motors
         return hardware_interface::return_type::OK;
     }
 }
