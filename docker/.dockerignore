@@ -1,0 +1,44 @@
+# Version control
+.git
+.gitignore
+
+# Build artifacts
+**/build/
+**/install/
+**/log/
+**/.colcon/
+
+# Python
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
+
+# Documentation
+**/docs/
+**/*.md
+!README.md
+
+# Docker
+docker/
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Other
+*.log
+*.pid
+*.seed
+*.pid.lock 

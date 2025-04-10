@@ -1,78 +1,94 @@
-FROM ros:humble-ros-base
+# Build arguments
+ARG GAZEBO_VERSION=fortress
 
-# Install Gazebo Fortress and dependencies
-RUN apt-get update && apt-get install -y \
-    wget \
+# Builder stage
+FROM osrf/ros:humble-desktop-full as builder
+
+# Install build dependencies
+RUN . /opt/ros/humble/setup.sh && \
+    apt-get update && apt-get install -y \
+    cmake \
     curl \
-    gnupg \
-    lsb-release \
+    libglu1-mesa-dev \
+    python3-pip \
+    python3-pydantic \
+    python3-rosdep \
+    python3-colcon-common-extensions \
+    ros-humble-gazebo-ros \
+    ros-humble-gazebo-ros-pkgs \
+    ros-humble-joint-state-publisher \
+    ros-humble-robot-localization \
+    ros-humble-robot-state-publisher \
+    ros-humble-ros2bag \
+    ros-humble-rosbag2-storage-default-plugins \
+    ros-humble-rmw-fastrtps-cpp \
+    ros-humble-rmw-cyclonedds-cpp \
+    wget \
+    xorg-dev \
+    mesa-utils \
     libgl1-mesa-glx \
     libgl1-mesa-dri \
-    ros-humble-ros-gz \
-    ros-humble-ros-gz-sim \
-    ros-humble-xacro \
-    ros-humble-robot-state-publisher \
-    ros-humble-joint-state-publisher \
-    ros-humble-controller-manager \
-    ros-humble-gazebo-ros2-control \
-    ros-humble-ros2-control \
-    ros-humble-ros2-controllers \
-    # Extra packages for mesh loading
-    libogre-1.9-dev \
-    libassimp-dev \
-    libavcodec-dev \
-    libavdevice-dev \
-    libavformat-dev \
-    libavutil-dev \
-    libswscale-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-# Add Gazebo Fortress repository and install
-RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
-    && apt-get update \
-    && apt-get install -y gz-fortress \
     && rm -rf /var/lib/apt/lists/*
 
 # Set up workspace
 WORKDIR /workspace
-RUN mkdir -p /workspace/src /workspace/models
 
-# Copy project files
-COPY puppy_ros2_ws/src /workspace/src
-
-# Set up the models directory for easier access
-WORKDIR /workspace/models
-RUN mkdir -p puppybot/meshes
-
-# Ensure access to the meshes by creating a symbolic link
-RUN cd /workspace/models/puppybot/meshes && \
-    if [ -d /workspace/src/puppy_description/meshes ]; then \
-    ln -s /workspace/src/puppy_description/meshes/* .; \
-    fi
-
-# Fix STL files permissions just in case
-RUN find /workspace -name "*.STL" -exec chmod 644 {} \; || true
-
-# Return to workspace directory
-WORKDIR /workspace
+# Copy the ROS workspace
+COPY puppy_ros2_ws /workspace
 
 # Build workspace
-RUN /bin/bash -c "source /opt/ros/humble/setup.bash && \
+RUN . /opt/ros/humble/setup.sh && \
     cd /workspace && \
-    colcon build --symlink-install"
+    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release || (echo "Build failed" && exit 1)
 
-# Set up environment in bashrc
-RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc && \
-    echo "source /workspace/install/setup.bash" >> ~/.bashrc && \
-    echo "export GZ_VERSION=fortress" >> ~/.bashrc && \
-    echo "export GZ_SIM_RESOURCE_PATH=/workspace/src:/workspace/models" >> ~/.bashrc && \
-    echo "export GZ_RESOURCE_PATH=/workspace/src:/workspace/models" >> ~/.bashrc && \
-    echo "export IGN_GAZEBO_RESOURCE_PATH=/workspace/src:/workspace/models" >> ~/.bashrc && \
-    echo "export IGN_FILE_PATH=/workspace/src:/workspace/models" >> ~/.bashrc
+# Runtime stage
+FROM osrf/ros:humble-desktop-full
 
-# Skip the welcome screen
-RUN mkdir -p ~/.gz && echo '<?xml version="1.0"?><gz><gui><plugin filename="GzScene3D" name="3D View"><gz-gui><title>3D View</title><property key="showTitleBar" type="bool">false</property><property key="state" type="string">docked</property></gz-gui></plugin><plugin filename="WorldControl" name="World control"><gz-gui><title>World control</title><property key="showTitleBar" type="bool">false</property><property key="state" type="string">docked</property></gz-gui></plugin><plugin filename="WorldStats" name="World stats"><gz-gui><title>World stats</title><property key="showTitleBar" type="bool">false</property><property key="state" type="string">docked</property></gz-gui></plugin></gz></gz>' > ~/.gz/gui.config
+# Install runtime dependencies
+RUN . /opt/ros/humble/setup.sh && \
+    apt-get update && apt-get install -y \
+    cmake \
+    curl \
+    libglu1-mesa-dev \
+    python3-pip \
+    python3-pydantic \
+    python3-rosdep \
+    python3-colcon-common-extensions \
+    ros-humble-gazebo-ros \
+    ros-humble-gazebo-ros-pkgs \
+    ros-humble-joint-state-publisher \
+    ros-humble-robot-localization \
+    ros-humble-robot-state-publisher \
+    ros-humble-ros2bag \
+    ros-humble-rosbag2-storage-default-plugins \
+    ros-humble-rmw-fastrtps-cpp \
+    ros-humble-rmw-cyclonedds-cpp \
+    wget \
+    xorg-dev \
+    mesa-utils \
+    libgl1-mesa-glx \
+    libgl1-mesa-dri \
+    && rm -rf /var/lib/apt/lists/*
 
-# Set the command to run when container starts
-CMD ["/startup.sh"] 
+# Install Gazebo
+RUN . /opt/ros/humble/setup.sh && \
+    wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
+    && apt-get update \
+    && apt-get install -y gazebo-${GAZEBO_VERSION} \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set up workspace
+WORKDIR /workspace
+
+# Copy built artifacts from builder
+COPY --from=builder /workspace/install /workspace/install
+
+# Copy only necessary runtime files
+COPY puppy_ros2_ws/src/puppy_description /workspace/src/puppy_description
+
+# Set environment variables
+ENV ROS_DISTRO=humble
+ENV GAZEBO_VERSION=${GAZEBO_VERSION}
+ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+ENV PATH="/usr/lib/gazebo-${GAZEBO_VERSION}/bin:${PATH}" 
