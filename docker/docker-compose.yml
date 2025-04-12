@@ -8,23 +8,23 @@ services:
       context: ..
       dockerfile: docker/Dockerfile
       args:
-        - GAZEBO_VERSION=${GAZEBO_VERSION:-fortress}
+        - GAZEBO_VERSION=${GAZEBO_VERSION}
     network_mode: host
     environment:
       - DISPLAY=${DISPLAY}
-      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
-      - ROS_DISTRO=humble
-      - GAZEBO_VERSION=${GAZEBO_VERSION:-fortress}
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID}
+      - ROS_DISTRO=${ROS_DISTRO}
+      - GAZEBO_VERSION=${GAZEBO_VERSION}
     volumes:
       # X11 display
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
-      - ${XAUTHORITY:-~/.Xauthority}:/root/.Xauthority
+      - ${XAUTHORITY}:/root/.Xauthority
       # Workspace
-      - ../puppy_ros2_ws:/workspace:rw
+      - ${WORKSPACE_PATH}:/workspace:rw
     command: >
       bash -c "
         cd /workspace && \
-        source /opt/ros/humble/setup.bash && \
+        source /opt/ros/${ROS_DISTRO}/setup.bash && \
         source /workspace/install/setup.bash && \
         /bin/bash
       "
@@ -44,26 +44,26 @@ services:
       context: ..
       dockerfile: docker/Dockerfile
       args:
-        - GAZEBO_VERSION=${GAZEBO_VERSION:-fortress}
+        - GAZEBO_VERSION=${GAZEBO_VERSION}
     network_mode: host
     environment:
       - DISPLAY=${DISPLAY}
-      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
-      - ROS_DISTRO=humble
-      - GAZEBO_VERSION=${GAZEBO_VERSION:-fortress}
-      - GAZEBO_MODEL_PATH=/workspace/src/puppy_description/models
-      - GAZEBO_RESOURCE_PATH=/workspace/src/puppy_description/worlds
-      - IGN_GAZEBO_RESOURCE_PATH=/workspace/src/puppy_description
-      - IGN_GAZEBO_SYSTEM_PLUGIN_PATH=/usr/lib/x86_64-linux-gnu/ign-gazebo-6/plugins
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID}
+      - ROS_DISTRO=${ROS_DISTRO}
+      - GAZEBO_VERSION=${GAZEBO_VERSION}
+      - GAZEBO_MODEL_PATH=${GAZEBO_MODEL_PATH}
+      - GAZEBO_RESOURCE_PATH=${GAZEBO_RESOURCE_PATH}
+      - IGN_GAZEBO_RESOURCE_PATH=${IGN_GAZEBO_RESOURCE_PATH}
+      - IGN_GAZEBO_SYSTEM_PLUGIN_PATH=${IGN_GAZEBO_SYSTEM_PLUGIN_PATH}
     volumes:
       # X11 display
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
-      - ${XAUTHORITY:-~/.Xauthority}:/root/.Xauthority
+      - ${XAUTHORITY}:/root/.Xauthority
       # Workspace
-      - ../puppy_ros2_ws:/workspace:rw
+      - ${WORKSPACE_PATH}:/workspace:rw
     command: >
       bash -c "
-        source /opt/ros/humble/setup.bash && \
+        source /opt/ros/${ROS_DISTRO}/setup.bash && \
         source /workspace/install/setup.bash && \
         cd /workspace && \
         ign gazebo -v 4 -r /workspace/src/puppy_description/sdf/puppy_world.sdf
