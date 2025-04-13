@@ -19,13 +19,14 @@ services:
       # X11 display
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ${XAUTHORITY}:/root/.Xauthority
-      # Workspace
-      - ${WORKSPACE_PATH}:/workspace:rw
+      # Workspace source
+      - ../puppy_ros2_ws/src:/workspace/src:rw
     command: >
       bash -c "
         cd /workspace && \
         source /opt/ros/${ROS_DISTRO}/setup.bash && \
-        source /workspace/install/setup.bash && \
+        colcon build --symlink-install && \
+        source install/setup.bash && \
         /bin/bash
       "
     stdin_open: true
@@ -59,14 +60,15 @@ services:
       # X11 display
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ${XAUTHORITY}:/root/.Xauthority
-      # Workspace
-      - ${WORKSPACE_PATH}:/workspace:rw
+      # Workspace source
+      - ../puppy_ros2_ws/src:/workspace/src:rw
     command: >
       bash -c "
-        source /opt/ros/${ROS_DISTRO}/setup.bash && \
-        source /workspace/install/setup.bash && \
         cd /workspace && \
-        ign gazebo -v 4 -r /workspace/src/puppy_description/sdf/puppy_world.sdf
+        source /opt/ros/${ROS_DISTRO}/setup.bash && \
+        colcon build --symlink-install && \
+        source install/setup.bash && \
+        ign gazebo -v 4 -r src/puppy_description/sdf/puppy_world.sdf
       "
     stdin_open: true
     tty: true
