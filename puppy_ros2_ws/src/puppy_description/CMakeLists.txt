@@ -10,13 +10,18 @@ find_package(ros_gz_sim REQUIRED)
 find_package(ros_gz_bridge REQUIRED)
 find_package(xacro REQUIRED)
 
-# Install necessary directories (URDF, meshes, launch, config, SDF)
+# Install Python launch files
 install(DIRECTORY
-  urdf
-  meshes
-  launch
-  config
-  sdf
+  launch/
+  DESTINATION share/${PROJECT_NAME}
+)
+
+# Install other resource directories (URDF, meshes, config, SDF)
+install(DIRECTORY
+  urdf/
+  meshes/
+  config/
+  sdf/
   DESTINATION share/${PROJECT_NAME}
 )
 

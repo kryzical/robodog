@@ -40,35 +40,26 @@ services:
 
   simulation:
     container_name: puppy_simulation
-    image: ghcr.io/${GITHUB_USERNAME:-yourusername}/puppy_simulation:${TAG:-latest}
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile
-      args:
-        - GAZEBO_VERSION=${GAZEBO_VERSION}
+    image: puppy_ros2:latest
     network_mode: host
     environment:
       - DISPLAY=${DISPLAY}
       - ROS_DOMAIN_ID=${ROS_DOMAIN_ID}
       - ROS_DISTRO=${ROS_DISTRO}
       - GAZEBO_VERSION=${GAZEBO_VERSION}
-      - GAZEBO_MODEL_PATH=${GAZEBO_MODEL_PATH}
-      - GAZEBO_RESOURCE_PATH=${GAZEBO_RESOURCE_PATH}
-      - IGN_GAZEBO_RESOURCE_PATH=${IGN_GAZEBO_RESOURCE_PATH}
-      - IGN_GAZEBO_SYSTEM_PLUGIN_PATH=${IGN_GAZEBO_SYSTEM_PLUGIN_PATH}
     volumes:
       # X11 display
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
-      - ${XAUTHORITY}:/root/.Xauthority
       # Workspace source
-      - ../puppy_ros2_ws/src:/workspace/src:rw
+      - ../puppy_ros2_ws/src:/workspace/puppy_ros2_ws/src:rw
     command: >
       bash -c "
-        cd /workspace && \
+        cd /workspace/puppy_ros2_ws && \
         source /opt/ros/${ROS_DISTRO}/setup.bash && \
+        rm -rf build install log && \
         colcon build --symlink-install && \
         source install/setup.bash && \
-        ign gazebo -v 4 -r src/puppy_description/sdf/puppy_world.sdf
+        ros2 launch puppy_description controlled_robot.launch.py
       "
     stdin_open: true
     tty: true
