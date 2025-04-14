@@ -41,7 +41,7 @@
       </link>
     </model>
     <include>
-      <uri>file:///workspace/src/puppy_description/sdf/puppy_permanent.sdf</uri>
+      <uri>model://puppy_description</uri>
       <pose>0 0 0.2 0 0 0</pose>
     </include>
   </world>

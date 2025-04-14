@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /workspace/src/puppy_description
+CMAKE_SOURCE_DIR = /workspace/puppy_ros2_ws/src/puppy_description
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /workspace/build/puppy_description
+CMAKE_BINARY_DIR = /workspace/puppy_ros2_ws/build/puppy_description
 
 # Utility rule file for puppy_description_uninstall.
 
@@ -67,7 +67,7 @@ include CMakeFiles/puppy_description_uninstall.dir/compiler_depend.make
 include CMakeFiles/puppy_description_uninstall.dir/progress.make
 
 CMakeFiles/puppy_description_uninstall:
-	/usr/bin/cmake -P /workspace/build/puppy_description/ament_cmake_uninstall_target/ament_cmake_uninstall_target.cmake
+	/usr/bin/cmake -P /workspace/puppy_ros2_ws/build/puppy_description/ament_cmake_uninstall_target/ament_cmake_uninstall_target.cmake
 
 puppy_description_uninstall: CMakeFiles/puppy_description_uninstall
 puppy_description_uninstall: CMakeFiles/puppy_description_uninstall.dir/build.make
@@ -82,6 +82,6 @@ CMakeFiles/puppy_description_uninstall.dir/clean:
 .PHONY : CMakeFiles/puppy_description_uninstall.dir/clean
 
 CMakeFiles/puppy_description_uninstall.dir/depend:
-	cd /workspace/build/puppy_description && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /workspace/src/puppy_description /workspace/src/puppy_description /workspace/build/puppy_description /workspace/build/puppy_description /workspace/build/puppy_description/CMakeFiles/puppy_description_uninstall.dir/DependInfo.cmake --color=$(COLOR)
+	cd /workspace/puppy_ros2_ws/build/puppy_description && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /workspace/puppy_ros2_ws/src/puppy_description /workspace/puppy_ros2_ws/src/puppy_description /workspace/puppy_ros2_ws/build/puppy_description /workspace/puppy_ros2_ws/build/puppy_description /workspace/puppy_ros2_ws/build/puppy_description/CMakeFiles/puppy_description_uninstall.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/puppy_description_uninstall.dir/depend
 

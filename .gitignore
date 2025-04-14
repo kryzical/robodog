@@ -20,7 +20,6 @@ __pycache__/
 *$py.class
 *.so
 .Python
-.env
 .venv
 env/
 venv/
@@ -48,9 +47,6 @@ Thumbs.db
 
 # Docker temp files
 .docker/
-
-# Environment files
-.env
 
 # Editor files
 .vscode/
@@ -105,4 +101,9 @@ models/
 *.project
 *.settings/
 *.sublime-workspace
-*.sublime-project 
+*.sublime-project
+
+# Ignore mesh files
+# *.stl
+# *.obj
+# *.dae 

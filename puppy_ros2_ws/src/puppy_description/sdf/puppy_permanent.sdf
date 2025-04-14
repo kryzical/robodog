@@ -18,7 +18,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>file:///workspace/src/puppy_description/meshes/base_link.STL</uri>
+            <uri>model://puppy_description/meshes/base_link.STL</uri>
           </mesh>
         </geometry>
         <surface>
@@ -35,7 +35,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>file:///workspace/src/puppy_description/meshes/base_link.STL</uri>
+            <uri>model://puppy_description/meshes/base_link.STL</uri>
           </mesh>
         </geometry>
       </collision>
@@ -44,7 +44,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>file:///workspace/src/puppy_description/meshes/camera_link.STL</uri>
+            <uri>model://puppy_description/meshes/camera_link.STL</uri>
           </mesh>
         </geometry>
         <surface>
@@ -61,7 +61,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>file:///workspace/src/puppy_description/meshes/base_link.STL</uri>
+            <uri>model://puppy_description/meshes/base_link.STL</uri>
           </mesh>
         </geometry>
         <material>
@@ -75,7 +75,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>file:///workspace/src/puppy_description/meshes/camera_link.STL</uri>
+            <uri>model://puppy_description/meshes/camera_link.STL</uri>
           </mesh>
         </geometry>
         <material>
@@ -124,7 +124,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>file:///workspace/src/puppy_description/meshes/lb_link1.STL</uri>
+            <uri>model://puppy_description/meshes/lb_link1.STL</uri>
           </mesh>
         </geometry>
         <surface>
@@ -141,7 +141,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>file:///workspace/src/puppy_description/meshes/lb_link1.STL</uri>
+            <uri>model://puppy_description/meshes/lb_link1.STL</uri>
           </mesh>
         </geometry>
         <material>
@@ -190,7 +190,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>file:///workspace/src/puppy_description/meshes/lb_link2.STL</uri>
+            <uri>model://puppy_description/meshes/lb_link2.STL</uri>
           </mesh>
         </geometry>
         <surface>
@@ -231,7 +231,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>file:///workspace/src/puppy_description/meshes/lb_link2.STL</uri>
+            <uri>model://puppy_description/meshes/lb_link2.STL</uri>
           </mesh>
         </geometry>
         <material>
@@ -280,7 +280,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>file:///workspace/src/puppy_description/meshes/lf_link1.STL</uri>
+            <uri>model://puppy_description/meshes/lf_link1.STL</uri>
           </mesh>
         </geometry>
         <surface>
@@ -297,7 +297,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>file:///workspace/src/puppy_description/meshes/lf_link1.STL</uri>
+            <uri>model://puppy_description/meshes/lf_link1.STL</uri>
           </mesh>
         </geometry>
         <material>
@@ -346,7 +346,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>file:///workspace/src/puppy_description/meshes/lf_link2.STL</uri>
+            <uri>model://puppy_description/meshes/lf_link2.STL</uri>
           </mesh>
         </geometry>
         <surface>
@@ -387,7 +387,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>file:///workspace/src/puppy_description/meshes/lf_link2.STL</uri>
+            <uri>model://puppy_description/meshes/lf_link2.STL</uri>
           </mesh>
         </geometry>
         <material>
@@ -436,7 +436,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>file:///workspace/src/puppy_description/meshes/rb_link1.STL</uri>
+            <uri>model://puppy_description/meshes/rb_link1.STL</uri>
           </mesh>
         </geometry>
         <surface>
@@ -453,7 +453,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>file:///workspace/src/puppy_description/meshes/rb_link1.STL</uri>
+            <uri>model://puppy_description/meshes/rb_link1.STL</uri>
           </mesh>
         </geometry>
         <material>
@@ -502,7 +502,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>file:///workspace/src/puppy_description/meshes/rb_link2.STL</uri>
+            <uri>model://puppy_description/meshes/rb_link2.STL</uri>
           </mesh>
         </geometry>
         <surface>
@@ -543,7 +543,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>file:///workspace/src/puppy_description/meshes/rb_link2.STL</uri>
+            <uri>model://puppy_description/meshes/rb_link2.STL</uri>
           </mesh>
         </geometry>
         <material>
@@ -592,7 +592,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>file:///workspace/src/puppy_description/meshes/rf_link1.STL</uri>
+            <uri>model://puppy_description/meshes/rf_link1.STL</uri>
           </mesh>
         </geometry>
         <surface>
@@ -609,7 +609,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>file:///workspace/src/puppy_description/meshes/rf_link1.STL</uri>
+            <uri>model://puppy_description/meshes/rf_link1.STL</uri>
           </mesh>
         </geometry>
         <material>
@@ -658,7 +658,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>file:///workspace/src/puppy_description/meshes/rf_link2.STL</uri>
+            <uri>model://puppy_description/meshes/rf_link2.STL</uri>
           </mesh>
         </geometry>
         <surface>
@@ -699,7 +699,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>file:///workspace/src/puppy_description/meshes/rf_link2.STL</uri>
+            <uri>model://puppy_description/meshes/rf_link2.STL</uri>
           </mesh>
         </geometry>
         <material>

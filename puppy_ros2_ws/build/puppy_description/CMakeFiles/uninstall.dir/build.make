@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /workspace/src/puppy_description
+CMAKE_SOURCE_DIR = /workspace/puppy_ros2_ws/src/puppy_description
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /workspace/build/puppy_description
+CMAKE_BINARY_DIR = /workspace/puppy_ros2_ws/build/puppy_description
 
 # Utility rule file for uninstall.
 
@@ -78,6 +78,6 @@ CMakeFiles/uninstall.dir/clean:
 .PHONY : CMakeFiles/uninstall.dir/clean
 
 CMakeFiles/uninstall.dir/depend:
-	cd /workspace/build/puppy_description && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /workspace/src/puppy_description /workspace/src/puppy_description /workspace/build/puppy_description /workspace/build/puppy_description /workspace/build/puppy_description/CMakeFiles/uninstall.dir/DependInfo.cmake --color=$(COLOR)
+	cd /workspace/puppy_ros2_ws/build/puppy_description && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /workspace/puppy_ros2_ws/src/puppy_description /workspace/puppy_ros2_ws/src/puppy_description /workspace/puppy_ros2_ws/build/puppy_description /workspace/puppy_ros2_ws/build/puppy_description /workspace/puppy_ros2_ws/build/puppy_description/CMakeFiles/uninstall.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/uninstall.dir/depend
 

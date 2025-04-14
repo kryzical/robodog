@@ -4,34 +4,54 @@ import os
 import xacro
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, RegisterEventHandler
+from launch.actions import IncludeLaunchDescription, RegisterEventHandler, SetEnvironmentVariable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.event_handlers import OnProcessExit
 from launch_ros.actions import Node
 
 def generate_launch_description():
-    # Get the package directory
+    # Get package paths
     pkg_dir = get_package_share_directory('puppy_description')
-    urdf_dir = os.path.join(pkg_dir, 'urdf')
-    config_dir = os.path.join(pkg_dir, 'config')
-    xacro_file = os.path.join(urdf_dir, 'puppy.urdf.xacro')
+    # Use the known absolute path for src within the container
+    src_dir = '/workspace/puppy_ros2_ws/src/puppy_description'
+    
+    # Print debug info
+    print(f"Package directory: {pkg_dir}")
+    print(f"Source directory: {src_dir}")
     
     # Load the controller configuration
-    controller_config = os.path.join(config_dir, 'gazebo_controllers.yaml')
+    controller_config = os.path.join(pkg_dir, 'config', 'gazebo_controllers.yaml')
     
     # Process the XACRO file to get the URDF
-    robot_description_content = xacro.process_file(xacro_file).toxml()
+    robot_description_content = xacro.process_file(
+        os.path.join(src_dir, 'urdf', 'puppy.urdf.xacro'),
+        mappings={'package_dir': pkg_dir}
+    ).toxml()
     
     # For debugging: Save the processed URDF to a file
-    with open('/tmp/puppy_processed.urdf', 'w') as f:
-        f.write(robot_description_content)
+    # with open('/tmp/puppy_processed.urdf', 'w') as f:
+    #     f.write(robot_description_content)
     
-    # Launch Gazebo with empty world
+    # Set environment variables specifically for the Gazebo launch context
+    # Point to the parent directories where the 'puppy_description' model folder can be found
+    gazebo_model_path = SetEnvironmentVariable(
+        name='IGN_GAZEBO_MODEL_PATH',
+        value=f"{src_dir}/..:{pkg_dir}/.." # Point to parent of src and install/share
+    )
+    gazebo_resource_path = SetEnvironmentVariable(
+        name='IGN_GAZEBO_RESOURCE_PATH',
+        value=f"{src_dir}/..:{pkg_dir}/.." # Point to parent of src and install/share
+    )
+    
+    # Launch Ignition Gazebo with empty world
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             os.path.join(get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')
         ]),
-        launch_arguments={'gz_args': '-r -v 4 empty.sdf'}.items()
+        launch_arguments={
+            'gz_args': '-r -v 4 empty.sdf',
+            'on_exit_shutdown': 'true'
+        }.items()
     )
     
     # Bridge for clock synchronization and joint states
@@ -53,7 +73,8 @@ def generate_launch_description():
         output='screen',
         parameters=[{
             'robot_description': robot_description_content,
-            'use_sim_time': True
+            'use_sim_time': True,
+            'publish_frequency': 30.0
         }]
     )
     
@@ -62,7 +83,10 @@ def generate_launch_description():
         package='joint_state_publisher',
         executable='joint_state_publisher',
         name='joint_state_publisher',
-        output='screen'
+        output='screen',
+        parameters=[{
+            'use_sim_time': True
+        }]
     )
     
     # Controller manager
@@ -119,6 +143,8 @@ def generate_launch_description():
     )
     
     return LaunchDescription([
+        gazebo_model_path,
+        gazebo_resource_path,
         gazebo,
         bridge,
         robot_state_publisher,

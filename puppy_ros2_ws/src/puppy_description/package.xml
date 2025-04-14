@@ -9,16 +9,33 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <!-- Core ROS2 dependencies -->
   <depend>rclpy</depend>
   <depend>robot_state_publisher</depend>
   <depend>rviz2</depend>
-  <depend>ros_gz_sim</depend>
-  <depend>ros_gz_bridge</depend>
   <depend>xacro</depend>
   <depend>joint_state_publisher</depend>
   <depend>joint_state_publisher_gui</depend>
 
+  <!-- Gazebo/IGN dependencies -->
+  <depend>ros_gz_sim</depend>
+  <depend>ros_gz_bridge</depend>
+  <depend>ros_gz_description</depend>
+
+  <!-- Resource dependencies -->
+  <depend>ros2launch</depend>
+  <depend>ros2run</depend>
+
   <export>
     <build_type>ament_cmake</build_type>
+    
+    <!-- Export for Gazebo/IGN -->
+    <gazebo_ros gazebo_model_path="${prefix}/.."/>
+    <gazebo_ros gazebo_media_path="${prefix}/.."/>
+    
+    <!-- Export for ROS2 tools -->
+    <ros2launch>
+      <launch_file>launch/controlled_robot.launch.py</launch_file>
+    </ros2launch>
   </export>
 </package> 

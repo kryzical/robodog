@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot name="puppy" xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:include filename="/workspace/src/puppy_description/urdf/puppy.transmission.xacro"/>
-  <xacro:include filename="/workspace/src/puppy_description/urdf/puppy.gazebo.xacro"/>
+  <xacro:include filename="puppy.transmission.xacro"/>
+  <xacro:include filename="puppy.gazebo.xacro"/>
   <xacro:include filename="materials.xacro" />
   
   <xacro:property name="motor_torque" value="0.5"/>
@@ -35,7 +35,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="file:///workspace/models/puppybot/meshes/base_link.STL" />
+          filename="package://puppy_description/meshes/base_link.STL" />
       </geometry>
       <material
         name="white">
@@ -47,7 +47,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="file:///workspace/models/puppybot/meshes/base_link.STL" />
+          filename="package://puppy_description/meshes/base_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -85,7 +85,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="file:///workspace/models/puppybot/meshes/base_link.STL" />
+          filename="package://puppy_description/meshes/base_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -98,12 +98,12 @@
       <mass
         value="0.0101534902703093" />
       <inertia
-        ixx="4.75129190044601E-06"
-        ixy="2.10473016237263E-08"
-        ixz="1.88925228411051E-08"
-        iyy="2.87659318790812E-06"
-        iyz="2.14913235084379E-06"
-        izz="2.92897619209419E-06" />
+        ixx="0.0001015640290354"
+        ixy="5.44665608405109E-10"
+        ixz="-5.74905560030545E-09"
+        iyy="4.73014549137098E-05"
+        iyz="-4.46099046853099E-06"
+        izz="0.000137571042581761" />
     </inertial>
     <visual>
       <origin
@@ -111,10 +111,10 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="file:///workspace/models/puppybot/meshes/lb_link1.STL" />
+          filename="package://puppy_description/meshes/lb_link1.STL" />
       </geometry>
       <material
-        name="white">
+        name="blue">
       </material>
     </visual>
     <collision>
@@ -123,7 +123,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="file:///workspace/models/puppybot/meshes/lb_link1.STL" />
+          filename="package://puppy_description/meshes/lb_link1.STL" />
       </geometry>
     </collision>
   </link>
@@ -167,10 +167,10 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="file:///workspace/models/puppybot/meshes/lb_link2.STL" />
+          filename="package://puppy_description/meshes/lb_link2.STL" />
       </geometry>
       <material
-        name="white">
+        name="red">
       </material>
     </visual>
     <collision>
@@ -179,7 +179,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="file:///workspace/models/puppybot/meshes/lb_link2.STL" />
+          filename="package://puppy_description/meshes/lb_link2.STL" />
       </geometry>
     </collision>
   </link>
@@ -223,10 +223,10 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="file:///workspace/models/puppybot/meshes/rb_link1.STL" />
+          filename="package://puppy_description/meshes/rb_link1.STL" />
       </geometry>
       <material
-        name="white">
+        name="blue">
       </material>
     </visual>
     <collision>
@@ -235,7 +235,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="file:///workspace/models/puppybot/meshes/rb_link1.STL" />
+          filename="package://puppy_description/meshes/rb_link1.STL" />
       </geometry>
     </collision>
   </link>
@@ -279,10 +279,10 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="file:///workspace/models/puppybot/meshes/rb_link2.STL" />
+          filename="package://puppy_description/meshes/rb_link2.STL" />
       </geometry>
       <material
-        name="white">
+        name="red">
       </material>
     </visual>
     <collision>
@@ -291,7 +291,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="file:///workspace/models/puppybot/meshes/rb_link2.STL" />
+          filename="package://puppy_description/meshes/rb_link2.STL" />
       </geometry>
     </collision>
   </link>
@@ -335,10 +335,10 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="file:///workspace/models/puppybot/meshes/rf_link1.STL" />
+          filename="package://puppy_description/meshes/rf_link1.STL" />
       </geometry>
       <material
-        name="white">
+        name="blue">
       </material>
     </visual>
     <collision>
@@ -347,7 +347,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="file:///workspace/models/puppybot/meshes/rf_link1.STL" />
+          filename="package://puppy_description/meshes/rf_link1.STL" />
       </geometry>
     </collision>
   </link>
@@ -391,10 +391,10 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="file:///workspace/models/puppybot/meshes/rf_link2.STL" />
+          filename="package://puppy_description/meshes/rf_link2.STL" />
       </geometry>
       <material
-        name="white">
+        name="red">
       </material>
     </visual>
     <collision>
@@ -403,7 +403,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="file:///workspace/models/puppybot/meshes/rf_link2.STL" />
+          filename="package://puppy_description/meshes/rf_link2.STL" />
       </geometry>
     </collision>
   </link>
@@ -447,10 +447,10 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="file:///workspace/models/puppybot/meshes/lf_link1.STL" />
+          filename="package://puppy_description/meshes/lf_link1.STL" />
       </geometry>
       <material
-        name="white">
+        name="blue">
       </material>
     </visual>
     <collision>
@@ -459,7 +459,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="file:///workspace/models/puppybot/meshes/lf_link1.STL" />
+          filename="package://puppy_description/meshes/lf_link1.STL" />
       </geometry>
     </collision>
   </link>
@@ -503,10 +503,10 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="file:///workspace/models/puppybot/meshes/lf_link2.STL" />
+          filename="package://puppy_description/meshes/lf_link2.STL" />
       </geometry>
       <material
-        name="white">
+        name="red">
       </material>
     </visual>
     <collision>
@@ -515,7 +515,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="file:///workspace/models/puppybot/meshes/lf_link2.STL" />
+          filename="package://puppy_description/meshes/lf_link2.STL" />
       </geometry>
     </collision>
   </link>
@@ -559,10 +559,10 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="file:///workspace/models/puppybot/meshes/camera_link.STL" />
+          filename="package://puppy_description/meshes/camera_link.STL" />
       </geometry>
       <material
-        name="white">
+        name="black">
       </material>
     </visual>
     <collision>
@@ -571,7 +571,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="file:///workspace/models/puppybot/meshes/camera_link.STL" />
+          filename="package://puppy_description/meshes/camera_link.STL" />
       </geometry>
     </collision>
   </link>

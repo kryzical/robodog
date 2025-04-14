@@ -16,6 +16,7 @@ RUN . /opt/ros/humble/setup.sh && \
     ros-humble-gazebo-ros \
     ros-humble-gazebo-ros-pkgs \
     ros-humble-joint-state-publisher \
+    ros-humble-joint-state-publisher-gui \
     ros-humble-robot-localization \
     ros-humble-robot-state-publisher \
     ros-humble-ros2bag \
@@ -27,6 +28,8 @@ RUN . /opt/ros/humble/setup.sh && \
     ros-humble-controller-manager \
     ros-humble-ros2-control \
     ros-humble-ros2-controllers \
+    ros-humble-gazebo-ros2-control \
+    ros-humble-xacro \
     wget \
     xorg-dev \
     mesa-utils \
@@ -45,23 +48,37 @@ RUN . /opt/ros/humble/setup.sh && \
 # Set up workspace
 WORKDIR /workspace
 
-# Copy only the ROS workspace
-COPY puppy_ros2_ws /workspace
+# Create the workspace structure
+RUN mkdir -p /workspace/puppy_ros2_ws/src
+
+# Copy the ROS workspace
+COPY puppy_ros2_ws/src/puppy_description /workspace/puppy_ros2_ws/src/puppy_description
 
 # Build workspace
 RUN . /opt/ros/humble/setup.sh && \
-    cd /workspace && \
-    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
+    cd /workspace/puppy_ros2_ws && \
+    colcon build --symlink-install --packages-select puppy_description --cmake-args -DCMAKE_BUILD_TYPE=Release && \
+    . install/setup.sh
 
 # Set environment variables
 ENV ROS_DISTRO=humble
 ENV GAZEBO_VERSION=fortress
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 ENV PATH="/usr/lib/gazebo-fortress/bin:/usr/bin:${PATH}"
-ENV GAZEBO_MODEL_PATH=/workspace/src/puppy_description/models
-ENV GAZEBO_RESOURCE_PATH=/workspace/src/puppy_description/worlds
-ENV IGN_GAZEBO_RESOURCE_PATH=/workspace/src/puppy_description
-ENV IGN_GAZEBO_SYSTEM_PLUGIN_PATH=/usr/lib/x86_64-linux-gnu/ign-gazebo-6/plugins
+
+# More flexible paths that work with volume mounts
+ENV GAZEBO_MODEL_PATH="/workspace/puppy_ros2_ws/src/puppy_description/meshes:/workspace/puppy_ros2_ws/install/puppy_description/share/puppy_description/meshes"
+ENV GAZEBO_RESOURCE_PATH="/workspace/puppy_ros2_ws/src/puppy_description:/workspace/puppy_ros2_ws/install/puppy_description/share/puppy_description"
+# Point only to parent dirs for model:// resolution
+ENV IGN_GAZEBO_RESOURCE_PATH="/workspace/puppy_ros2_ws/src:/workspace/puppy_ros2_ws/install/puppy_description/share"
+ENV IGN_GAZEBO_MODEL_PATH="/workspace/puppy_ros2_ws/src:/workspace/puppy_ros2_ws/install/puppy_description/share"
+ENV IGN_GAZEBO_SYSTEM_PLUGIN_PATH="/usr/lib/x86_64-linux-gnu/ign-gazebo-6/plugins"
+ENV ROS_PACKAGE_PATH="/workspace/puppy_ros2_ws/install/puppy_description/share"
+
+# Create a setup script
+RUN echo 'source /opt/ros/humble/setup.bash' >> /root/.bashrc && \
+    echo 'source /workspace/puppy_ros2_ws/install/setup.bash' >> /root/.bashrc && \
+    echo 'export ROS_PACKAGE_PATH=/workspace/puppy_ros2_ws/install/puppy_description/share:${ROS_PACKAGE_PATH}' >> /root/.bashrc
 
 # Default command
 CMD ["/bin/bash"] 
