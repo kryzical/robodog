@@ -1,0 +1,62 @@
+version: '3.8' # Keep or remove based on compose version
+
+services:
+  terminal:
+    container_name: puppy_terminal
+    image: ghcr.io/${GITHUB_USERNAME:-yourusername}/puppy_terminal:${TAG:-latest}
+    # Build context is now robodog
+    build:
+      context: .
+      dockerfile: Dockerfile 
+      args:
+        - GAZEBO_VERSION=${GAZEBO_VERSION}
+    network_mode: host
+    environment:
+      - DISPLAY=${DISPLAY}
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID}
+      - ROS_DISTRO=${ROS_DISTRO}
+      - GAZEBO_VERSION=${GAZEBO_VERSION}
+    volumes:
+      # X11 display
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      # Workspace source (relative to robodog directory)
+      - ../puppy_ros2_ws/src:/workspace/puppy_ros2_ws/src:rw
+    # Command for terminal service
+    command: >
+      bash -c "
+        cd /workspace/puppy_ros2_ws && \
+        source /opt/ros/${ROS_DISTRO}/setup.bash && \
+        # Build is now done in the image for simulation
+        # Maybe build here if needed for interactive terminal?
+        source install/setup.bash && \
+        /bin/bash
+      "
+    stdin_open: true
+    tty: true
+    # ... restart/logging ...
+
+  simulation:
+    container_name: puppy_simulation
+    # Use the locally built image with workspace included
+    image: puppy_ros2_built:latest 
+    # Build section removed
+    network_mode: host
+    environment:
+      - DISPLAY=${DISPLAY}
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID}
+      - ROS_DISTRO=${ROS_DISTRO}
+      - GAZEBO_VERSION=${GAZEBO_VERSION}
+      # Relies on ENV vars set inside the image
+    volumes:
+      # X11 display
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      # NO source volume mount needed if using build-in-image
+    # Simplified command: source and launch
+    command: >
+      bash -c "
+        source /workspace/puppy_ros2_ws/install/setup.bash && \
+        ros2 launch puppy_description controlled_robot.launch.py
+      "
+    stdin_open: true
+    tty: true
+    # ... restart/logging ... 
