@@ -51,31 +51,28 @@ WORKDIR /workspace
 # Create the workspace structure
 RUN mkdir -p /workspace/puppy_ros2_ws/src
 
-# Copy the ROS workspace
-COPY puppy_ros2_ws/src/puppy_description /workspace/puppy_ros2_ws/src/puppy_description
+# Copy the ROS workspace source code
+# Build context is assumed to be the parent of robodog (i.e., ros2 directory)
+COPY robodog/puppy_ros2_ws/src/puppy_description /workspace/puppy_ros2_ws/src/puppy_description
 
-# Build workspace
-RUN . /opt/ros/humble/setup.sh && \
-    cd /workspace/puppy_ros2_ws && \
-    colcon build --symlink-install --packages-select puppy_description --cmake-args -DCMAKE_BUILD_TYPE=Release && \
-    . install/setup.sh
+# Build workspace *inside* the image
+RUN ["bash", "-c", "source /opt/ros/humble/setup.bash && cd /workspace/puppy_ros2_ws && colcon build --symlink-install"]
 
-# Set environment variables
+# Set environment variables (Ensure ROS_PACKAGE_PATH points to install space)
 ENV ROS_DISTRO=humble
 ENV GAZEBO_VERSION=fortress
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 ENV PATH="/usr/lib/gazebo-fortress/bin:/usr/bin:${PATH}"
-
-# More flexible paths that work with volume mounts
-ENV GAZEBO_MODEL_PATH="/workspace/puppy_ros2_ws/src/puppy_description/meshes:/workspace/puppy_ros2_ws/install/puppy_description/share/puppy_description/meshes"
-ENV GAZEBO_RESOURCE_PATH="/workspace/puppy_ros2_ws/src/puppy_description:/workspace/puppy_ros2_ws/install/puppy_description/share/puppy_description"
-# Point only to parent dirs for model:// resolution
-ENV IGN_GAZEBO_RESOURCE_PATH="/workspace/puppy_ros2_ws/src:/workspace/puppy_ros2_ws/install/puppy_description/share"
-ENV IGN_GAZEBO_MODEL_PATH="/workspace/puppy_ros2_ws/src:/workspace/puppy_ros2_ws/install/puppy_description/share"
+# Point Gazebo/Ignition paths to the built install space and potentially copied source
+ENV GAZEBO_MODEL_PATH="/workspace/puppy_ros2_ws/install/puppy_description/share/puppy_description/meshes"
+ENV GAZEBO_RESOURCE_PATH="/workspace/puppy_ros2_ws/install/puppy_description/share/puppy_description"
+# Include install/share AND copied src for model:// resolution
+ENV IGN_GAZEBO_RESOURCE_PATH="/workspace/puppy_ros2_ws/install/puppy_description/share:/workspace/puppy_ros2_ws/src"
+ENV IGN_GAZEBO_MODEL_PATH="/workspace/puppy_ros2_ws/install/puppy_description/share:/workspace/puppy_ros2_ws/src"
 ENV IGN_GAZEBO_SYSTEM_PLUGIN_PATH="/usr/lib/x86_64-linux-gnu/ign-gazebo-6/plugins"
 ENV ROS_PACKAGE_PATH="/workspace/puppy_ros2_ws/install/puppy_description/share"
 
-# Create a setup script
+# Append sourcing to .bashrc (sources the built workspace)
 RUN echo 'source /opt/ros/humble/setup.bash' >> /root/.bashrc && \
     echo 'source /workspace/puppy_ros2_ws/install/setup.bash' >> /root/.bashrc && \
     echo 'export ROS_PACKAGE_PATH=/workspace/puppy_ros2_ws/install/puppy_description/share:${ROS_PACKAGE_PATH}' >> /root/.bashrc
