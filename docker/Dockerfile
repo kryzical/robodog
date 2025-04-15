@@ -53,7 +53,7 @@ RUN mkdir -p /workspace/puppy_ros2_ws/src
 
 # Copy the ROS workspace source code
 # Build context is assumed to be the robodog directory
-COPY ../puppy_ros2_ws/src/puppy_description /workspace/puppy_ros2_ws/src/puppy_description
+COPY ../puppy_ros2_ws/src /workspace/puppy_ros2_ws/src
 
 # Build workspace *inside* the image
 RUN ["bash", "-c", "source /opt/ros/humble/setup.bash && cd /workspace/puppy_ros2_ws && colcon build --symlink-install"]
@@ -64,18 +64,18 @@ ENV GAZEBO_VERSION=fortress
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 ENV PATH="/usr/lib/gazebo-fortress/bin:/usr/bin:${PATH}"
 # Point Gazebo/Ignition paths to the built install space and potentially copied source
-ENV GAZEBO_MODEL_PATH="/workspace/puppy_ros2_ws/install/puppy_description/share/puppy_description/meshes"
-ENV GAZEBO_RESOURCE_PATH="/workspace/puppy_ros2_ws/install/puppy_description/share/puppy_description"
-# Include install/share AND copied src for model:// resolution
-ENV IGN_GAZEBO_RESOURCE_PATH="/workspace/puppy_ros2_ws/install/puppy_description/share:/workspace/puppy_ros2_ws/src"
-ENV IGN_GAZEBO_MODEL_PATH="/workspace/puppy_ros2_ws/install/puppy_description/share:/workspace/puppy_ros2_ws/src"
+# General paths for install and source space
+ENV GAZEBO_MODEL_PATH="/workspace/puppy_ros2_ws/install/share:/workspace/puppy_ros2_ws/src"
+ENV GAZEBO_RESOURCE_PATH="/workspace/puppy_ros2_ws/install/share:/workspace/puppy_ros2_ws/src"
+ENV IGN_GAZEBO_RESOURCE_PATH="/workspace/puppy_ros2_ws/install/share:/workspace/puppy_ros2_ws/src"
+ENV IGN_GAZEBO_MODEL_PATH="/workspace/puppy_ros2_ws/install/share:/workspace/puppy_ros2_ws/src"
 ENV IGN_GAZEBO_SYSTEM_PLUGIN_PATH="/usr/lib/x86_64-linux-gnu/ign-gazebo-6/plugins"
-ENV ROS_PACKAGE_PATH="/workspace/puppy_ros2_ws/install/puppy_description/share"
+# ROS_PACKAGE_PATH is generally not needed/set explicitly in ROS 2; sourcing install/setup.bash handles discovery.
 
 # Append sourcing to .bashrc (sources the built workspace)
 RUN echo 'source /opt/ros/humble/setup.bash' >> /root/.bashrc && \
-    echo 'source /workspace/puppy_ros2_ws/install/setup.bash' >> /root/.bashrc && \
-    echo 'export ROS_PACKAGE_PATH=/workspace/puppy_ros2_ws/install/puppy_description/share:${ROS_PACKAGE_PATH}' >> /root/.bashrc
+    echo 'source /workspace/puppy_ros2_ws/install/setup.bash' >> /root/.bashrc
+# Removed explicit ROS_PACKAGE_PATH export
 
 # Default command
 CMD ["/bin/bash"] 
