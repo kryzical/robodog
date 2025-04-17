@@ -107,3 +107,11 @@ models/
 # *.stl
 # *.obj
 # *.dae 
+# ROS 2 Build Artifacts
+build/
+install/
+log/
+
+# Cloned Source Dependencies (ros2_control)
+puppy_ros2_ws/src/ros-controls/
+gazebo_control.repos
