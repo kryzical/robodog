@@ -53,7 +53,7 @@ RUN mkdir -p /workspace/puppy_ros2_ws/src
 
 # Copy the ROS workspace source code
 # Build context is assumed to be the robodog directory
-COPY ../puppy_ros2_ws/src /workspace/puppy_ros2_ws/src
+COPY . /workspace/puppy_ros2_ws/src
 
 # Build workspace *inside* the image
 RUN ["bash", "-c", "source /opt/ros/humble/setup.bash && cd /workspace/puppy_ros2_ws && colcon build --symlink-install"]
