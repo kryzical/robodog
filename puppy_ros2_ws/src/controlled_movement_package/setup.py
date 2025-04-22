@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'key_inpute_node = controlled_movement.key_input_node:main',
+            'key_input_node = controlled_movement.key_input_node:main',
             'camera_input = controlled_movement.key_input_node:main',
         ],
     },
