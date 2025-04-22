@@ -36,6 +36,8 @@ RUN . /opt/ros/humble/setup.sh && \
     libgl1-mesa-glx \
     libgl1-mesa-dri \
     && rm -rf /var/lib/apt/lists/*
+#install pygame
+RUN pip3 install pygame
 
 # Install Gazebo
 RUN . /opt/ros/humble/setup.sh && \
