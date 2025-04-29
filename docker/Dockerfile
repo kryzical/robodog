@@ -38,6 +38,7 @@ RUN . /opt/ros/humble/setup.sh && \
     && rm -rf /var/lib/apt/lists/*
 #install pygame
 RUN pip3 install pygame
+RUN pip3 install adafruit-circuitpython-servokit
 
 # Install Gazebo
 RUN . /opt/ros/humble/setup.sh && \
