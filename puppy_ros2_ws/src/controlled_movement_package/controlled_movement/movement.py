@@ -1,6 +1,6 @@
 from time import *
 from adafruit_servokit import ServoKit
-import stand as st
+# import stand as st
 
 #initialize kit to channel for operation, will not need to do any other place
 kit = ServoKit(channels=16)
@@ -311,10 +311,10 @@ def turn_right():
 
 
 def main():
-    st.stand()
+    # st.stand()
     sleep(1)
-    for i in range (5):
-        turn_left()
+    # for i in range (5):
+    #     turn_left()
 
 if __name__ == "__main__":
     main()
