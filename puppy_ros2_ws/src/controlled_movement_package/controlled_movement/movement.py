@@ -238,108 +238,108 @@ def stand():
 #         sleep(interval_time)
 
 #     print("Trot complete.")
-# #turn left
-# def turn_left():
-#     print("Turning Left (improved)...")
+#turn left
+def turn_left():
+    print("Turning Left (improved)...")
 
-#     lf1_a, lf2_a = 152, 66
-#     lr1_a, lr2_a = 152, 66
-#     rf1_a, rf2_a = 13, 96
-#     rr1_a, rr2_a = 13, 96
-#     interval_time = 0.01
+    lf1_a, lf2_a = 152, 66
+    lr1_a, lr2_a = 152, 66
+    rf1_a, rf2_a = 13, 96
+    rr1_a, rr2_a = 13, 96
+    interval_time = 0.01
 
-#     # Step 1: move RF + LR
-#     for step in range(30):
-#         if step < 20:
-#             rf2_a -= 1
-#             lr2_a += 1
-#             kit.servo[rf2].angle = rf2_a
-#             kit.servo[lr2].angle = lr2_a
+    # Step 1: move RF + LR
+    for step in range(30):
+        if step < 20:
+            rf2_a -= 1
+            lr2_a += 1
+            kit.servo[rf2].angle = rf2_a
+            kit.servo[lr2].angle = lr2_a
 
-#             rf1_a += 1
-#             lr1_a -= 1
-#             kit.servo[rf1].angle = rf1_a
-#             kit.servo[lr1].angle = lr1_a
-#         sleep(interval_time)
+            rf1_a += 1
+            lr1_a -= 1
+            kit.servo[rf1].angle = rf1_a
+            kit.servo[lr1].angle = lr1_a
+        sleep(interval_time)
 
-#     for step in range(20):
-#         rf2_a += 1
-#         lr2_a -= 1
-#         kit.servo[rf2].angle = rf2_a
-#         kit.servo[lr2].angle = lr2_a
-#         sleep(interval_time)
+    for step in range(20):
+        rf2_a += 1
+        lr2_a -= 1
+        kit.servo[rf2].angle = rf2_a
+        kit.servo[lr2].angle = lr2_a
+        sleep(interval_time)
 
-#     # Step 2: move LF + RR
-#     for step in range(30):
-#         if step < 20:
-#             lf2_a -= 1
-#             rr2_a += 1
-#             kit.servo[lf2].angle = lf2_a
-#             kit.servo[rr2].angle = rr2_a
+    # Step 2: move LF + RR
+    for step in range(30):
+        if step < 20:
+            lf2_a -= 1
+            rr2_a += 1
+            kit.servo[lf2].angle = lf2_a
+            kit.servo[rr2].angle = rr2_a
 
-#             lf1_a -= 1
-#             rr1_a += 1
-#             kit.servo[lf1].angle = lf1_a
-#             kit.servo[rr1].angle = rr1_a
-#         sleep(interval_time)
+            lf1_a -= 1
+            rr1_a += 1
+            kit.servo[lf1].angle = lf1_a
+            kit.servo[rr1].angle = rr1_a
+        sleep(interval_time)
 
-#     for step in range(20):
-#         lf2_a += 1
-#         rr2_a -= 1
-#         kit.servo[lf2].angle = lf2_a
-#         kit.servo[rr2].angle = rr2_a
-#         sleep(interval_time)
+    for step in range(20):
+        lf2_a += 1
+        rr2_a -= 1
+        kit.servo[lf2].angle = lf2_a
+        kit.servo[rr2].angle = rr2_a
+        sleep(interval_time)
 
-# def turn_right():
-#     print("Turning Right (improved)...")
+def turn_right():
+    print("Turning Right (improved)...")
 
-#     lf1_a, lf2_a = 152, 66
-#     lr1_a, lr2_a = 152, 66
-#     rf1_a, rf2_a = 13, 96
-#     rr1_a, rr2_a = 13, 96
-#     interval_time = 0.0001
+    lf1_a, lf2_a = 152, 66
+    lr1_a, lr2_a = 152, 66
+    rf1_a, rf2_a = 13, 96
+    rr1_a, rr2_a = 13, 96
+    interval_time = 0.0001
 
-#     # Step 1: move LF + RR
-#     for step in range(30):
-#         if step < 20:
-#             lf2_a -= 1
-#             rr2_a += 1
-#             kit.servo[lf2].angle = lf2_a
-#             kit.servo[rr2].angle = rr2_a
+    # Step 1: move LF + RR
+    for step in range(30):
+        if step < 20:
+            lf2_a -= 1
+            rr2_a += 1
+            kit.servo[lf2].angle = lf2_a
+            kit.servo[rr2].angle = rr2_a
 
-#             lf1_a -= 1
-#             rr1_a += 1
-#             kit.servo[lf1].angle = lf1_a
-#             kit.servo[rr1].angle = rr1_a
-#         sleep(interval_time)
+            lf1_a -= 1
+            rr1_a += 1
+            kit.servo[lf1].angle = lf1_a
+            kit.servo[rr1].angle = rr1_a
+        sleep(interval_time)
 
-#     for step in range(20):
-#         lf2_a += 1
-#         rr2_a -= 1
-#         kit.servo[lf2].angle = lf2_a
-#         kit.servo[rr2].angle = rr2_a
-#         sleep(interval_time)
+    for step in range(20):
+        lf2_a += 1
+        rr2_a -= 1
+        kit.servo[lf2].angle = lf2_a
+        kit.servo[rr2].angle = rr2_a
+        sleep(interval_time)
 
-#     # Step 2: move RF + LR
-#     for step in range(30):
-#         if step < 20:
-#             rf2_a -= 1
-#             lr2_a += 1
-#             kit.servo[rf2].angle = rf2_a
-#             kit.servo[lr2].angle = lr2_a
+    # Step 2: move RF + LR
+    for step in range(30):
+        if step < 20:
+            rf2_a -= 1
+            lr2_a += 1
+            kit.servo[rf2].angle = rf2_a
+            kit.servo[lr2].angle = lr2_a
 
-#             rf1_a += 1
-#             lr1_a -= 1
-#             kit.servo[rf1].angle = rf1_a
-#             kit.servo[lr1].angle = lr1_a
-#         sleep(interval_time)
+            rf1_a += 1
+            lr1_a -= 1
+            kit.servo[rf1].angle = rf1_a
+            kit.servo[lr1].angle = lr1_a
+        sleep(interval_time)
 
-#     for step in range(20):
-#         rf2_a += 1
-#         lr2_a -= 1
-#         kit.servo[rf2].angle = rf2_a
-#         kit.servo[lr2].angle = lr2_a
-#         sleep(interval_time)
+    for step in range(20):
+        rf2_a += 1
+        lr2_a -= 1
+        kit.servo[rf2].angle = rf2_a
+        kit.servo[lr2].angle = lr2_a
+        sleep(interval_time)
 
 
 
