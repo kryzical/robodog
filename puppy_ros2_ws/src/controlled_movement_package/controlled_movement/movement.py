@@ -1,6 +1,5 @@
 from time import *
 from adafruit_servokit import ServoKit
-import stand as st
 
 #initialize kit to channel for operation, will not need to do any other place
 kit = ServoKit(channels=16)
