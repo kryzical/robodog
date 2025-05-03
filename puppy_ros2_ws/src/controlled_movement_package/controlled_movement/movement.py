@@ -292,7 +292,7 @@ legs = {
 def clamp(val, min_val=0, max_val=180):
     return max(min(val, max_val), min_val)
 
-def generate_leg_trajectory(t, hip_home, knee_home, swing_dir, lift=15, swing=20):
+def generate_leg_trajectory(t, hip_home, knee_home, swing_dir, lift=30, swing=40):
     hip_offset = math.sin(2 * math.pi * t) * swing * 0.5
     knee_offset = math.sin(math.pi * (t % 1)) * lift if t < 0.5 else 0
     hip_angle = clamp(hip_home + swing_dir * hip_offset)
@@ -304,7 +304,7 @@ def stand():
         kit.servo[cfg['hip']].angle = cfg['hip_home']
         kit.servo[cfg['knee']].angle = cfg['knee_home']
 
-def trot_forward(time_now, start_time, cycle_time=1.0):
+def trot_forward(time_now, start_time, cycle_time=1.2):
     t = ((time_now - start_time) % cycle_time) / cycle_time
     for leg_name, cfg in legs.items():
         hip_angle, knee_angle = generate_leg_trajectory(
@@ -316,7 +316,7 @@ def trot_forward(time_now, start_time, cycle_time=1.0):
         kit.servo[cfg['hip']].angle = hip_angle
         kit.servo[cfg['knee']].angle = knee_angle
 
-def walk_back(time_now, start_time, cycle_time=1.0):
+def walk_back(time_now, start_time, cycle_time=1.2):
     t = ((time_now - start_time) % cycle_time) / cycle_time
     for leg_name, cfg in legs.items():
         # Reverses swing direction for backward walking
@@ -329,7 +329,7 @@ def walk_back(time_now, start_time, cycle_time=1.0):
         kit.servo[cfg['hip']].angle = hip_angle
         kit.servo[cfg['knee']].angle = knee_angle
 
-def turn_left(time_now, start_time, cycle_time=1.0):
+def turn_left(time_now, start_time, cycle_time=1.2):
     t = ((time_now - start_time) % cycle_time) / cycle_time
     for leg_name, cfg in legs.items():
         mod_cfg = cfg.copy()
@@ -343,7 +343,7 @@ def turn_left(time_now, start_time, cycle_time=1.0):
         kit.servo[mod_cfg['hip']].angle = hip_angle
         kit.servo[mod_cfg['knee']].angle = knee_angle
 
-def turn_right(time_now, start_time, cycle_time=1.0):
+def turn_right(time_now, start_time, cycle_time=1.2):
     t = ((time_now - start_time) % cycle_time) / cycle_time
     for leg_name, cfg in legs.items():
         mod_cfg = cfg.copy()
