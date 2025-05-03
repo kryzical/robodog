@@ -1,5 +1,9 @@
-from time import *
+from time import sleep
 from adafruit_servokit import ServoKit
+import rclpy
+from rclpy.node import Node
+from sensor_msgs.msg import JointState
+
 
 #initialize kit to channel for operation, will not need to do any other place
 kit = ServoKit(channels=16)
@@ -31,7 +35,59 @@ rr2 = 15
 #RR2 15
     #range 0(in) 180 (extended)
 
+joint_names = [
+    'lf1_joint', 'lf2_joint', 'lr1_joint', 'lr2_joint',
+    'rf1_joint', 'rf2_joint', 'rr1_joint', 'rr2_joint'
+]
+servo_channels = {
+    'lf1_joint': 4, 'lf2_joint': 5,
+    'lr1_joint': 12, 'lr2_joint': 13,
+    'rf1_joint': 6, 'rf2_joint': 7,
+    'rr1_joint': 14, 'rr2_joint': 15
+}
 
+class JointStateBroadcaster(Node):
+    def __init__(self):
+        super().__init__('movement_joint_publisher')
+        self.publisher_ = self.create_publisher(JointState, '/joint_states', 10)
+
+    def publish_joint_states(self, angles):
+        msg = JointState()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.name = joint_names
+        msg.position = [angles[name] * 3.14159 / 180 for name in joint_names]  # deg → rad
+        self.publisher_.publish(msg)
+
+# Initialize ROS2 before main loop
+rclpy.init()
+joint_pub = JointStateBroadcaster()
+
+def publish_and_move(angles):
+    """Set servo positions and publish joint states."""
+    for name, angle in angles.items():
+        kit.servo[servo_channels[name]].angle = angle
+    joint_pub.publish_joint_states(angles)
+
+def trot_forward():
+    print("starting integrated trot...")
+
+    angles = {
+        'lf1_joint': 152, 'lf2_joint': 66,
+        'lr1_joint': 152, 'lr2_joint': 66,
+        'rf1_joint': 152, 'rf2_joint': 66,
+        'rr1_joint': 152, 'rr2_joint': 66,
+    }
+
+    interval = 0.0001
+
+    for _ in range(20):
+        angles['rf2_joint'] -= 1
+        angles['lr2_joint'] += 1
+        publish_and_move(angles)
+        angles['rf1_joint'] += 1
+        angles['lr1_joint'] -= 1
+        publish_and_move(angles)
+        sleep(interval)
 
 def trot_forward():
     lf1_a = 152 #152
@@ -308,18 +364,6 @@ def turn_right():
         sleep(interval_time)
 
 def stand():
-#left side
-    # kit.servo[4].angle = 132 #lf1
-    # kit.servo[5].angle = 86 #lf2
-    # kit.servo[12].angle = 132 #lr1
-    # kit.servo[13].angle = 86 #lr2
-
-    # #right side
-    # kit.servo[6].angle = 33 #rf1
-    # kit.servo[7].angle = 76 #rf2
-    # kit.servo[14].angle = 33 #rr1
-    # kit.servo[15].angle = 76 #rr2
-
     #left side
     kit.servo[4].angle = 152 #lf1
     kit.servo[5].angle = 66 #lf2
@@ -333,14 +377,14 @@ def stand():
     kit.servo[15].angle = 96 #rr2
 
 def main():
-    #st.stand()
     sleep(1)
-    #for i in range (5):
-    #    turn_left()
+    #trot_forward()
+    rclpy.spin_once(joint_pub, timeout_sec=0.1)
+    joint_pub.destroy_node()
+    #rclpy.shutdown()
 
 if __name__ == "__main__":
     main()
-
 
 # from time import sleep, time
 # from adafruit_servokit import ServoKit

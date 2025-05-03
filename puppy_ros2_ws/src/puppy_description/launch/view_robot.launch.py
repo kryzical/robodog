@@ -58,13 +58,22 @@ def generate_launch_description():
         }]
     )
 
-    # Joint State Publisher GUI Node
-    joint_state_publisher_gui_node = Node(
-        package='joint_state_publisher_gui',
-        executable='joint_state_publisher_gui',
-        name='joint_state_publisher_gui',
-        output='screen'
-    )
+    # # Joint State Publisher GUI Node
+    # joint_state_publisher_gui_node = Node(
+    #     package='joint_state_publisher_gui',
+    #     executable='joint_state_publisher_gui',
+    #     name='joint_state_publisher_gui',
+    #     output='screen'
+    # )
+
+    # Your own joint state publisher (publishes from real robot)
+    # joint_state_publisher_gui_node = Node(
+    #     package='controlled_movement',
+    #     executable='joint_state_publisher',  # Assuming this node exists and does the publishing
+    #     name='joint_state_publisher',
+    #     output='screen'
+    # )
+
 
     # RViz2 Node
     rviz_node = Node(
