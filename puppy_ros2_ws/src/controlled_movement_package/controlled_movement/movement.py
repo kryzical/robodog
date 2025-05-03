@@ -151,35 +151,30 @@ def trot_forward():
     
     print(f"lf1: {lf1_a}, lf2: {lf2_a}, rf1 : {rf1_a}, rf2: {rf2_a}, lr1: {lr1_a}, lr2: {lr2_a}, rr1: {rr1_a}, rr2: {rr2_a}")
 
+def stand():
+#left side
+    # kit.servo[4].angle = 132 #lf1
+    # kit.servo[5].angle = 86 #lf2
+    # kit.servo[12].angle = 132 #lr1
+    # kit.servo[13].angle = 86 #lr2
 
+    # #right side
+    # kit.servo[6].angle = 33 #rf1
+    # kit.servo[7].angle = 76 #rf2
+    # kit.servo[14].angle = 33 #rr1
+    # kit.servo[15].angle = 76 #rr2
 
+    #left side
+    kit.servo[4].angle = 152 #lf1
+    kit.servo[5].angle = 66 #lf2
+    kit.servo[12].angle = 152 #lr1
+    kit.servo[13].angle = 66 #lr2
 
-
-
-# def stand():
-# #left side
-#     # kit.servo[4].angle = 132 #lf1
-#     # kit.servo[5].angle = 86 #lf2
-#     # kit.servo[12].angle = 132 #lr1
-#     # kit.servo[13].angle = 86 #lr2
-
-#     # #right side
-#     # kit.servo[6].angle = 33 #rf1
-#     # kit.servo[7].angle = 76 #rf2
-#     # kit.servo[14].angle = 33 #rr1
-#     # kit.servo[15].angle = 76 #rr2
-
-#     #left side
-#     kit.servo[4].angle = 152 #lf1
-#     kit.servo[5].angle = 66 #lf2
-#     kit.servo[12].angle = 152 #lr1
-#     kit.servo[13].angle = 66 #lr2
-
-#     #right side
-#     kit.servo[6].angle = 13 #rf1
-#     kit.servo[7].angle = 96 #rf2
-#     kit.servo[14].angle = 13 #rr1
-#     kit.servo[15].angle = 96 #rr2
+    #right side
+    kit.servo[6].angle = 13 #rf1
+    kit.servo[7].angle = 96 #rf2
+    kit.servo[14].angle = 13 #rr1
+    kit.servo[15].angle = 96 #rr2
 
 
 # def trot_forward():
