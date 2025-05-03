@@ -28,19 +28,19 @@ class MovementListener(Node):
 
         if movement_states[0]:  # Up key (W)
             self.get_logger().info('Walking forward...')
-            movement.trot_forward(time_now, start_time)
+            movement.trot_forward()
 
         elif movement_states[1]:  # Down key (S)
             self.get_logger().info('Walking backward...')
-            movement.walk_back(time_now, start_time)  # Not implemented
+            movement.walk_back()  # Not implemented
 
         elif movement_states[2]:  # Left key (A)
             self.get_logger().info('Turning left...')
-            movement.turn_left(time_now, start_time)
+            movement.turn_left()
 
         elif movement_states[3]:  # Right key (D)
             self.get_logger().info('Turning right...')
-            movement.turn_right(time_now, start_time)
+            movement.turn_right()
 
         else:
             self.get_logger().info('Standing still.')
