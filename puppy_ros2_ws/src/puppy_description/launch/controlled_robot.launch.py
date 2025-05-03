@@ -4,7 +4,7 @@ import os
 import xacro
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable
+from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 
@@ -12,7 +12,8 @@ def generate_launch_description():
     # Get package paths
     pkg_dir = get_package_share_directory('puppy_description')
     # Use the known absolute path for src within the container
-    src_dir = '/workspace/puppy_ros2_ws/src/puppy_description'
+    src_dir = os.path.join(pkg_dir, 'urdf')
+
     
     # Print debug info
     print(f"Package directory: {pkg_dir}")
@@ -20,8 +21,9 @@ def generate_launch_description():
     
     # Process the XACRO file to get the URDF
     robot_description_content = xacro.process_file(
-        os.path.join(src_dir, 'urdf', 'puppy.urdf.xacro')
+    os.path.join(src_dir, 'puppy.urdf.xacro')
     ).toxml()
+
     
     # Set environment variables specifically for the Gazebo launch context
     # Point to the parent directories where the 'puppy_description' model folder can be found
@@ -75,11 +77,21 @@ def generate_launch_description():
     )
     
     # Spawn robot entity in Gazebo
-    spawn_entity = Node(
+    #spawn_entity = Node(
+    #    package='ros_gz_sim',
+    #    executable='create',
+    #    arguments=['-topic', '/robot_description', '-entity', 'puppy'],
+    #    output='screen'
+    #)
+
+    spawn_entity = TimerAction(
+        period=5.0,
+        actions=[Node(
         package='ros_gz_sim',
         executable='create',
         arguments=['-topic', '/robot_description', '-entity', 'puppy'],
         output='screen'
+        )]
     )
 
     # --- Launch Description ---
