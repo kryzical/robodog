@@ -484,7 +484,7 @@ def update_leg(leg_name, t):
     kit.servo[cfg['hip']].angle = hip_angle
     kit.servo[cfg['knee']].angle = knee_angle
 
-def trot_forward_step(time_now, start_time):
+def trot_forward(time_now, start_time):
     """Call this every 20ms to run one frame of the gait"""
     t = ((time_now - start_time) % CYCLE_TIME) / CYCLE_TIME
     for leg in legs:
