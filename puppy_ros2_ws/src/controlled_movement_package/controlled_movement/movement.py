@@ -395,7 +395,7 @@ def swing_leg(name, hip_servo, knee_servo, hip_start, hip_end, knee_up, knee_dow
     kit.servo[knee_servo].angle = knee_down # Set leg down
     sleep(0.2)
 
-def trot_step():
+def trot_forward():
     # Start from stand
     stand()
 
