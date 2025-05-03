@@ -70,16 +70,16 @@ class MovementListener(Node):
         time_now = time.time()
 
         if self.motion_command[0]:  # Forward
-            movement.trot_forward_step(time_now, self.start_time)
+            movement.trot_forward(time_now, self.start_time)
 
         elif self.motion_command[1]:  # Backward
-            movement.walk_back_step(time_now, self.start_time)
+            movement.walk_back(time_now, self.start_time)
 
         elif self.motion_command[2]:  # Left
-            movement.turn_left_step(time_now, self.start_time)
+            movement.turn_left(time_now, self.start_time)
 
         elif self.motion_command[3]:  # Right
-            movement.turn_right_step(time_now, self.start_time)
+            movement.turn_right(time_now, self.start_time)
 
         else:
             movement.stand()
