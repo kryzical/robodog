@@ -359,65 +359,169 @@
 # if __name__ == "__main__":
 #     main()
 
-from time import sleep
+
+
+# from time import sleep
+# from adafruit_servokit import ServoKit
+
+# kit = ServoKit(channels=16)
+
+# # Servo mapping
+# lf1, lf2 = 4, 5
+# lr1, lr2 = 12, 13
+# rf1, rf2 = 6, 7
+# rr1, rr2 = 14, 15
+
+# def safe(angle): return max(0, min(180, angle))
+
+# # === Stand Pose ===
+# def stand():
+#     print("Standing...")
+#     kit.servo[lf1].angle = 152
+#     kit.servo[lf2].angle = 66
+#     kit.servo[lr1].angle = 152
+#     kit.servo[lr2].angle = 66
+#     kit.servo[rf1].angle = 13
+#     kit.servo[rf2].angle = 96
+#     kit.servo[rr1].angle = 13
+#     kit.servo[rr2].angle = 96
+#     sleep(0.5)
+
+# # === Single Trot Phase ===
+# def swing_leg(name, hip_servo, knee_servo, hip_start, hip_end, knee_up, knee_down):
+#     print(f"Swinging {name}...")
+#     kit.servo[knee_servo].angle = knee_up   # Lift leg
+#     sleep(0.2)
+#     kit.servo[hip_servo].angle = hip_end    # Swing leg
+#     sleep(0.2)
+#     kit.servo[knee_servo].angle = knee_down # Set leg down
+#     sleep(0.2)
+
+# def trot_forward():
+#     # Start from stand
+#     stand()
+
+#     # Phase 1: RF + LR swing
+#     swing_leg("RF", rf1, rf2, 13, 40, 75, 96)
+#     swing_leg("LR", lr1, lr2, 152, 125, 87, 66)
+
+#     # Delay to stabilize
+#     sleep(0.2)
+
+#     # Phase 2: LF + RR swing
+#     swing_leg("LF", lf1, lf2, 152, 125, 87, 66)
+#     swing_leg("RR", rr1, rr2, 13, 40, 75, 96)
+
+#     sleep(0.2)
+
+# def main():
+#     stand()
+#     #for _ in range(3):
+#     #    trot_step()
+#     #stand()
+
+# if __name__ == "__main__":
+#     main()
+
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import Int32MultiArray
 from adafruit_servokit import ServoKit
+import time
+import math
 
 kit = ServoKit(channels=16)
 
-# Servo mapping
+# Servo mappings
 lf1, lf2 = 4, 5
 lr1, lr2 = 12, 13
 rf1, rf2 = 6, 7
 rr1, rr2 = 14, 15
 
+# Standing defaults
+joint_defaults = {
+    lf1: 152, lf2: 66,
+    lr1: 152, lr2: 66,
+    rf1: 13,  rf2: 96,
+    rr1: 13,  rr2: 96,
+}
+
+# Gait config
+CYCLE_TIME = 1.0
+LIFT_HEIGHT = 20
+SWING_DISTANCE = 25
+leg_phase = {
+    'lf': 0.0, 'rr': 0.0,
+    'rf': 0.5, 'lr': 0.5
+}
+legs = {
+    'lf': {'hip': lf1, 'knee': lf2, 'hip_home': 152, 'knee_home': 66, 'swing_dir': -1},
+    'lr': {'hip': lr1, 'knee': lr2, 'hip_home': 152, 'knee_home': 66, 'swing_dir': -1},
+    'rf': {'hip': rf1, 'knee': rf2, 'hip_home': 13,  'knee_home': 96, 'swing_dir': 1},
+    'rr': {'hip': rr1, 'knee': rr2, 'hip_home': 13,  'knee_home': 96, 'swing_dir': 1},
+}
+
 def safe(angle): return max(0, min(180, angle))
 
-# === Stand Pose ===
 def stand():
-    print("Standing...")
-    kit.servo[lf1].angle = 152
-    kit.servo[lf2].angle = 66
-    kit.servo[lr1].angle = 152
-    kit.servo[lr2].angle = 66
-    kit.servo[rf1].angle = 13
-    kit.servo[rf2].angle = 96
-    kit.servo[rr1].angle = 13
-    kit.servo[rr2].angle = 96
-    sleep(0.5)
+    for ch, val in joint_defaults.items():
+        kit.servo[ch].angle = val
 
-# === Single Trot Phase ===
-def swing_leg(name, hip_servo, knee_servo, hip_start, hip_end, knee_up, knee_down):
-    print(f"Swinging {name}...")
-    kit.servo[knee_servo].angle = knee_up   # Lift leg
-    sleep(0.2)
-    kit.servo[hip_servo].angle = hip_end    # Swing leg
-    sleep(0.2)
-    kit.servo[knee_servo].angle = knee_down # Set leg down
-    sleep(0.2)
+def update_leg(leg_name, t):
+    cfg = legs[leg_name]
+    swing_dir = cfg['swing_dir']
+    phase_t = (t + leg_phase[leg_name]) % 1.0
 
-def trot_forward():
-    # Start from stand
-    stand()
+    # Hip swing
+    hip_offset = math.sin(2 * math.pi * phase_t) * SWING_DISTANCE * 0.5
+    hip_angle = safe(cfg['hip_home'] + swing_dir * hip_offset)
 
-    # Phase 1: RF + LR swing
-    swing_leg("RF", rf1, rf2, 13, 40, 75, 96)
-    swing_leg("LR", lr1, lr2, 152, 125, 87, 66)
+    # Knee lift
+    if phase_t < 0.5:
+        knee_offset = math.sin(math.pi * (phase_t * 2)) * LIFT_HEIGHT
+    else:
+        knee_offset = 0
+    knee_angle = safe(cfg['knee_home'] - knee_offset if swing_dir == 1 else cfg['knee_home'] + knee_offset)
 
-    # Delay to stabilize
-    sleep(0.2)
+    kit.servo[cfg['hip']].angle = hip_angle
+    kit.servo[cfg['knee']].angle = knee_angle
 
-    # Phase 2: LF + RR swing
-    swing_leg("LF", lf1, lf2, 152, 125, 87, 66)
-    swing_leg("RR", rr1, rr2, 13, 40, 75, 96)
+class MovementNode(Node):
+    def __init__(self):
+        super().__init__('movement_node')
+        self.subscription = self.create_subscription(
+            Int32MultiArray,
+            'command_topic',
+            self.listener_callback,
+            10)
+        self.subscription  # prevent unused var warning
 
-    sleep(0.2)
+        self.last_command = [0, 0, 0, 0]  # [up, down, left, right]
+        self.timer = self.create_timer(0.02, self.update_loop)
+        self.start_time = time.time()
 
-def main():
-    stand()
-    #for _ in range(3):
-    #    trot_step()
-    #stand()
+    def listener_callback(self, msg):
+        self.last_command = msg.data
 
-if __name__ == "__main__":
+    def update_loop(self):
+        now = time.time()
+        t = ((now - self.start_time) % CYCLE_TIME) / CYCLE_TIME
+
+        # Only trot forward if "up" is pressed
+        if self.last_command[0] == 1:
+            for leg in legs:
+                update_leg(leg, t)
+        else:
+            stand()
+
+def main(args=None):
+    rclpy.init(args=args)
+    movement_node = MovementNode()
+    rclpy.spin(movement_node)
+    movement_node.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
     main()
+
 
