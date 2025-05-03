@@ -361,92 +361,63 @@
 
 from time import sleep
 from adafruit_servokit import ServoKit
-import math
 
-# Initialize kit to channel for operation
 kit = ServoKit(channels=16)
 
-# Servo port mappings
+# Servo mapping
 lf1, lf2 = 4, 5
 lr1, lr2 = 12, 13
 rf1, rf2 = 6, 7
 rr1, rr2 = 14, 15
 
-def safe_angle(angle):
-    """Clamp angle between 0 and 180 degrees."""
-    return max(0, min(180, angle))
+def safe(angle): return max(0, min(180, angle))
 
+# === Stand Pose ===
 def stand():
-    """Neutral standing pose."""
-    print("Setting robot to stand position...")
-
-    # left side
+    print("Standing...")
     kit.servo[lf1].angle = 152
     kit.servo[lf2].angle = 66
     kit.servo[lr1].angle = 152
     kit.servo[lr2].angle = 66
-
-    # right side
     kit.servo[rf1].angle = 13
     kit.servo[rf2].angle = 96
     kit.servo[rr1].angle = 13
     kit.servo[rr2].angle = 96
-
     sleep(0.5)
 
-def interpolate_swing(start, end, steps):
-    """Generate smooth swing phase angles."""
-    return [int(start + (end - start) * (0.5 - 0.5 * math.cos(math.pi * i / steps))) for i in range(steps)]
+# === Single Trot Phase ===
+def swing_leg(name, hip_servo, knee_servo, hip_start, hip_end, knee_up, knee_down):
+    print(f"Swinging {name}...")
+    kit.servo[knee_servo].angle = knee_up   # Lift leg
+    sleep(0.2)
+    kit.servo[hip_servo].angle = hip_end    # Swing leg
+    sleep(0.2)
+    kit.servo[knee_servo].angle = knee_down # Set leg down
+    sleep(0.2)
 
-def interpolate_lift(start, end, steps):
-    """Lift leg with a similar curve (smoother than linear)."""
-    return interpolate_swing(start, end, steps)  # reuse cosine interpolation
-
-def trot_forward():
-    print("Starting improved symmetric trot...")
-    step_count = 20
-    interval_time = 0.02
-
-    # Initialize to default stand position
+def trot_step():
+    # Start from stand
     stand()
 
-    # === Phase 1: RF + LR swing ===
-    rf1_swing = interpolate_swing(13, 40, step_count)
-    rf2_lift = interpolate_lift(96, 75, step_count)
+    # Phase 1: RF + LR swing
+    swing_leg("RF", rf1, rf2, 13, 40, 75, 96)
+    swing_leg("LR", lr1, lr2, 152, 125, 87, 66)
 
-    lr1_swing = interpolate_swing(152, 125, step_count)
-    lr2_lift = interpolate_lift(66, 87, step_count)
+    # Delay to stabilize
+    sleep(0.2)
 
-    for i in range(step_count):
-        kit.servo[rf1].angle = safe_angle(rf1_swing[i])
-        kit.servo[rf2].angle = safe_angle(rf2_lift[i])
-        kit.servo[lr1].angle = safe_angle(lr1_swing[i])
-        kit.servo[lr2].angle = safe_angle(lr2_lift[i])
-        sleep(interval_time)
+    # Phase 2: LF + RR swing
+    swing_leg("LF", lf1, lf2, 152, 125, 87, 66)
+    swing_leg("RR", rr1, rr2, 13, 40, 75, 96)
 
-    # === Phase 2: LF + RR swing ===
-    lf1_swing = interpolate_swing(152, 125, step_count)
-    lf2_lift = interpolate_lift(66, 87, step_count)
-
-    rr1_swing = interpolate_swing(13, 40, step_count)
-    rr2_lift = interpolate_lift(96, 75, step_count)
-
-    for i in range(step_count):
-        kit.servo[lf1].angle = safe_angle(lf1_swing[i])
-        kit.servo[lf2].angle = safe_angle(lf2_lift[i])
-        kit.servo[rr1].angle = safe_angle(rr1_swing[i])
-        kit.servo[rr2].angle = safe_angle(rr2_lift[i])
-        sleep(interval_time)
-
-    print("Trot complete.")
-    stand()
+    sleep(0.2)
 
 def main():
+    stand()
+    #for _ in range(3):
+    #    trot_step()
     #stand()
-    sleep(1)
-    #for _ in range(3):  # Trot forward 3 times
-    #    trot_forward()
-    #    sleep(0.5)
 
 if __name__ == "__main__":
     main()
+
