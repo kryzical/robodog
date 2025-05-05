@@ -35,59 +35,59 @@ rr2 = 15
 #RR2 15
     #range 0(in) 180 (extended)
 
-joint_names = [
-    'lf1_joint', 'lf2_joint', 'lr1_joint', 'lr2_joint',
-    'rf1_joint', 'rf2_joint', 'rr1_joint', 'rr2_joint'
-]
-servo_channels = {
-    'lf1_joint': 4, 'lf2_joint': 5,
-    'lr1_joint': 12, 'lr2_joint': 13,
-    'rf1_joint': 6, 'rf2_joint': 7,
-    'rr1_joint': 14, 'rr2_joint': 15
-}
+# joint_names = [
+#     'lf1_joint', 'lf2_joint', 'lr1_joint', 'lr2_joint',
+#     'rf1_joint', 'rf2_joint', 'rr1_joint', 'rr2_joint'
+# ]
+# servo_channels = {
+#     'lf1_joint': 4, 'lf2_joint': 5,
+#     'lr1_joint': 12, 'lr2_joint': 13,
+#     'rf1_joint': 6, 'rf2_joint': 7,
+#     'rr1_joint': 14, 'rr2_joint': 15
+# }
 
-class JointStateBroadcaster(Node):
-    def __init__(self):
-        super().__init__('movement_joint_publisher')
-        self.publisher_ = self.create_publisher(JointState, '/joint_states', 10)
-
-    def publish_joint_states(self, angles):
-        msg = JointState()
-        msg.header.stamp = self.get_clock().now().to_msg()
-        msg.name = joint_names
-        msg.position = [angles[name] * 3.14159 / 180 for name in joint_names]  # deg → rad
-        self.publisher_.publish(msg)
-
-# Initialize ROS2 before main loop
-rclpy.init()
-joint_pub = JointStateBroadcaster()
-
-def publish_and_move(angles):
-    """Set servo positions and publish joint states."""
-    for name, angle in angles.items():
-        kit.servo[servo_channels[name]].angle = angle
-    joint_pub.publish_joint_states(angles)
-
-def trot_forward():
-    print("starting integrated trot...")
-
-    angles = {
-        'lf1_joint': 152, 'lf2_joint': 66,
-        'lr1_joint': 152, 'lr2_joint': 66,
-        'rf1_joint': 152, 'rf2_joint': 66,
-        'rr1_joint': 152, 'rr2_joint': 66,
-    }
-
-    interval = 0.0001
-
-    for _ in range(20):
-        angles['rf2_joint'] -= 1
-        angles['lr2_joint'] += 1
-        publish_and_move(angles)
-        angles['rf1_joint'] += 1
-        angles['lr1_joint'] -= 1
-        publish_and_move(angles)
-        sleep(interval)
+## class JointStateBroadcaster(Node):
+##     def __init__(self):
+##         super().__init__('movement_joint_publisher')
+##         self.publisher_ = self.create_publisher(JointState, '/joint_states', 10)
+#
+##     def publish_joint_states(self, angles):
+##         msg = JointState()
+##         msg.header.stamp = self.get_clock().now().to_msg()
+##         msg.name = joint_names
+##         msg.position = [angles[name] * 3.14159 / 180 for name in joint_names]  # deg → rad
+##         self.publisher_.publish(msg)
+#
+## # Initialize ROS2 before main loop
+## #rclpy.init()
+## joint_pub = JointStateBroadcaster()
+#
+## def publish_and_move(angles):
+##     """Set servo positions and publish joint states."""
+##     for name, angle in angles.items():
+##         kit.servo[servo_channels[name]].angle = angle
+##     joint_pub.publish_joint_states(angles)
+#
+## def trot_forward():
+##     print("starting integrated trot...")
+#
+##     angles = {
+##         'lf1_joint': 152, 'lf2_joint': 66,
+##         'lr1_joint': 152, 'lr2_joint': 66,
+##         'rf1_joint': 152, 'rf2_joint': 66,
+##         'rr1_joint': 152, 'rr2_joint': 66,
+##     }
+#
+##     interval = 0.0001
+#
+##     for _ in range(20):
+##         angles['rf2_joint'] -= 1
+##         angles['lr2_joint'] += 1
+##         publish_and_move(angles)
+##         angles['rf1_joint'] += 1
+##         angles['lr1_joint'] -= 1
+##         publish_and_move(angles)
+##         sleep(interval)
 
 def trot_forward():
     lf1_a = 152 #152
