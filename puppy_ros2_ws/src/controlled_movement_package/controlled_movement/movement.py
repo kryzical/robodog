@@ -220,32 +220,26 @@ def clamp(angle):
     return max(0, min(180, angle))
 
 def trot_forward():
-    step_duration = 1.0  # seconds per cycle
-    step_resolution = 50  # how many frames per cycle
-    amplitude = 20        # degrees of swing
-    lift = 15             # degrees to lift legs
+    step_duration = 2.0         # Duration of full cycle
+    step_resolution = 60     # Number of frames per cycle
+    swing_amplitude = 20        # Hip forward/backward swing
+    lift_amplitude = 15         # Knee lift
 
     for i in range(step_resolution):
         phase = 2 * math.pi * i / step_resolution  # 0 to 2π
 
-        # Forward phase for trot motion
         for leg, (hip_idx, knee_idx) in legs.items():
+            # Diagonal pairs: RF+LR move together, LF+RR move together but in opposite phase
             if leg in ['rf', 'lr']:
-                # These legs are in the forward swing phase
-                hip_angle = 90 - amplitude * math.sin(phase)
-                knee_angle = 90 + lift * math.sin(phase)
-            else:
-                # These legs are in the opposite swing (following phase)
-                hip_angle = 90 - amplitude * math.sin(phase + math.pi)
-                knee_angle = 90 + lift * math.sin(phase + math.pi)
+                phase_offset = 0  # in phase
+            else:  # 'lf', 'rr'
+                phase_offset = math.pi  # opposite phase
 
-            # Apply clamping to prevent out-of-bounds angles
-            hip_angle = clamp(hip_angle)
-            knee_angle = clamp(knee_angle)
+            hip_angle = 90 + swing_amplitude * math.sin(phase + phase_offset)
+            knee_angle = 90 - lift_amplitude * math.cos(phase + phase_offset)
 
-            # Send to servos
-            kit.servo[hip_idx].angle = hip_angle
-            kit.servo[knee_idx].angle = knee_angle
+            kit.servo[hip_idx].angle = clamp(hip_angle)
+            kit.servo[knee_idx].angle = clamp(knee_angle)
 
         time.sleep(step_duration / step_resolution)
 
