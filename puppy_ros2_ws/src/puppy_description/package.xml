@@ -22,6 +22,14 @@
   <depend>ros_gz_bridge</depend>
   <depend>ros_gz_description</depend>
 
+  <!-- Controller dependencies -->
+  <depend>controller_manager</depend>
+  <depend>joint_state_broadcaster</depend>
+  <depend>position_controllers</depend>
+  <depend>ros2_control</depend>
+  <depend>ros2_controllers</depend>
+  <depend>gz_ros2_control</depend>
+
   <!-- Resource dependencies -->
   <depend>ros2launch</depend>
   <depend>ros2run</depend>

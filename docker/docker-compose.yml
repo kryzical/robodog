@@ -20,13 +20,18 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ${XAUTHORITY}:/root/.Xauthority
       # Workspace source
-      - ../puppy_ros2_ws/src:/workspace/src:rw
+      - ../puppy_ros2_ws:/workspace/puppy_ros2_ws:rw
     command: >
       bash -c "
-        cd /workspace && \
+        cd /workspace/puppy_ros2_ws && \
         source /opt/ros/${ROS_DISTRO}/setup.bash && \
-        colcon build --symlink-install && \
-        source install/setup.bash && \
+        if [ ! -d 'install' ]; then
+          echo 'First time setup: Building workspace...' && \
+          colcon build --symlink-install && \
+          source install/setup.bash
+        else
+          source install/setup.bash
+        fi && \
         /bin/bash
       "
     stdin_open: true
@@ -51,7 +56,7 @@ services:
       # X11 display
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       # Workspace source
-      - ../puppy_ros2_ws/src:/workspace/puppy_ros2_ws/src:rw
+      - ../puppy_ros2_ws:/workspace/puppy_ros2_ws:rw
     command: >
       bash -c "
         cd /workspace/puppy_ros2_ws && \
