@@ -1,4 +1,4 @@
-from time import sleep
+from time import *
 from adafruit_servokit import ServoKit
 import rclpy
 from rclpy.node import Node
@@ -581,8 +581,8 @@ def stand():
 def main():
     sleep(1)
     #trot_forward()
-    rclpy.spin_once(joint_pub, timeout_sec=0.1)
-    joint_pub.destroy_node()
+    #rclpy.spin_once(joint_pub, timeout_sec=0.1)
+    #joint_pub.destroy_node()
     #rclpy.shutdown()
 
 if __name__ == "__main__":
