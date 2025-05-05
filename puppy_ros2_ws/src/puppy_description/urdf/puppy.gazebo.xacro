@@ -1,6 +1,15 @@
 <?xml version="1.0"?>
 <robot name="puppy" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+  <!-- Gazebo Control Plugin -->
+  <gazebo>
+    <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <robot_param>robot_description</robot_param>
+      <robot_param_node>robot_state_publisher</robot_param_node>
+      <parameters>$(find puppy_description)/config/ros2_control.yaml</parameters>
+    </plugin>
+  </gazebo>
+
   <xacro:macro name="model_color" params="link_name">
     <gazebo reference="${link_name}">
       <material>Gazebo/Black</material>
