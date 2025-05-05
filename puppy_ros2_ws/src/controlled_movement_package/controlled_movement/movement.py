@@ -1,4 +1,4 @@
-from time import *
+import time
 from adafruit_servokit import ServoKit
 import rclpy
 from rclpy.node import Node
@@ -426,7 +426,7 @@ def turn_left():
         rr2_a -= 1
         kit.servo[rr2].angle = rr2_a
         i -= 1
-        sleep(interval_time)
+        time.sleep(interval_time)
     i = 40
     j = 60
     while(i>0 or j>0):
@@ -438,7 +438,7 @@ def turn_left():
             rr2_a += 1
             kit.servo[rr2].angle = rr2_a
             j -= 1
-        sleep(interval_time)
+        time.sleep(interval_time)
     i = 40
     j = 20
     while(i>0):
@@ -446,12 +446,12 @@ def turn_left():
             rr1_a -= 1
             kit.servo[rr1].angle = rr1_a
             i -= 1
-        sleep(.005)
+        time.sleep(.005)
     while(j>0):
         rr2_a -= 1
         kit.servo[rr2].angle = rr2_a
         j -= 1
-        sleep(interval_time)
+        time.sleep(interval_time)
 
 
     i = 40
@@ -459,7 +459,7 @@ def turn_left():
         rf2_a -= 1
         kit.servo[rf2].angle = rf2_a
         i -= 1
-        sleep(interval_time)
+        time.sleep(interval_time)
     i = 40
     j = 60
     while(i>0 or j>0):
@@ -471,7 +471,7 @@ def turn_left():
             rf2_a += 1
             kit.servo[rf2].angle = rf2_a
             j -= 1
-        sleep(interval_time)
+        time.sleep(interval_time)
     i = 40
     j = 20
     while(i>0):
@@ -479,12 +479,12 @@ def turn_left():
             rf1_a -= 1
             kit.servo[rf1].angle = rf1_a
             i -= 1
-        sleep(.005)
+        time.sleep(.005)
     while(j>0):
         rf2_a -= 1
         kit.servo[rf2].angle = rf2_a
         j -= 1
-        sleep(interval_time)
+        time.sleep(interval_time)
 
     print(f"lf1: {lf1_a}, lf2: {lf2_a}, rf1 : {rf1_a}, rf2: {rf2_a}, lr1: {lr1_a}, lr2: {lr2_a}, rr1: {rr1_a}, rr2: {rr2_a}")
 
@@ -505,7 +505,7 @@ def turn_right():
         lr2_a += 1
         kit.servo[lr2].angle = lr2_a
         i -= 1
-        sleep(interval_time)
+        time.sleep(interval_time)
     i = 50
     j = 70
     while(i>0 or j>0):
@@ -517,7 +517,7 @@ def turn_right():
             lr2_a -= 1
             kit.servo[lr2].angle = lr2_a
             j -= 1
-        sleep(interval_time)
+        time.sleep(interval_time)
     i = 50
     j =30
     while(i>0):
@@ -525,12 +525,12 @@ def turn_right():
             lr1_a += 1
             kit.servo[lr1].angle = lr1_a
             i -= 1
-        sleep(.005)
+        time.sleep(.005)
     while(j>0):
         lr2_a += 1
         kit.servo[lr2].angle = lr2_a
         j -= 1
-        sleep(interval_time)
+        time.sleep(interval_time)
 
     
     i = 40
@@ -538,7 +538,7 @@ def turn_right():
         lf2_a += 1
         kit.servo[lf2].angle = lf2_a
         i -= 1
-        sleep(interval_time)
+        time.sleep(interval_time)
     i = 50
     j = 70
     while(i>0 or j>0):
@@ -550,7 +550,7 @@ def turn_right():
             lf2_a -= 1
             kit.servo[lf2].angle = lf2_a
             j -= 1
-        sleep(interval_time)
+        time.sleep(interval_time)
     i = 50
     j = 30
     while(i>0):
@@ -558,12 +558,12 @@ def turn_right():
             lf1_a += 1
             kit.servo[lf1].angle = lf1_a
             i -= 1
-        sleep(.005)
+        time.sleep(.005)
     while(j>0):
         lf2_a += 1
         kit.servo[lf2].angle = lf2_a
         j -= 1
-        sleep(interval_time)
+        time.sleep(interval_time)
 
 def stand():
     #left side
@@ -579,10 +579,10 @@ def stand():
     kit.servo[15].angle = 96 #rr2
 
 def main():
-    sleep(1)
+    time.sleep(1)
     #trot_forward()
-    #rclpy.spin_once(joint_pub, timeout_sec=0.1)
-    #joint_pub.destroy_node()
+    rclpy.spin_once(joint_pub, timeout_sec=0.1)
+    joint_pub.destroy_node()
     #rclpy.shutdown()
 
 if __name__ == "__main__":
