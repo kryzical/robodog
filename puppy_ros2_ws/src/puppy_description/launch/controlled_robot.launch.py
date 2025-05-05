@@ -55,7 +55,9 @@ def generate_launch_description():
             '/model/puppy/joint_state@sensor_msgs/msg/JointState[ignition.msgs.Model',
             '/model/puppy/cmd_vel@geometry_msgs/msg/Twist[ignition.msgs.Twist',
             '/model/puppy/odometry@nav_msgs/msg/Odometry[ignition.msgs.Odometry',
-            '/model/puppy/command@std_msgs/msg/Float64MultiArray[ignition.msgs.Double_V'
+            '/model/puppy/command@std_msgs/msg/Float64MultiArray[ignition.msgs.Double_V',
+            '/camera/image_raw@sensor_msgs/msg/Image[ignition.msgs.Image',
+            '/camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo'
         ],
         output='screen',
         parameters=[{'use_sim_time': True}]
@@ -88,7 +90,16 @@ def generate_launch_description():
     spawn_entity = Node(
         package='ros_gz_sim',
         executable='create',
-        arguments=['-topic', '/robot_description', '-entity', 'puppy'],
+        arguments=[
+            '-topic', '/robot_description',
+            '-entity', 'puppy',
+            '-x', '0.0',
+            '-y', '0.0',
+            '-z', '0.2',  # Lift the robot slightly to avoid ground collision
+            '-R', '0.0',
+            '-P', '0.0',
+            '-Y', '0.0'
+        ],
         output='screen'
     )
 
@@ -131,13 +142,27 @@ def generate_launch_description():
 
     # Add delay to ensure controller manager is ready
     delay_joint_state_broadcaster = TimerAction(
-        period=5.0,
+        period=5.0,  # Increased delay to ensure proper initialization
         actions=[joint_state_broadcaster_spawner]
     )
 
     delay_position_controller = TimerAction(
-        period=6.0,
+        period=6.0,  # Increased delay to ensure proper initialization
         actions=[position_controller_spawner]
+    )
+
+    # Launch the stand command node
+    stand_command_node = Node(
+        package='puppy_control',
+        executable='stand_command',
+        name='stand_command',
+        output='screen'
+    )
+
+    # Add delay to ensure controllers are ready before starting stand command
+    delay_stand_command = TimerAction(
+        period=7.0,  # Increased delay to ensure controllers are fully initialized
+        actions=[stand_command_node]
     )
 
     # --- Launch Description ---
@@ -157,5 +182,6 @@ def generate_launch_description():
         # Controller Manager and Controllers
         controller_manager,
         delay_joint_state_broadcaster,
-        delay_position_controller
+        delay_position_controller,
+        delay_stand_command
     ]) 

@@ -1,0 +1,26 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+
+    hardware_interfaces:
+      - name: gazebo_hardware
+        type: gz_ros2_control/GazeboSimSystem
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    position_controller:
+      type: position_controllers/JointGroupPositionController
+
+# Controller parameters
+position_controller:
+  ros__parameters:
+    joints:
+      - lf_joint1
+      - lf_joint2
+      - lb_joint1
+      - lb_joint2
+      - rf_joint1
+      - rf_joint2
+      - rb_joint1
+      - rb_joint2 
