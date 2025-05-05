@@ -6,9 +6,19 @@ FROM osrf/ros:humble-desktop-full
 # Install wget first
 RUN apt-get update && apt-get install -y wget && rm -rf /var/lib/apt/lists/*
 
+# Install pygame and servokit
+RUN pip3 install pygame
+RUN pip3 install adafruit-circuitpython-servokit
+
 # Add Gazebo repository
 RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
+
+# Install Gazebo
+RUN . /opt/ros/humble/setup.sh && \
+    apt-get update \
+    && apt-get install -y gazebo-${GAZEBO_VERSION} \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install all necessary dependencies
 RUN . /opt/ros/humble/setup.sh && \
