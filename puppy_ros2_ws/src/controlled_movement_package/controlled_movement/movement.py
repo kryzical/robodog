@@ -221,9 +221,9 @@ def clamp(angle):
 
 def trot_forward():
     step_duration = 2.0         # Duration of full cycle
-    step_resolution = 120     # Number of frames per cycle
-    swing_amplitude = 20        # Hip forward/backward swing
-    lift_amplitude = 15         # Knee lift
+    step_resolution = 60     # Number of frames per cycle
+    swing_amplitude = 10        # Hip forward/backward swing
+    lift_amplitude = 10         # Knee lift
 
     for i in range(step_resolution):
         phase = 2 * math.pi * i / step_resolution  # 0 to 2π
