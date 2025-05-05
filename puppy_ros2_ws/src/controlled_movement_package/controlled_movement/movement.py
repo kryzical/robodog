@@ -205,6 +205,122 @@ def trot_forward():
     
     print(f"lf1: {lf1_a}, lf2: {lf2_a}, rf1 : {rf1_a}, rf2: {rf2_a}, lr1: {lr1_a}, lr2: {lr2_a}, rr1: {rr1_a}, rr2: {rr2_a}")
 
+def walk_back():
+    # Initial servo angles
+    lf1_a = 152  # Left Front 1
+    lf2_a = 66   # Left Front 2
+    lr1_a = 152  # Left Rear 1
+    lr2_a = 66   # Left Rear 2
+    rf1_a = 13   # Right Front 1
+    rf2_a = 96   # Right Front 2
+    rr1_a = 13   # Right Rear 1
+    rr2_a = 96   # Right Rear 2
+    interval_time = 0.00005  # Time interval for smooth movement
+
+    # Phase 1: Swing Left Rear (lr2) and Right Front (rf2)
+    for i in range(1):
+        # Lift the legs first
+        i = 40  # Diff between lr2 and rf2
+        j = 30  # Diff between lf2 and rr2
+        while i >= 0 or j >= 0:
+            if i >= 0:
+                lr2_a -= 1  # Moving the rear leg in the opposite direction (reverse)
+                rf2_a += 1  # Move right front backward
+                kit.servo[lr2].angle = lr2_a
+                kit.servo[rf2].angle = rf2_a
+                i -= 1
+            if j >= 0:
+                rr2_a -= 1  # Move the rear right leg backward
+                lf2_a += 1  # Move left front backward
+                kit.servo[rr2].angle = rr2_a
+                kit.servo[lf2].angle = lf2_a
+                j -= 1
+            sleep(interval_time)
+        sleep(interval_time)
+
+        # Lower the rf1, rf2, lr1, lr2 back down
+        i = 30
+        j = 40
+        while i >= 0 or j >= 0:
+            if i >= 0:
+                rf1_a -= 1  # Move right front 1 servo down
+                lr1_a += 1  # Move left rear 1 servo down
+                kit.servo[rf1].angle = rf1_a
+                kit.servo[lr1].angle = lr1_a
+                i -= 1
+            if j >= 0:
+                rf2_a -= 1  # Move right front 2 servo down
+                lr2_a += 1  # Move left rear 2 servo down
+                kit.servo[lr2].angle = lr2_a
+                kit.servo[rf2].angle = rf2_a
+                j -= 1
+            sleep(interval_time)
+
+        # Phase 2: Swing Left Front (lf1) and Right Rear (rr1)
+        print(f"lf1: {lf1_a} lf2: {lf2_a} rr1: {rr1_a} rr2: {rr2_a}")
+        sleep(interval_time)
+        i = 11  # Diff between lf1 and rr1
+        j = 30  # Diff between rf1 and lr1
+        k = 5   # Diff between rf2 and lr2
+        while i >= 0 or j >= 0 or k >= 0:
+            if i >= 0:
+                lf1_a -= 1  # Left front 1 moves backward
+                rr1_a += 1  # Right rear moves backward
+                kit.servo[lf1].angle = lf1_a
+                kit.servo[rr1].angle = rr1_a
+                i -= 1
+            if j >= 0:
+                rf1_a += 1  # Move right front 1 backward
+                lr1_a -= 1  # Move left rear 1 backward
+                kit.servo[rf1].angle = rf1_a
+                kit.servo[lr1].angle = lr1_a
+                j -= 1
+            if k >= 0:
+                rf2_a -= 1  # Move right front 2 backward
+                lr2_a += 1  # Move left rear 2 backward
+                kit.servo[rf2].angle = rf2_a
+                kit.servo[lr2].angle = lr2_a
+                k -= 1
+            sleep(interval_time)
+        print("done ")
+
+        # Retract left front (lf2) and right rear (rr2)
+        i = 40
+        while i >= 0:
+            lf2_a -= 1  # Move left front 2 back
+            rr2_a += 1  # Move right rear back
+            kit.servo[lf2].angle = lf2_a
+            kit.servo[rr2].angle = rr2_a
+            i -= 1
+            sleep(interval_time)
+
+        # Final phase: Return to standing position (retract)
+        i = 12
+        j = 10
+        k = 6
+        while i > 0 or j > 0 or k > 0:
+            if i > 0:
+                lf1_a += 1  # Left front 1 goes back to normal
+                rr1_a -= 1  # Right rear goes back to normal
+                kit.servo[lf1].angle = lf1_a
+                kit.servo[rr1].angle = rr1_a
+                i -= 1
+            if j > 0:
+                lf2_a += 1  # Left front 2 goes back to normal
+                rr2_a -= 1  # Right rear 2 goes back to normal
+                kit.servo[lf2].angle = lf2_a
+                kit.servo[rr2].angle = rr2_a
+                j -= 1
+            if k > 0:
+                lr2_a -= 1  # Left rear 2 goes back to normal
+                rf2_a += 1  # Right front 2 goes back to normal
+                kit.servo[lr2].angle = lr2_a
+                kit.servo[rf2].angle = rf2_a
+                k -= 1
+            sleep(interval_time)
+
+    print(f"lf1: {lf1_a}, lf2: {lf2_a}, rf1 : {rf1_a}, rf2: {rf2_a}, lr1: {lr1_a}, lr2: {lr2_a}, rr1: {rr1_a}, rr2: {rr2_a}")
+
 #turn left
 def turn_left():
     lf1_a = 152 #152
