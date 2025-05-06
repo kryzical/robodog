@@ -45,6 +45,12 @@ install(PROGRAMS
   RENAME puppy_walk_node
 )
 
+install(PROGRAMS
+  puppy_control/puppy_walk_backward_node.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME puppy_walk_backward_node
+)
+
 # Install launch files
 install(DIRECTORY
   launch

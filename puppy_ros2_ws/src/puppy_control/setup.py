@@ -20,6 +20,7 @@ setup(
     entry_points={
         'console_scripts': [
             'puppy_walk_node = puppy_control.puppy_walk_node:main',
+            'puppy_walk_backward_node = puppy_control.puppy_walk_backward_node:main',
             'puppy_motion_node = puppy_control.puppy_motion_node:main',
         ],
     },
