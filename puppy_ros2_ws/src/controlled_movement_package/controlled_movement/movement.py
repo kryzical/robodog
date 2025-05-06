@@ -36,60 +36,6 @@ rr2 = 15
 #RR2 15
     #range 0(in) 180 (extended)
 
-# joint_names = [
-#     'lf1_joint', 'lf2_joint', 'lr1_joint', 'lr2_joint',
-#     'rf1_joint', 'rf2_joint', 'rr1_joint', 'rr2_joint'
-# ]
-# servo_channels = {
-#     'lf1_joint': 4, 'lf2_joint': 5,
-#     'lr1_joint': 12, 'lr2_joint': 13,
-#     'rf1_joint': 6, 'rf2_joint': 7,
-#     'rr1_joint': 14, 'rr2_joint': 15
-# }
-
-## class JointStateBroadcaster(Node):
-##     def __init__(self):
-##         super().__init__('movement_joint_publisher')
-##         self.publisher_ = self.create_publisher(JointState, '/joint_states', 10)
-#
-##     def publish_joint_states(self, angles):
-##         msg = JointState()
-##         msg.header.stamp = self.get_clock().now().to_msg()
-##         msg.name = joint_names
-##         msg.position = [angles[name] * 3.14159 / 180 for name in joint_names]  # deg → rad
-##         self.publisher_.publish(msg)
-#
-## # Initialize ROS2 before main loop
-## #rclpy.init()
-## joint_pub = JointStateBroadcaster()
-#
-## def publish_and_move(angles):
-##     """Set servo positions and publish joint states."""
-##     for name, angle in angles.items():
-##         kit.servo[servo_channels[name]].angle = angle
-##     joint_pub.publish_joint_states(angles)
-#
-## def trot_forward():
-##     print("starting integrated trot...")
-#
-##     angles = {
-##         'lf1_joint': 152, 'lf2_joint': 66,
-##         'lr1_joint': 152, 'lr2_joint': 66,
-##         'rf1_joint': 152, 'rf2_joint': 66,
-##         'rr1_joint': 152, 'rr2_joint': 66,
-##     }
-#
-##     interval = 0.0001
-#
-##     for _ in range(20):
-##         angles['rf2_joint'] -= 1
-##         angles['lr2_joint'] += 1
-##         publish_and_move(angles)
-##         angles['rf1_joint'] += 1
-##         angles['lr1_joint'] -= 1
-##         publish_and_move(angles)
-##         sleep(interval)
-
 def trot_forward():
     lf1_a = 152 #152
     lf2_a = 66 #66
@@ -207,214 +153,121 @@ def trot_forward():
     print(f"lf1: {lf1_a}, lf2: {lf2_a}, rf1 : {rf1_a}, rf2: {rf2_a}, lr1: {lr1_a}, lr2: {lr2_a}, rr1: {rr1_a}, rr2: {rr2_a}")
 
 
-
-
-
-
-
-# # Assume servo indices (you should update these according to your setup)
-# # Example: each leg has 2 servos: [hip, knee]
-# legs = {
-#     'rf': [0, 1],  # right front
-#     'lf': [2, 3],  # left front
-#     'rr': [4, 5],  # right rear
-#     'lr': [6, 7],  # left rear
-# }
-
-# def clamp(angle):
-#     return max(0, min(180, angle))
-
-# def trot_forward():
-#     step_duration = 2.0         # Duration of full cycle
-#     step_resolution = 60     # Number of frames per cycle
-#     swing_amplitude = 10        # Hip forward/backward swing
-#     lift_amplitude = 10         # Knee lift
-
-#     for i in range(step_resolution):
-#         phase = 2 * math.pi * i / step_resolution  # 0 to 2π
-
-#         for leg, (hip_idx, knee_idx) in legs.items():
-#             # Diagonal pairs: RF+LR move together, LF+RR move together but in opposite phase
-#             if leg in ['rf', 'lr']:
-#                 phase_offset = 0  # in phase
-#             else:  # 'lf', 'rr'
-#                 phase_offset = math.pi  # opposite phase
-
-#             hip_angle = 90 + swing_amplitude * math.sin(phase + phase_offset)
-#             knee_angle = 90 - lift_amplitude * math.cos(phase + phase_offset)
-
-#             kit.servo[hip_idx].angle = clamp(hip_angle)
-#             kit.servo[knee_idx].angle = clamp(knee_angle)
-
-#         time.time.sleep(step_duration / step_resolution)
-
-def walk_back():
-    # Initial servo angles
-    lf1_a = 152  # Left Front 1
-    lf2_a = 66   # Left Front 2
-    lr1_a = 152  # Left Rear 1
-    lr2_a = 66   # Left Rear 2
-    rf1_a = 13   # Right Front 1
-    rf2_a = 96   # Right Front 2
-    rr1_a = 13   # Right Rear 1
-    rr2_a = 96   # Right Rear 2
-    interval_time = 0.00005  # Time interval for smooth movement
-
-    # Phase 1: Swing Left Rear (lr2) and Right Front (rf2)
-    for i in range(1):
-        # Lift the legs first
-        i = 40  # Diff between lr2 and rf2
-        j = 30  # Diff between lf2 and rr2
-        while i >= 0 or j >= 0:
-            if i >= 0:
-                lr2_a -= 1  # Moving the rear leg in the opposite direction (reverse)
-                rf2_a += 1  # Move right front backward
-                kit.servo[lr2].angle = lr2_a
-                kit.servo[rf2].angle = rf2_a
-                i -= 1
-            if j >= 0:
-                rr2_a -= 1  # Move the rear right leg backward
-                lf2_a += 1  # Move left front backward
-                kit.servo[rr2].angle = rr2_a
-                kit.servo[lf2].angle = lf2_a
-                j -= 1
-            time.sleep(interval_time)
-        time.sleep(interval_time)
-
-        # Lower the rf1, rf2, lr1, lr2 back down
-        i = 30
-        j = 40
-        while i >= 0 or j >= 0:
-            if i >= 0:
-                rf1_a -= 1  # Move right front 1 servo down
-                lr1_a += 1  # Move left rear 1 servo down
-                kit.servo[rf1].angle = rf1_a
-                kit.servo[lr1].angle = lr1_a
-                i -= 1
-            if j >= 0:
-                rf2_a -= 1  # Move right front 2 servo down
-                lr2_a += 1  # Move left rear 2 servo down
-                kit.servo[lr2].angle = lr2_a
-                kit.servo[rf2].angle = rf2_a
-                j -= 1
-            time.sleep(interval_time)
-
-        # Phase 2: Swing Left Front (lf1) and Right Rear (rr1)
-        print(f"lf1: {lf1_a} lf2: {lf2_a} rr1: {rr1_a} rr2: {rr2_a}")
-        time.sleep(interval_time)
-        i = 11  # Diff between lf1 and rr1
-        j = 30  # Diff between rf1 and lr1
-        k = 5   # Diff between rf2 and lr2
-        while i >= 0 or j >= 0 or k >= 0:
-            if i >= 0:
-                lf1_a -= 1  # Left front 1 moves backward
-                rr1_a += 1  # Right rear moves backward
-                kit.servo[lf1].angle = lf1_a
-                kit.servo[rr1].angle = rr1_a
-                i -= 1
-            if j >= 0:
-                rf1_a += 1  # Move right front 1 backward
-                lr1_a -= 1  # Move left rear 1 backward
-                kit.servo[rf1].angle = rf1_a
-                kit.servo[lr1].angle = lr1_a
-                j -= 1
-            if k >= 0:
-                rf2_a -= 1  # Move right front 2 backward
-                lr2_a += 1  # Move left rear 2 backward
-                kit.servo[rf2].angle = rf2_a
-                kit.servo[lr2].angle = lr2_a
-                k -= 1
-            time.sleep(interval_time)
-        print("done ")
-
-        # Retract left front (lf2) and right rear (rr2)
-        i = 40
-        while i >= 0:
-            lf2_a -= 1  # Move left front 2 back
-            rr2_a += 1  # Move right rear back
-            kit.servo[lf2].angle = lf2_a
-            kit.servo[rr2].angle = rr2_a
-            i -= 1
-            time.sleep(interval_time)
-
-        # Final phase: Return to standing position (retract)
-        i = 12
-        j = 10
-        k = 6
-        while i > 0 or j > 0 or k > 0:
-            if i > 0:
-                lf1_a += 1  # Left front 1 goes back to normal
-                rr1_a -= 1  # Right rear goes back to normal
-                kit.servo[lf1].angle = lf1_a
-                kit.servo[rr1].angle = rr1_a
-                i -= 1
-            if j > 0:
-                lf2_a += 1  # Left front 2 goes back to normal
-                rr2_a -= 1  # Right rear 2 goes back to normal
-                kit.servo[lf2].angle = lf2_a
-                kit.servo[rr2].angle = rr2_a
-                j -= 1
-            if k > 0:
-                lr2_a -= 1  # Left rear 2 goes back to normal
-                rf2_a += 1  # Right front 2 goes back to normal
-                kit.servo[lr2].angle = lr2_a
-                kit.servo[rf2].angle = rf2_a
-                k -= 1
-            time.sleep(interval_time)
-
-    print(f"lf1: {lf1_a}, lf2: {lf2_a}, rf1 : {rf1_a}, rf2: {rf2_a}, lr1: {lr1_a}, lr2: {lr2_a}, rr1: {rr1_a}, rr2: {rr2_a}")
-
-
-
-
-
-
-# # Assume servo indices (you should update these according to your setup)
-# # Example: each leg has 2 servos: [hip, knee]
-# legs = {
-#     'rf': [0, 1],  # right front
-#     'lf': [2, 3],  # left front
-#     'rr': [4, 5],  # right rear
-#     'lr': [6, 7],  # left rear
-# }
-
-# def clamp(angle):
-#     return max(0, min(180, angle))
-
 # def walk_back():
-#     step_duration = 1.0  # seconds per cycle
-#     step_resolution = 50  # how many frames per cycle
-#     amplitude = 20        # degrees of swing
-#     lift = 15             # degrees to lift legs
+#     # Initial servo angles
+#     lf1_a = 152  # Left Front 1
+#     lf2_a = 66   # Left Front 2
+#     lr1_a = 152  # Left Rear 1
+#     lr2_a = 66   # Left Rear 2
+#     rf1_a = 13   # Right Front 1
+#     rf2_a = 96   # Right Front 2
+#     rr1_a = 13   # Right Rear 1
+#     rr2_a = 96   # Right Rear 2
+#     interval_time = 0.00005  # Time interval for smooth movement
 
-#     for i in range(step_resolution):
-#         phase = 2 * math.pi * i / step_resolution  # 0 to 2π
+#     # Phase 1: Swing Left Rear (lr2) and Right Front (rf2)
+#     for i in range(1):
+#         # Lift the legs first
+#         i = 40  # Diff between lr2 and rf2
+#         j = 30  # Diff between lf2 and rr2
+#         while i >= 0 or j >= 0:
+#             if i >= 0:
+#                 lr2_a -= 1  # Moving the rear leg in the opposite direction (reverse)
+#                 rf2_a += 1  # Move right front backward
+#                 kit.servo[lr2].angle = lr2_a
+#                 kit.servo[rf2].angle = rf2_a
+#                 i -= 1
+#             if j >= 0:
+#                 rr2_a -= 1  # Move the rear right leg backward
+#                 lf2_a += 1  # Move left front backward
+#                 kit.servo[rr2].angle = rr2_a
+#                 kit.servo[lf2].angle = lf2_a
+#                 j -= 1
+#             time.sleep(interval_time)
+#         time.sleep(interval_time)
 
-#         # Reverse phase for backward walking
-#         for leg, (hip_idx, knee_idx) in legs.items():
-#             if leg in ['rf', 'lr']:
-#                 # These legs in forward swing phase
-#                 hip_angle = 90 - amplitude * math.sin(phase)
-#                 knee_angle = 90 + lift * math.sin(phase)
-#             else:
-#                 # These legs in opposite swing
-#                 hip_angle = 90 - amplitude * math.sin(phase + math.pi)
-#                 knee_angle = 90 + lift * math.sin(phase + math.pi)
+#         # Lower the rf1, rf2, lr1, lr2 back down
+#         i = 30
+#         j = 40
+#         while i >= 0 or j >= 0:
+#             if i >= 0:
+#                 rf1_a -= 1  # Move right front 1 servo down
+#                 lr1_a += 1  # Move left rear 1 servo down
+#                 kit.servo[rf1].angle = rf1_a
+#                 kit.servo[lr1].angle = lr1_a
+#                 i -= 1
+#             if j >= 0:
+#                 rf2_a -= 1  # Move right front 2 servo down
+#                 lr2_a += 1  # Move left rear 2 servo down
+#                 kit.servo[lr2].angle = lr2_a
+#                 kit.servo[rf2].angle = rf2_a
+#                 j -= 1
+#             time.sleep(interval_time)
 
-#             # Apply clamping
-#             hip_angle = clamp(hip_angle)
-#             knee_angle = clamp(knee_angle)
+#         # Phase 2: Swing Left Front (lf1) and Right Rear (rr1)
+#         print(f"lf1: {lf1_a} lf2: {lf2_a} rr1: {rr1_a} rr2: {rr2_a}")
+#         time.sleep(interval_time)
+#         i = 11  # Diff between lf1 and rr1
+#         j = 30  # Diff between rf1 and lr1
+#         k = 5   # Diff between rf2 and lr2
+#         while i >= 0 or j >= 0 or k >= 0:
+#             if i >= 0:
+#                 lf1_a -= 1  # Left front 1 moves backward
+#                 rr1_a += 1  # Right rear moves backward
+#                 kit.servo[lf1].angle = lf1_a
+#                 kit.servo[rr1].angle = rr1_a
+#                 i -= 1
+#             if j >= 0:
+#                 rf1_a += 1  # Move right front 1 backward
+#                 lr1_a -= 1  # Move left rear 1 backward
+#                 kit.servo[rf1].angle = rf1_a
+#                 kit.servo[lr1].angle = lr1_a
+#                 j -= 1
+#             if k >= 0:
+#                 rf2_a -= 1  # Move right front 2 backward
+#                 lr2_a += 1  # Move left rear 2 backward
+#                 kit.servo[rf2].angle = rf2_a
+#                 kit.servo[lr2].angle = lr2_a
+#                 k -= 1
+#             time.sleep(interval_time)
+#         print("done ")
 
-#             # Send to servos
-#             kit.servo[hip_idx].angle = hip_angle
-#             kit.servo[knee_idx].angle = knee_angle
+#         # Retract left front (lf2) and right rear (rr2)
+#         i = 40
+#         while i >= 0:
+#             lf2_a -= 1  # Move left front 2 back
+#             rr2_a += 1  # Move right rear back
+#             kit.servo[lf2].angle = lf2_a
+#             kit.servo[rr2].angle = rr2_a
+#             i -= 1
+#             time.sleep(interval_time)
 
-#         time.time.sleep(step_duration / step_resolution)
+#         # Final phase: Return to standing position (retract)
+#         i = 12
+#         j = 10
+#         k = 6
+#         while i > 0 or j > 0 or k > 0:
+#             if i > 0:
+#                 lf1_a += 1  # Left front 1 goes back to normal
+#                 rr1_a -= 1  # Right rear goes back to normal
+#                 kit.servo[lf1].angle = lf1_a
+#                 kit.servo[rr1].angle = rr1_a
+#                 i -= 1
+#             if j > 0:
+#                 lf2_a += 1  # Left front 2 goes back to normal
+#                 rr2_a -= 1  # Right rear 2 goes back to normal
+#                 kit.servo[lf2].angle = lf2_a
+#                 kit.servo[rr2].angle = rr2_a
+#                 j -= 1
+#             if k > 0:
+#                 lr2_a -= 1  # Left rear 2 goes back to normal
+#                 rf2_a += 1  # Right front 2 goes back to normal
+#                 kit.servo[lr2].angle = lr2_a
+#                 kit.servo[rf2].angle = rf2_a
+#                 k -= 1
+#             time.sleep(interval_time)
 
-
-
-
-
+#     print(f"lf1: {lf1_a}, lf2: {lf2_a}, rf1 : {rf1_a}, rf2: {rf2_a}, lr1: {lr1_a}, lr2: {lr2_a}, rr1: {rr1_a}, rr2: {rr2_a}")
 
 # #turn left
 def turn_left():
@@ -590,8 +443,8 @@ def stand():
 def main():
     time.sleep(1)
     #trot_forward()
-    rclpy.spin_once(joint_pub, timeout_sec=0.1)
-    joint_pub.destroy_node()
+    #rclpy.spin_once(joint_pub, timeout_sec=0.1)
+    #joint_pub.destroy_node()
     #rclpy.shutdown()
 
 if __name__ == "__main__":

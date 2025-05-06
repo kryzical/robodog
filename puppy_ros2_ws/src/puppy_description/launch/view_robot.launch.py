@@ -25,7 +25,7 @@ def generate_launch_description():
 
     # Construct the paths to the config and xacro files within the install space subdirs
     # default_rviz_config_path = os.path.join(pkg_share, 'config', 'display.rviz')
-    default_rviz_config_path = os.path.join(pkg_share, 'rviz', 'puppy_camera.rviz')
+    default_rviz_config_path = os.path.join(pkg_share, 'rviz', 'display.rviz')
     xacro_file = os.path.join(pkg_share, 'urdf', 'puppy.urdf.xacro')
 
     # Re-declare the rvizconfig argument using the constructed default path
@@ -59,13 +59,13 @@ def generate_launch_description():
         }]
     )
 
-    # # Joint State Publisher GUI Node
-    # joint_state_publisher_gui_node = Node(
-    #     package='joint_state_publisher_gui',
-    #     executable='joint_state_publisher_gui',
-    #     name='joint_state_publisher_gui',
-    #     output='screen'
-    # )
+    # Joint State Publisher GUI Node
+    joint_state_publisher_gui_node = Node(
+        package='joint_state_publisher_gui',
+        executable='joint_state_publisher_gui',
+        name='joint_state_publisher_gui',
+        output='screen'
+    )
     
     #attempt at making a camera node launch
     camera_node = Node(
@@ -80,17 +80,7 @@ def generate_launch_description():
         'pixel_format': 'YUYV',
         'use_sensor_data_qos': True
     }]
-)
-
-
-    #Your own joint state publisher (publishes from real robot)
-    joint_state_publisher_gui_node = Node(
-        package='joint_state_publisher',
-        executable='joint_state_publisher',
-        name='joint_state_publisher',
-        output='screen'
     )
-
 
     # RViz2 Node
     rviz_node = Node(
