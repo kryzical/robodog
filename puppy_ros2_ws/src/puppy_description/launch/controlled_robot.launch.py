@@ -57,7 +57,8 @@ def generate_launch_description():
             '/model/puppy/odometry@nav_msgs/msg/Odometry[ignition.msgs.Odometry',
             '/model/puppy/command@std_msgs/msg/Float64MultiArray[ignition.msgs.Double_V',
             '/camera/image_raw@sensor_msgs/msg/Image[ignition.msgs.Image',
-            '/camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo'
+            '/camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo',
+            '/position_controller/commands@std_msgs/msg/Float64MultiArray[ignition.msgs.Double_V'
         ],
         output='screen',
         parameters=[{'use_sim_time': True}]
@@ -116,8 +117,7 @@ def generate_launch_description():
             os.path.join(pkg_dir, 'config', 'ros2_control.yaml')
         ],
         output='screen',
-        name='controller_manager',
-        prefix=['stdbuf -o L']
+        name='controller_manager'
     )
 
     # Load joint state broadcaster
@@ -126,8 +126,7 @@ def generate_launch_description():
         executable='spawner',
         arguments=['joint_state_broadcaster'],
         output='screen',
-        name='joint_state_broadcaster_spawner',
-        prefix=['stdbuf -o L']
+        name='joint_state_broadcaster_spawner'
     )
 
     # Load position controller
@@ -136,8 +135,7 @@ def generate_launch_description():
         executable='spawner',
         arguments=['position_controller'],
         output='screen',
-        name='position_controller_spawner',
-        prefix=['stdbuf -o L']
+        name='position_controller_spawner'
     )
 
     # Add delay to ensure controller manager is ready
@@ -161,7 +159,7 @@ def generate_launch_description():
 
     # Add delay to ensure controllers are ready before starting stand command
     delay_stand_command = TimerAction(
-        period=7.0,  # Increased delay to ensure controllers are fully initialized
+        period=16.0,  # Increased delay to ensure position controller is fully activated
         actions=[stand_command_node]
     )
 
