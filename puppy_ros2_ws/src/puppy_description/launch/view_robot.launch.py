@@ -66,6 +66,22 @@ def generate_launch_description():
     #     name='joint_state_publisher_gui',
     #     output='screen'
     # )
+    
+    #attempt at making a camera node launch
+    camera_node = Node(
+    package='v4l2_camera',
+    executable='v4l2_camera_node',
+    name='v4l2_camera_node',
+    output='screen',
+    parameters=[{
+        'video_device': '/dev/video0',
+        'image_size': [640, 480],
+        'camera_frame_id': 'camera_link',
+        'pixel_format': 'YUYV',
+        'use_sensor_data_qos': True
+    }]
+)
+
 
     #Your own joint state publisher (publishes from real robot)
     joint_state_publisher_gui_node = Node(
@@ -90,5 +106,6 @@ def generate_launch_description():
         rviz_config_arg,
         robot_state_publisher_node,
         joint_state_publisher_gui_node,
-        rviz_node
+        rviz_node,
+        camera_node
     ]) 
