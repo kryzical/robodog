@@ -1,0 +1,26 @@
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Name: TF
+      Class: rviz_default_plugins/TF
+      Enabled: true
+    - Name: RobotModel
+      Class: rviz_default_plugins/RobotModel
+      Enabled: true
+      Robot Description: robot_description
+    - Name: Camera
+      Class: rviz_default_plugins/Camera
+      Enabled: true
+      Image Topic: /camera/image_raw/compressed
+      Queue Size: 2
+      Transport Hint: compressed
+  Fixed Frame: base_link
+  Global Options:
+    Background Color: [0, 0, 0]
+    Frame Rate: 30
+    Default Light: true
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+  Name: Root

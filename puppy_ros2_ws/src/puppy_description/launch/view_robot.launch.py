@@ -24,7 +24,8 @@ def generate_launch_description():
     pkg_share = get_package_share_directory('puppy_description')
 
     # Construct the paths to the config and xacro files within the install space subdirs
-    default_rviz_config_path = os.path.join(pkg_share, 'config', 'display.rviz')
+    # default_rviz_config_path = os.path.join(pkg_share, 'config', 'display.rviz')
+    default_rviz_config_path = os.path.join(pkg_share, 'rviz', 'puppy_camera.rviz')
     xacro_file = os.path.join(pkg_share, 'urdf', 'puppy.urdf.xacro')
 
     # Re-declare the rvizconfig argument using the constructed default path
