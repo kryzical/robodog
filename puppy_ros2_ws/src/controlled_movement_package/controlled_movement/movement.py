@@ -202,7 +202,7 @@ def trot_forward():
                     kit.servo[lr2].angle = lr2_a
                     kit.servo[rf2].angle = rf2_a
                     k -= 1
-                time.time.sleep(interval_time)
+                time.sleep(interval_time)
     
     print(f"lf1: {lf1_a}, lf2: {lf2_a}, rf1 : {rf1_a}, rf2: {rf2_a}, lr1: {lr1_a}, lr2: {lr2_a}, rr1: {rr1_a}, rr2: {rr2_a}")
 
