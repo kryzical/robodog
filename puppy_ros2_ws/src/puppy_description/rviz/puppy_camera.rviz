@@ -11,10 +11,11 @@ Visualization Manager:
     - Name: Camera
       Class: rviz_default_plugins/Camera
       Enabled: true
-      Image Topic: /camera/image_raw/compressed
+      Image Topic: /image_raw
       Queue Size: 2
-      Transport Hint: compressed
+      Transport Hint: raw
   Fixed Frame: base_link
+  Fixed Frame: camera_link
   Global Options:
     Background Color: [0, 0, 0]
     Frame Rate: 30
