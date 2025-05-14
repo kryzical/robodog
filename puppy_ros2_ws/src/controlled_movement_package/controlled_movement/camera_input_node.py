@@ -36,7 +36,7 @@ class CameraInputNode(Node):
         super().__init__('camera_input_node')
         self.subscription = self.create_subscription(
             Image,
-            '/camera/image_raw',
+            '/image_raw',
             self.listener_callback,
             10
         )
