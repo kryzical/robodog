@@ -47,6 +47,7 @@ class CameraInputNode(Node):
     def listener_callback(self, msg):
         # Convert ROS Image to OpenCV image
         frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
+        small_frame = cv2.resize(frame, (320, 240))
         results = self.model(frame)
 
         # Draw detections
