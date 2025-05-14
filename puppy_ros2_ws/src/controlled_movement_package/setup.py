@@ -19,11 +19,11 @@ setup(
     license='Apache-2.0',
     tests_require=['pytest'],
     entry_points={
-        'console_scripts': [
-            'key_input_node = controlled_movement.key_input_node:main',
-            'movement_listener_node = controlled_movement.movement_listener_node:main',
-            'movement = controlled_movement.movement:main',
-            'camera_input = controlled_movement.key_input_node:main',
-        ],
-    },
+    'console_scripts': [
+        'key_input_node = controlled_movement.key_input_node:main',
+        'movement_listener_node = controlled_movement.movement_listener_node:main',
+        'movement = controlled_movement.movement:main',
+        'camera_input_node = controlled_movement.camera_input_node:main',  # corrected!
+    ],
+},
 )

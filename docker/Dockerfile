@@ -40,6 +40,7 @@ RUN . /opt/ros/humble/setup.sh && \
 #install pygame
 RUN pip3 install pygame
 RUN pip3 install adafruit-circuitpython-servokit
+RUN pip3 install ultralytics opencv-python-headless cv_bridge
 
 # Install Gazebo
 RUN . /opt/ros/humble/setup.sh && \
