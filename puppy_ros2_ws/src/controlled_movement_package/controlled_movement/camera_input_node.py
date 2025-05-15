@@ -20,9 +20,14 @@ class CameraInputNode(Node):
         self.get_logger().info('YOLO camera input node started.')
 
     def listener_callback(self, msg):
+        # Convert to OpenCV
         frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
-        results = self.model(frame)
 
+        # Run YOLO detection
+        results = self.model(frame)
+        self.get_logger().info(f"YOLO results: {results}")
+
+        # Draw detections
         for result in results:
             for box in result.boxes:
                 x1, y1, x2, y2 = map(int, box.xyxy[0])
@@ -31,13 +36,17 @@ class CameraInputNode(Node):
                 cv2.putText(frame, label, (x1, y1 - 10),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
-        # Show locally for debug
-        cv2.imshow('YOLO Detection', frame)
-        cv2.waitKey(1)
-
-        # Publish to topic
-        msg_out = self.bridge.cv2_to_imgmsg(frame, encoding='bgr8')
+        # Convert to RGB and publish
+        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        msg_out = self.bridge.cv2_to_imgmsg(frame_rgb, encoding='rgb8')
+        msg_out.header.stamp = msg.header.stamp
+        msg_out.header.frame_id = 'camera_frame'
         self.publisher.publish(msg_out)
+
+        # Optional display (can comment this out if needed)
+        # cv2.imshow('YOLO Detection', frame)
+        # cv2.waitKey(1)
+
 
 def main(args=None):
     rclpy.init(args=args)
