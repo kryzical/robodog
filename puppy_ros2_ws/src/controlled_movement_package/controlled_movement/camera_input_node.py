@@ -8,26 +8,31 @@ from ultralytics import YOLO
 class CameraInputNode(Node):
     def __init__(self):
         super().__init__('camera_input_node')
+
+        self.bridge = CvBridge()
+        self.model = YOLO('yolov8n.pt')
+
+        # Subscribe to the original working topic name
         self.subscription = self.create_subscription(
             Image,
-            '/camera/image_raw',  # <-- correct topic name
+            '/image_raw',  # ✅ don't change this if it's working
             self.listener_callback,
             10
         )
-        self.publisher = self.create_publisher(Image, '/camera/yolo_annotated', 10)
-        self.bridge = CvBridge()
-        self.model = YOLO('yolov8n.pt')
+
+        # Publisher to annotated topic
+        self.publisher = self.create_publisher(Image, '/yolo_annotated', 10)
+
         self.get_logger().info('YOLO camera input node started.')
 
     def listener_callback(self, msg):
-        # Convert to OpenCV
+        # Convert incoming ROS image to OpenCV format
         frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
 
-        # Run YOLO detection
+        # Run YOLO inference
         results = self.model(frame)
-        self.get_logger().info(f"YOLO results: {results}")
 
-        # Draw detections
+        # Draw detection boxes and labels
         for result in results:
             for box in result.boxes:
                 x1, y1, x2, y2 = map(int, box.xyxy[0])
@@ -36,17 +41,18 @@ class CameraInputNode(Node):
                 cv2.putText(frame, label, (x1, y1 - 10),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
-        # Convert to RGB and publish
+        # Convert to RGB for rqt_image_view
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         msg_out = self.bridge.cv2_to_imgmsg(frame_rgb, encoding='rgb8')
         msg_out.header.stamp = msg.header.stamp
         msg_out.header.frame_id = 'camera_frame'
+
+        # Publish annotated image
         self.publisher.publish(msg_out)
 
-        # Optional display (can comment this out if needed)
-        # cv2.imshow('YOLO Detection', frame)
-        # cv2.waitKey(1)
-
+        # (Optional) Visualize locally
+        cv2.imshow('YOLO Detection', frame)
+        cv2.waitKey(1)
 
 def main(args=None):
     rclpy.init(args=args)
@@ -54,7 +60,6 @@ def main(args=None):
     rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()
-
 
 
 # import rclpy
