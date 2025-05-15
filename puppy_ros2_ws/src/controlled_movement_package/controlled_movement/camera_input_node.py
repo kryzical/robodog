@@ -15,7 +15,7 @@
 #         # Subscribe to the original working topic name
 #         self.subscription = self.create_subscription(
 #             Image,
-#             '/image_raw',  # ✅ don't change this if it's working
+#             '/image_raw',  
 #             self.listener_callback,
 #             10
 #         )
@@ -60,6 +60,8 @@
 #     rclpy.spin(node)
 #     node.destroy_node()
 #     rclpy.shutdown()
+
+
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image
