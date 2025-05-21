@@ -1,6 +1,6 @@
 WORKING BRANCHES
-- ros2
-- ros2-traise
+- ros2 (gazebo simulation)
+- ros2-traise (steam deck functionality)
  
 ARCHIVED BRANCHES
 - EVERYTHING ELSE
